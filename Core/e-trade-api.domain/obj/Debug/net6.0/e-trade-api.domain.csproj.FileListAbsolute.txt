@@ -1,0 +1,12 @@
+C:\E-Trade\e-trade-api\Core\e-trade-api.domain\bin\Debug\net6.0\e-trade-api.domain.deps.json
+C:\E-Trade\e-trade-api\Core\e-trade-api.domain\bin\Debug\net6.0\e-trade-api.domain.dll
+C:\E-Trade\e-trade-api\Core\e-trade-api.domain\bin\Debug\net6.0\e-trade-api.domain.pdb
+C:\E-Trade\e-trade-api\Core\e-trade-api.domain\obj\Debug\net6.0\e-trade-api.domain.csproj.AssemblyReference.cache
+C:\E-Trade\e-trade-api\Core\e-trade-api.domain\obj\Debug\net6.0\e-trade-api.domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\E-Trade\e-trade-api\Core\e-trade-api.domain\obj\Debug\net6.0\e-trade-api.domain.AssemblyInfoInputs.cache
+C:\E-Trade\e-trade-api\Core\e-trade-api.domain\obj\Debug\net6.0\e-trade-api.domain.AssemblyInfo.cs
+C:\E-Trade\e-trade-api\Core\e-trade-api.domain\obj\Debug\net6.0\e-trade-api.domain.csproj.CoreCompileInputs.cache
+C:\E-Trade\e-trade-api\Core\e-trade-api.domain\obj\Debug\net6.0\e-trade-api.domain.dll
+C:\E-Trade\e-trade-api\Core\e-trade-api.domain\obj\Debug\net6.0\refint\e-trade-api.domain.dll
+C:\E-Trade\e-trade-api\Core\e-trade-api.domain\obj\Debug\net6.0\e-trade-api.domain.pdb
+C:\E-Trade\e-trade-api\Core\e-trade-api.domain\obj\Debug\net6.0\ref\e-trade-api.domain.dll
