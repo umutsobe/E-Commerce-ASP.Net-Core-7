@@ -8,6 +8,6 @@ namespace e_trade_api.domain.Entities
         public string? Adress { get; set; }
         public ICollection<Product> Products { get; set; }
         public Customer Customer { get; set; }
-        public int CustomerId { get; set; }
+        public Guid CustomerId { get; set; }
     }
 }

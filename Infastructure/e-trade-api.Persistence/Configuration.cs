@@ -21,3 +21,4 @@ namespace e_trade_api.Persistence
         }
     }
 }
+// presentation'daki appsettings.json dosyasına ulaştık.
