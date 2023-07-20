@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vH7UHfBZK/WsIHlN0RHQ5kZzLPtOHnR+RQu6U6o6bXsBcgl6shFsWQNbRJq/xdjiqjiPwOUSozUHbKVTPxWQjQ==",
+  "dgSpecHash": "q5CAcwnBMwPuLdXPM9P6kivwmtTwXgbbcdSXnkiVYr7KTkRH/+6ahhr4R5ahNJMVweKOXkqFhSkhm26jAI4OmQ==",
   "success": true,
-  "projectFilePath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj",
+  "projectFilePath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
