@@ -13,7 +13,8 @@ builder.Services.AddCors(
         options.AddDefaultPolicy(
             policy =>
                 policy
-                    .WithOrigins("http://localhost:4200/", "https://localhost:4200/") //sadece izin verilen url'ye response sağlansın. origin= kaynak
+                    // .WithOrigins("http://localhost:4200/", "https://localhost:4200/") //sadece izin verilen url'ye response sağlansın. origin= kaynak
+                    .AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod()
         )
