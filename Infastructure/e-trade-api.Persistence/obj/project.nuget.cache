@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "8a6AumZQxMGSChQEd5uAaVl4AKYLrrErdkKqAEeJHuI1ceAn4q2myqHWu5GG0SbGVWf440JbiFvs3J/N7mAHgg==",
+  "dgSpecHash": "mj38vWaA/K2YF0EfaNOCNx+CmbGZx8pNjeG5Z7gRtxtzmORmaGdzA/4sD5Y7zFs0H+55mwIxkw/9cP/njCrFKQ==",
   "success": true,
-  "projectFilePath": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj",
+  "projectFilePath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\umutt\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation\\11.6.0\\fluentvalidation.11.6.0.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.6.0\\fluentvalidation.dependencyinjectionextensions.11.6.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",

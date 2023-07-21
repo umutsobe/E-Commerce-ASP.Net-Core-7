@@ -1,3 +1,4 @@
+using e_trade_api.API;
 using e_trade_api.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,8 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddPersistenceServices();
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(
     options =>
@@ -19,6 +20,8 @@ builder.Services.AddCors(
                     .AllowAnyMethod()
         )
 );
+builder.Services.AddControllers();
+builder.Services.AddValidationsServices();
 
 var app = builder.Build();
 
