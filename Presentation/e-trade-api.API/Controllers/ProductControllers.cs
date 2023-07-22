@@ -11,14 +11,17 @@ public class ProductControllers : ControllerBase
 {
     private readonly IProductWriteRepository _productWriteRepository;
     private readonly IProductReadRepository _productReadRepository;
+    private readonly IWebHostEnvironment _webHostEnvironment;
 
     public ProductControllers( //constructer
         IProductReadRepository productReadRepository,
-        IProductWriteRepository productWriteRepository
+        IProductWriteRepository productWriteRepository,
+        IWebHostEnvironment webHostEnvironment
     )
     {
         _productReadRepository = productReadRepository;
         _productWriteRepository = productWriteRepository;
+        _webHostEnvironment = webHostEnvironment;
     }
 
     [HttpGet]
@@ -89,4 +92,58 @@ public class ProductControllers : ControllerBase
 
         return Ok();
     }
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> Upload()
+    {
+        //wwwroot/resource/product-images
+
+        string uploadPath = Path.Combine(
+            _webHostEnvironment.WebRootPath,
+            "resource/product-images"
+        );
+
+        Random r = new();
+
+        foreach (var file in Request.Form.Files)
+        {
+            string fullPath = Path.Combine(
+                uploadPath,
+                $"{r.NextDouble()}{Path.GetExtension(file.FileName)}"
+            );
+
+            using FileStream fileStream = // post edilen dosyalar burada yakalanır. özel bir yöntemdir. parametre olarak almaya gerek bırakmadı
+                new(
+                    fullPath,
+                    FileMode.Create,
+                    FileAccess.Write,
+                    FileShare.None,
+                    1024 * 1024,
+                    useAsync: false
+                );
+            await file.CopyToAsync(fileStream);
+            await fileStream.FlushAsync();
+        }
+        return Ok();
+    }
 }
+
+// string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "resource/product-images");: Dosyaların yükleneceği dizinin tam yolu olan uploadPath değişkenini oluşturur. Path.Combine metodu, WebRootPath (wwwroot klasörü) ve "resource/product-images" klasör yolunu birleştirerek dosyaların yükleneceği dizini elde eder.
+
+// foreach (var file in Request.Form.Files): HTTP isteği ile gönderilen dosyaları döngü ile işler. Request.Form.Files, gönderilen dosya verilerine erişimi sağlayan bir koleksiyondur.
+
+// Dosya ile ilgili işlemler yapmak için file değişkenini kullanarak döngü içerisinde devam edilir.
+
+// Dosyanın kaydedileceği tam yol olan fullPath oluşturulur. Path.GetExtension(file.FileName) ile dosya uzantısı alınır ve dosya adının önüne rastgele bir sayı eklenerek dosyanın benzersiz bir isim alması sağlanır.
+
+// using FileStream fileStream = new(...): Dosyanın içeriğini sunucuda belirtilen yola kaydetmek için bir FileStream örneği oluşturulur. using bloğu, fileStream nesnesinin işi bittiğinde otomatik olarak kapatılmasını sağlar.
+
+// Dosyayı sunucuda belirtilen yola FileMode.Create ile oluşturulacak şekilde açar. FileAccess.Write ile dosyaya yazılabilir bir erişim hakkı verilir.
+
+// await file.CopyToAsync(fileStream);: Dosya içeriği, HTTP isteği ile gelen dosya verileriyle fileStream nesnesine asenkron olarak kopyalanır. Dosya yüklemesi için asenkron yöntem kullanılmasının nedeni, sunucunun dosya yüklemelerini eş zamanlı olarak işlemesine olanak sağlamaktır.
+
+// await fileStream.FlushAsync();: Dosyaya yazma işlemi tamamlandığında, fileStream örneği kullanılarak verilerin diske tamamen yazıldığından emin olmak için FlushAsync metodu çağrılır.
+
+// Döngü, diğer dosyaları yüklemek için devam eder.
+
+// return Ok();: Eylem, dosyaların başarıyla yüklendiğini belirten bir Ok cevabı döndürür.
