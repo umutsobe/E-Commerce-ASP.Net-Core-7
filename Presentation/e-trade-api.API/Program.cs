@@ -1,4 +1,5 @@
 using e_trade_api.API;
+using e_trade_api.Infastructure;
 using e_trade_api.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddPersistenceServices();
+builder.Services.AddInfrastructureService();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();

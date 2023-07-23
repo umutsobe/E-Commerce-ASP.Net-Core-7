@@ -12,16 +12,19 @@ public class ProductControllers : ControllerBase
     private readonly IProductWriteRepository _productWriteRepository;
     private readonly IProductReadRepository _productReadRepository;
     private readonly IWebHostEnvironment _webHostEnvironment;
+    readonly IFileService _fileService;
 
     public ProductControllers( //constructer
         IProductReadRepository productReadRepository,
         IProductWriteRepository productWriteRepository,
-        IWebHostEnvironment webHostEnvironment
+        IWebHostEnvironment webHostEnvironment,
+        IFileService fileService
     )
     {
         _productReadRepository = productReadRepository;
         _productWriteRepository = productWriteRepository;
         _webHostEnvironment = webHostEnvironment;
+        _fileService = fileService;
     }
 
     [HttpGet]
@@ -96,34 +99,7 @@ public class ProductControllers : ControllerBase
     [HttpPost("[action]")]
     public async Task<IActionResult> Upload()
     {
-        //wwwroot/resource/product-images
-
-        string uploadPath = Path.Combine(
-            _webHostEnvironment.WebRootPath,
-            "resource/product-images"
-        );
-
-        Random r = new();
-
-        foreach (var file in Request.Form.Files)
-        {
-            string fullPath = Path.Combine(
-                uploadPath,
-                $"{r.NextDouble()}{Path.GetExtension(file.FileName)}"
-            );
-
-            using FileStream fileStream = // post edilen dosyalar burada yakalanır. özel bir yöntemdir. parametre olarak almaya gerek bırakmadı
-                new(
-                    fullPath,
-                    FileMode.Create,
-                    FileAccess.Write,
-                    FileShare.None,
-                    1024 * 1024,
-                    useAsync: false
-                );
-            await file.CopyToAsync(fileStream);
-            await fileStream.FlushAsync();
-        }
+        await _fileService.UploadAsync("resource/product-images", Request.Form.Files);
         return Ok();
     }
 }
