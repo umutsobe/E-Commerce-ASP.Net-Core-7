@@ -1,4 +1,5 @@
-﻿using e_trade_api.domain.Entities;
+﻿using e_trade_api.domain;
+using e_trade_api.domain.Entities;
 using e_trade_api.domain.Entities.Common;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,9 @@ namespace e_trade_api.Persistence.Contexts
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<domain.File> Files { get; set; }
+        public DbSet<ProductImageFile> ProductImageFiles { get; set; }
+        public DbSet<InvoiceFile> InvoiceFiles { get; set; }
 
         public override async Task<int> SaveChangesAsync(
             CancellationToken cancellationToken = default

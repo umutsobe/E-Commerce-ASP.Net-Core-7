@@ -1,5 +1,6 @@
 using System.Net;
 using e_trade_api.application;
+using e_trade_api.domain;
 using e_trade_api.domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,19 +13,37 @@ public class ProductControllers : ControllerBase
     private readonly IProductWriteRepository _productWriteRepository;
     private readonly IProductReadRepository _productReadRepository;
     private readonly IWebHostEnvironment _webHostEnvironment;
-    readonly IFileService _fileService;
+    readonly IFileWriteRepository _fileWriteRepository;
+    readonly IFileReadRepository _fileReadRepository;
+    readonly IProductImageFileReadRepository _productImageFileReadRepository;
+    readonly IProductImageFileWriteRepository _productImageFileWriteRepository;
+    readonly IInvoiceFileReadRepository _invoiceFileReadRepository;
+    readonly IInvoiceFileWriteRepository _invoiceFileWriteRepository;
+    readonly IStorageService _storageService;
 
     public ProductControllers( //constructer
         IProductReadRepository productReadRepository,
         IProductWriteRepository productWriteRepository,
         IWebHostEnvironment webHostEnvironment,
-        IFileService fileService
+        IFileWriteRepository fileWriteRepository,
+        IFileReadRepository fileReadRepository,
+        IProductImageFileReadRepository productImageFileReadRepository,
+        IProductImageFileWriteRepository productImageFileWriteRepository,
+        IInvoiceFileReadRepository invoiceFileReadRepository,
+        IInvoiceFileWriteRepository invoiceFileWriteRepository,
+        IStorageService storageService
     )
     {
         _productReadRepository = productReadRepository;
         _productWriteRepository = productWriteRepository;
         _webHostEnvironment = webHostEnvironment;
-        _fileService = fileService;
+        _fileWriteRepository = fileWriteRepository;
+        _fileReadRepository = fileReadRepository;
+        _productImageFileReadRepository = productImageFileReadRepository;
+        _productImageFileWriteRepository = productImageFileWriteRepository;
+        _invoiceFileReadRepository = invoiceFileReadRepository;
+        _invoiceFileWriteRepository = invoiceFileWriteRepository;
+        _storageService = storageService;
     }
 
     [HttpGet]
@@ -99,7 +118,22 @@ public class ProductControllers : ControllerBase
     [HttpPost("[action]")]
     public async Task<IActionResult> Upload()
     {
-        await _fileService.UploadAsync("resource/product-images", Request.Form.Files);
+        var datas = await _storageService.UploadAsync("resource/files", Request.Form.Files);
+
+        await _fileWriteRepository.AddRangeAsync(
+            datas
+                .Select(
+                    d =>
+                        new domain.File()
+                        {
+                            FileName = d.fileName,
+                            Path = d.path,
+                            Storage = _storageService.StorageName
+                        }
+                )
+                .ToList()
+        );
+        await _fileWriteRepository.SaveAsync();
         return Ok();
     }
 }
