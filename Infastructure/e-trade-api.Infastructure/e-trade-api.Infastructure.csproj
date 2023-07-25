@@ -8,4 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\e-trade-api.application\e-trade-api.application.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.17.0" />
+  </ItemGroup>
 </Project>

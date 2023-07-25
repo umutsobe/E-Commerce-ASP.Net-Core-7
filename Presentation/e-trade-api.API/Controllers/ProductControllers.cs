@@ -116,24 +116,30 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> Upload()
+    public async Task<IActionResult> Upload(string id)
     {
-        var datas = await _storageService.UploadAsync("resource/files", Request.Form.Files);
+        List<(string fileName, string path)> datas = await _storageService.UploadAsync(
+            "product-image",
+            Request.Form.Files
+        );
 
-        await _fileWriteRepository.AddRangeAsync(
+        Product product = await _productReadRepository.GetByIdAsync(id);
+
+        await _productImageFileWriteRepository.AddRangeAsync(
             datas
                 .Select(
                     d =>
-                        new domain.File()
+                        new ProductImageFile()
                         {
                             FileName = d.fileName,
                             Path = d.path,
-                            Storage = _storageService.StorageName
+                            Storage = _storageService.StorageName,
+                            Products = new List<Product>() { product }
                         }
                 )
                 .ToList()
         );
-        await _fileWriteRepository.SaveAsync();
+        await _productImageFileWriteRepository.SaveAsync();
         return Ok();
     }
 }
