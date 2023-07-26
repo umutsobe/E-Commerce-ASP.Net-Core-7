@@ -50,13 +50,12 @@ public class AzureStorage : IAzureStorage
 
         foreach (IFormFile file in files) //client'tan gelen dosyalar üzerinde geziniyoruz
         {
-            BlobClient blobClient = _blobContainerClient.GetBlobClient(
-                await FileRenameAsync(file.Name)
-            ); // her döngüde blobclient oluşturulacak. blobclient bizim yükleyeceğimiz tekil dosyayı temsil ediyor. senkron şekilde dosya ismini verdik. çünkü isim lazım.
+            string fileNewName = await FileRenameAsync(file.Name);
+            BlobClient blobClient = _blobContainerClient.GetBlobClient(fileNewName); // her döngüde blobclient oluşturulacak. blobclient bizim yükleyeceğimiz tekil dosyayı temsil ediyor. senkron şekilde dosya ismini verdik. çünkü isim lazım.
 
             await blobClient.UploadAsync(file.OpenReadStream()); //bir üst satırda oluşturduğumuz her döngüde yeni oluşturulan blobclient ile dosyayı azure'a gönderiyoruz.
 
-            datas.Add((file.Name, containerName)); // dosyayı bizim görmemiz için listeye ismi ve container ismini(dosyayı atmıyoruz) ekliyoruz
+            datas.Add((file.Name, $"{containerName}/{fileNewName}")); // dosyayı bizim görmemiz için listeye ismi ve container ismini(dosyayı atmıyoruz) ekliyoruz
         }
         return datas;
     }

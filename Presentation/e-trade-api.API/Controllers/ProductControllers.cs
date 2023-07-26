@@ -3,6 +3,7 @@ using e_trade_api.application;
 using e_trade_api.domain;
 using e_trade_api.domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace e_trade_api.API;
 
@@ -20,6 +21,7 @@ public class ProductControllers : ControllerBase
     readonly IInvoiceFileReadRepository _invoiceFileReadRepository;
     readonly IInvoiceFileWriteRepository _invoiceFileWriteRepository;
     readonly IStorageService _storageService;
+    readonly IConfiguration _configuration;
 
     public ProductControllers( //constructer
         IProductReadRepository productReadRepository,
@@ -31,7 +33,8 @@ public class ProductControllers : ControllerBase
         IProductImageFileWriteRepository productImageFileWriteRepository,
         IInvoiceFileReadRepository invoiceFileReadRepository,
         IInvoiceFileWriteRepository invoiceFileWriteRepository,
-        IStorageService storageService
+        IStorageService storageService,
+        IConfiguration configuration
     )
     {
         _productReadRepository = productReadRepository;
@@ -44,6 +47,7 @@ public class ProductControllers : ControllerBase
         _invoiceFileReadRepository = invoiceFileReadRepository;
         _invoiceFileWriteRepository = invoiceFileWriteRepository;
         _storageService = storageService;
+        _configuration = configuration;
     }
 
     [HttpGet]
@@ -140,6 +144,47 @@ public class ProductControllers : ControllerBase
                 .ToList()
         );
         await _productImageFileWriteRepository.SaveAsync();
+        return Ok();
+    }
+
+    [HttpGet("[action]/{id}")]
+    public async Task<IActionResult> GetProductImages(string id)
+    {
+        Product product = await _productReadRepository.Table
+            .Include(p => p.ProductImageFiles)
+            .FirstOrDefaultAsync(p => p.Id == Guid.Parse(id));
+
+        return Ok(
+            product.ProductImageFiles.Select(
+                p =>
+                    new
+                    {
+                        Path = $"{_configuration["BaseStorageUrl"]}/{p.Path}",
+                        p.FileName,
+                        p.Id
+                    }
+            )
+        );
+    }
+
+    [HttpDelete("[action]/{productId}")] //alttaki isimle buradaki isim aynı olmak zorunda. buradaki productId, pareametredeki productId
+    public async Task<IActionResult> DeleteImage(string productId, string imageId) //productId parametre olarak geliyor, imageId ise queryStringden geliyor
+    {
+        Product product = await _productReadRepository.Table
+            .Include(p => p.ProductImageFiles)
+            .FirstOrDefaultAsync(p => p.Id == Guid.Parse(productId));
+
+        ProductImageFile productImageFile = product.ProductImageFiles.FirstOrDefault(
+            p => p.Id == Guid.Parse(imageId)
+        );
+
+        await _productImageFileWriteRepository.RemoveAsync(productImageFile.Id.ToString());
+        await _productImageFileWriteRepository.SaveAsync();
+
+        string imageName = productImageFile.Path.Split("/")[1]; // bize / işaretinin gelme ihtimali yok çünkü characteregulatory ile / işaretini boş stringe dönüştürmüştük
+
+        await _storageService.DeleteAsync("product-image", imageName); // fotoğrafı azuredan da sildik
+
         return Ok();
     }
 }

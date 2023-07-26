@@ -4,13 +4,13 @@ public class NameOperation
 {
     public static string CharacterRegulatory(string name) =>
         name.Replace("\"", "")
+            .Replace("/", "")
             .Replace("!", "")
             .Replace("'", "")
             .Replace("^", "")
             .Replace("+", "")
             .Replace("%", "")
             .Replace("&", "")
-            .Replace("/", "")
             .Replace("(", "")
             .Replace(")", "")
             .Replace("=", "")
