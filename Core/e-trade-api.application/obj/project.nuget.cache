@@ -1,12 +1,19 @@
 {
   "version": 2,
-  "dgSpecHash": "CT2zh/JodcYk2nN1nk3zBdEMQFIWLKDs7Ue00JM6mjlRNCAvcp21TkKLs4Xfmr5d/gkvDblKlBo8NJqiQXUWZA==",
+  "dgSpecHash": "lSjOJ0CnNRNTZTDYrN5uwdmQNlUrVeNftrE3iDgPWELBTfVV6SBQarJYfcjXpf5GPmdSYil8e9ZZLA0u6ZZRlw==",
   "success": true,
   "projectFilePath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation\\11.6.0\\fluentvalidation.11.6.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.6.0\\fluentvalidation.dependencyinjectionextensions.11.6.0.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\mediatr\\10.0.1\\mediatr.10.0.1.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\mediatr.contracts\\1.0.1\\mediatr.contracts.1.0.1.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\mediatr.extensions.microsoft.dependencyinjection\\10.0.1\\mediatr.extensions.microsoft.dependencyinjection.10.0.1.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\microsoft.aspnetcore.http\\2.2.2\\microsoft.aspnetcore.http.2.2.2.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\microsoft.aspnetcore.http.abstractions\\2.2.0\\microsoft.aspnetcore.http.abstractions.2.2.0.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.2.0\\microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\microsoft.aspnetcore.webutilities\\2.2.0\\microsoft.aspnetcore.webutilities.2.2.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\microsoft.entityframeworkcore\\7.0.9\\microsoft.entityframeworkcore.7.0.9.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\7.0.9\\microsoft.entityframeworkcore.abstractions.7.0.9.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\7.0.9\\microsoft.entityframeworkcore.analyzers.7.0.9.nupkg.sha512",
@@ -16,9 +23,13 @@
     "C:\\Users\\umutt\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\microsoft.extensions.logging\\7.0.0\\microsoft.extensions.logging.7.0.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\microsoft.extensions.objectpool\\2.2.0\\microsoft.extensions.objectpool.2.2.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\microsoft.extensions.options\\7.0.0\\microsoft.extensions.options.7.0.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\microsoft.extensions.primitives\\7.0.0\\microsoft.extensions.primitives.7.0.0.nupkg.sha512",
-    "C:\\Users\\umutt\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+    "C:\\Users\\umutt\\.nuget\\packages\\microsoft.net.http.headers\\2.2.0\\microsoft.net.http.headers.2.2.0.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\system.buffers\\4.5.0\\system.buffers.4.5.0.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\system.text.encodings.web\\4.5.0\\system.text.encodings.web.4.5.0.nupkg.sha512"
   ],
   "logs": []
 }

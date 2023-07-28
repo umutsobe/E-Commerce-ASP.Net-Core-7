@@ -1,4 +1,5 @@
 using e_trade_api.API;
+using e_trade_api.application;
 using e_trade_api.Infastructure;
 using e_trade_api.Persistence;
 
@@ -8,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistenceServices();
 builder.Services.AddInfrastructureService();
-
+builder.Services.AddApplicationServices();
 // builder.Services.AddStorage<LocalStorage>();
 
 builder.Services.AddStorage<AzureStorage>();
