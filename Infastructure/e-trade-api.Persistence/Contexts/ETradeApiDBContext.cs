@@ -1,11 +1,12 @@
 ﻿using e_trade_api.domain;
 using e_trade_api.domain.Entities;
 using e_trade_api.domain.Entities.Common;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace e_trade_api.Persistence.Contexts
 {
-    public class ETradeApiDBContext : DbContext
+    public class ETradeApiDBContext : IdentityDbContext<AppUser, AppRole, string>
     {
         public ETradeApiDBContext(DbContextOptions options)
             : base(options) { }

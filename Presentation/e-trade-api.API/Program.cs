@@ -10,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddPersistenceServices();
 builder.Services.AddInfrastructureService();
 builder.Services.AddApplicationServices();
+builder.Services.AddControllers();
+
 // builder.Services.AddStorage<LocalStorage>();
 
 builder.Services.AddStorage<AzureStorage>();
