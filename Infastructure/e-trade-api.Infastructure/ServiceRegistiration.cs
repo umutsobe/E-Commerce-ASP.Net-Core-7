@@ -8,6 +8,7 @@ public static class ServiceRegistiration
     public static void AddInfrastructureService(this IServiceCollection services)
     {
         services.AddScoped<IStorageService, StorageService>();
+        services.AddScoped<ITokenHandler, TokenHandler>();
     }
 
     public static void AddStorage<T>(this IServiceCollection services)

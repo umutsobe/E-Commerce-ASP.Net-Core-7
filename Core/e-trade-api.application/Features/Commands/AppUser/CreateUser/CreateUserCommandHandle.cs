@@ -7,7 +7,7 @@ namespace e_trade_api.application;
 public class CreateUserCommandHandle
     : IRequestHandler<CreateUserCommandRequest, CreateUserCommandResponse>
 {
-    readonly UserManager<AppUser> _userManager;
+    readonly UserManager<AppUser> _userManager; //repository işlevi gören usermanager
 
     public CreateUserCommandHandle(UserManager<AppUser> userManager)
     {
@@ -25,7 +25,7 @@ public class CreateUserCommandHandle
                 Id = Guid.NewGuid().ToString(),
                 Name = request.Name,
                 Email = request.Email,
-                UserName = request.UserName
+                UserName = request.UserName,
             },
             request.Password
         );

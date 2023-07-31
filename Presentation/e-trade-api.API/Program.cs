@@ -1,7 +1,10 @@
+using System.Text;
 using e_trade_api.API;
 using e_trade_api.application;
 using e_trade_api.Infastructure;
 using e_trade_api.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +22,28 @@ builder.Services.AddStorage<AzureStorage>();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(
+        "Admin",
+        options =>
+        {
+            options.TokenValidationParameters = new()
+            {
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidAudience = builder.Configuration["Token:Audience"],
+                ValidIssuer = builder.Configuration["Token:Issuer"],
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"])
+                )
+            };
+        }
+    );
+
 builder.Services.AddCors(
     options =>
         options.AddDefaultPolicy(
@@ -46,6 +71,7 @@ app.UseCors();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -1,11 +1,13 @@
 using e_trade_api.application;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace e_trade_api.API;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(AuthenticationSchemes = "Admin")]
 public class ProductControllers : ControllerBase
 {
     readonly IMediator _mediator;
