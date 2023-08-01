@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using e_trade_api.domain.Entities;
 using MediatR;
 
-public class CreateProductCommandHandler : IRequestHandler<CreateProductCommandRequest, CreateProductCommandResponse>
+public class CreateProductCommandHandler
+    : IRequestHandler<CreateProductCommandRequest, CreateProductCommandResponse>
 {
-
     readonly IProductWriteRepository _productWriteRepository;
 
     public CreateProductCommandHandler(IProductWriteRepository productWriteRepository)
@@ -15,9 +15,12 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommandR
         _productWriteRepository = productWriteRepository;
     }
 
-    public async Task<CreateProductCommandResponse> Handle(CreateProductCommandRequest request, CancellationToken cancellationToken)
+    public async Task<CreateProductCommandResponse> Handle(
+        CreateProductCommandRequest request,
+        CancellationToken cancellationToken
+    )
     {
-            await _productWriteRepository.AddAsync(
+        await _productWriteRepository.AddAsync(
             new Product()
             {
                 Name = request.Name,
