@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using e_trade_api.application;
+using Microsoft.EntityFrameworkCore;
 
 public class GetAllProductQueryHandler
     : IRequestHandler<GetAllProductQueryRequest, GetAllProductQueryResponse>
@@ -17,11 +18,13 @@ public class GetAllProductQueryHandler
         CancellationToken cancellationToken
     )
     {
-        var totalCount = _productReadRepository.GetAll(false).Count();
+        var totalProductCount = _productReadRepository.GetAll(false).Count();
+
         var products = _productReadRepository
             .GetAll(false)
-            .Skip(request.Page * request.Size) //pagination
+            .Skip(request.Page * request.Size)
             .Take(request.Size)
+            .Include(p => p.ProductImageFiles)
             .Select(
                 p =>
                     new
@@ -31,13 +34,14 @@ public class GetAllProductQueryHandler
                         p.Stock,
                         p.Price,
                         p.CreatedDate,
-                        p.UpdatedDate
+                        p.UpdatedDate,
+                        p.ProductImageFiles
                     }
             )
             .ToList();
 
         GetAllProductQueryResponse response =
-            new() { TotalCount = totalCount, Products = products };
+            new() { TotalProductCount = totalProductCount, Products = products };
 
         return Task.FromResult(response);
     }
