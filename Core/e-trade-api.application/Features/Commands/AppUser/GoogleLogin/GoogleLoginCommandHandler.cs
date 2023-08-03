@@ -63,7 +63,7 @@ public class GoogleLoginCommandHandler
                 new UserLoginInfo(request.Provider, payload.Subject, request.Provider)
             );
 
-            Token token = _tokenHandler.CreateAccessToken(5);
+            Token token = _tokenHandler.CreateAccessToken(180);
             return new GoogleLoginCommandResponse { Token = token };
         }
         catch (Exception ex)

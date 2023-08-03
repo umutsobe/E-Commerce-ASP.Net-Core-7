@@ -1,4 +1,4 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
@@ -18,6 +18,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{9CBF7629-AB4A-4F0A-8712-E0201656852D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "e-trade-api.API", "Presentation\e-trade-api.API\e-trade-api.API.csproj", "{580FB483-1F97-43E3-97E6-9992BCBF6F7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "e-trade-api.SignalR", "Infastructure\e-trade-api.SignalR\e-trade-api.SignalR.csproj", "{297ABF66-8E32-4935-8B05-C9EBB3A8CA61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{580FB483-1F97-43E3-97E6-9992BCBF6F7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{580FB483-1F97-43E3-97E6-9992BCBF6F7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{580FB483-1F97-43E3-97E6-9992BCBF6F7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{297ABF66-8E32-4935-8B05-C9EBB3A8CA61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{297ABF66-8E32-4935-8B05-C9EBB3A8CA61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{297ABF66-8E32-4935-8B05-C9EBB3A8CA61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{297ABF66-8E32-4935-8B05-C9EBB3A8CA61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{A314CCEA-ACC5-4DB9-8C3C-BDD30D22A82A} = {AB2C4520-CE48-4D01-848E-F255FB4846BE}
 		{AB17669F-E77A-4805-BB9C-D0C1E4F63BA8} = {AB2C4520-CE48-4D01-848E-F255FB4846BE}
 		{580FB483-1F97-43E3-97E6-9992BCBF6F7A} = {9CBF7629-AB4A-4F0A-8712-E0201656852D}
+		{297ABF66-8E32-4935-8B05-C9EBB3A8CA61} = {AB2C4520-CE48-4D01-848E-F255FB4846BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B14AB26F-55BB-47D6-B1C9-24960D03F584}

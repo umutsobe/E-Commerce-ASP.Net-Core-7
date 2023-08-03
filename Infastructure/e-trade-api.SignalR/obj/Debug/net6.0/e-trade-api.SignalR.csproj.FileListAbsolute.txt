@@ -1,0 +1,17 @@
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\bin\Debug\net6.0\e-trade-api.SignalR.deps.json
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\bin\Debug\net6.0\e-trade-api.SignalR.dll
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\bin\Debug\net6.0\e-trade-api.SignalR.pdb
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\obj\Debug\net6.0\e-trade-api.SignalR.csproj.AssemblyReference.cache
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\obj\Debug\net6.0\e-trade-api.SignalR.GeneratedMSBuildEditorConfig.editorconfig
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\obj\Debug\net6.0\e-trade-api.SignalR.AssemblyInfoInputs.cache
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\obj\Debug\net6.0\e-trade-api.SignalR.AssemblyInfo.cs
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\obj\Debug\net6.0\e-trade-api.SignalR.csproj.CoreCompileInputs.cache
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\obj\Debug\net6.0\e-trade-api.SignalR.dll
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\obj\Debug\net6.0\refint\e-trade-api.SignalR.dll
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\obj\Debug\net6.0\e-trade-api.SignalR.pdb
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\obj\Debug\net6.0\ref\e-trade-api.SignalR.dll
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\bin\Debug\net6.0\e-trade-api.application.dll
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\bin\Debug\net6.0\e-trade-api.domain.dll
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\bin\Debug\net6.0\e-trade-api.application.pdb
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\bin\Debug\net6.0\e-trade-api.domain.pdb
+c:\E-Trade\e-trade-api\Infastructure\e-trade-api.SignalR\obj\Debug\net6.0\e-trade-api.SignalR.csproj.CopyComplete

@@ -2,7 +2,8 @@ using System.Threading.Tasks;
 using MediatR;
 using e_trade_api.application;
 
-public class GetAllProductQueryHandler : IRequestHandler<GetAllProductQueryRequest, GetAllProductQueryResponse>
+public class GetAllProductQueryHandler
+    : IRequestHandler<GetAllProductQueryRequest, GetAllProductQueryResponse>
 {
     readonly IProductReadRepository _productReadRepository;
 
@@ -11,13 +12,15 @@ public class GetAllProductQueryHandler : IRequestHandler<GetAllProductQueryReque
         _productReadRepository = productReadRepository;
     }
 
-
-    public Task<GetAllProductQueryResponse> Handle(GetAllProductQueryRequest request, CancellationToken cancellationToken)
+    public Task<GetAllProductQueryResponse> Handle(
+        GetAllProductQueryRequest request,
+        CancellationToken cancellationToken
+    )
     {
         var totalCount = _productReadRepository.GetAll(false).Count();
         var products = _productReadRepository
             .GetAll(false)
-            .Skip(request.Page * request.Size)
+            .Skip(request.Page * request.Size) //pagination
             .Take(request.Size)
             .Select(
                 p =>
@@ -33,11 +36,9 @@ public class GetAllProductQueryHandler : IRequestHandler<GetAllProductQueryReque
             )
             .ToList();
 
-            GetAllProductQueryResponse response= new (){
-                TotalCount = totalCount,
-                Products= products
-            };
+        GetAllProductQueryResponse response =
+            new() { TotalCount = totalCount, Products = products };
 
-            return Task.FromResult(response);
+        return Task.FromResult(response);
     }
 }

@@ -3,6 +3,7 @@ using e_trade_api.API;
 using e_trade_api.application;
 using e_trade_api.Infastructure;
 using e_trade_api.Persistence;
+using e_trade_api.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddPersistenceServices();
 builder.Services.AddInfrastructureService();
 builder.Services.AddApplicationServices();
+builder.Services.AddSignalRServices();
 builder.Services.AddControllers();
 
 // builder.Services.AddStorage<LocalStorage>();
@@ -39,7 +41,10 @@ builder.Services
                 ValidIssuer = builder.Configuration["Token:Issuer"],
                 IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"])
-                )
+                ),
+                //LifetimeValidator'ı neden oluşturduk. çünkü authorize olduktan sonra expiration date geçse dahi admin panelinde sayfayı yenilemeden route veya http istekleri yaptığımızda bu istekler karşılanıyordu. onun için expired olduktan sonra client artık backende erişemeyecek 401 authorize hatası alacak
+                LifetimeValidator = (notBefore, expires, securityToken, validationParameters) =>
+                    expires != null ? expires > DateTime.UtcNow : false
             };
         }
     );
@@ -49,10 +54,10 @@ builder.Services.AddCors(
         options.AddDefaultPolicy(
             policy =>
                 policy
-                    // .WithOrigins("http://localhost:4200/", "https://localhost:4200/") //sadece izin verilen url'ye response sağlansın. origin= kaynak
-                    .AllowAnyOrigin()
+                    .WithOrigins("http://localhost:4200", "https://localhost:4200")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
+                    .AllowCredentials()
         )
 );
 builder.Services.AddControllers();
@@ -75,5 +80,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHubs();
 
 app.Run();
