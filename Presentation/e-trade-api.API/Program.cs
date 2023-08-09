@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using e_trade_api.API;
 using e_trade_api.application;
@@ -10,7 +11,6 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddPersistenceServices();
 builder.Services.AddInfrastructureService();
 builder.Services.AddApplicationServices();
@@ -44,7 +44,8 @@ builder.Services
                 ),
                 //LifetimeValidator'ı neden oluşturduk. çünkü authorize olduktan sonra expiration date geçse dahi admin panelinde sayfayı yenilemeden route veya http istekleri yaptığımızda bu istekler karşılanıyordu. onun için expired olduktan sonra client artık backende erişemeyecek 401 authorize hatası alacak
                 LifetimeValidator = (notBefore, expires, securityToken, validationParameters) =>
-                    expires != null ? expires > DateTime.UtcNow : false
+                    expires != null ? expires > DateTime.UtcNow : false,
+                NameClaimType = ClaimTypes.Name,
             };
         }
     );
@@ -60,6 +61,7 @@ builder.Services.AddCors(
                     .AllowCredentials()
         )
 );
+
 builder.Services.AddControllers();
 builder.Services.AddValidationsServices();
 

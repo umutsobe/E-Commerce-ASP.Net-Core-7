@@ -41,6 +41,16 @@ namespace e_trade_api.Persistence
 
             services.AddScoped<IInvoiceFileReadRepository, InvoiceFileReadRepository>();
             services.AddScoped<IInvoiceFileWriteRepository, InvoiceFileWriteRepository>();
+
+            services.AddScoped<IBasketItemReadRepository, BasketItemReadRepository>();
+            services.AddScoped<IBasketItemWriteRepository, BasketItemWriteRepository>();
+            services.AddScoped<IBasketReadRepository, BasketReadRepository>();
+            services.AddScoped<IBasketWriteRepository, BasketWriteRepository>();
+            services.AddScoped<IBasketService, BasketService>();
+
+            services.AddScoped<IOrderItemReadRepository, OrderItemReadRepository>();
+            services.AddScoped<IOrderItemWriteRepository, OrderItemWriteRepository>();
+            services.AddScoped<IOrderService, OrderService>();
         }
     }
 }

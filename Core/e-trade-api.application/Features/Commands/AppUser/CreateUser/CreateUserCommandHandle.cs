@@ -8,10 +8,12 @@ public class CreateUserCommandHandle
     : IRequestHandler<CreateUserCommandRequest, CreateUserCommandResponse>
 {
     readonly UserManager<AppUser> _userManager; //repository işlevi gören usermanager
+    readonly IBasketService _basketService;
 
-    public CreateUserCommandHandle(UserManager<AppUser> userManager)
+    public CreateUserCommandHandle(UserManager<AppUser> userManager, IBasketService basketService)
     {
         _userManager = userManager;
+        _basketService = basketService;
     }
 
     public async Task<CreateUserCommandResponse> Handle(
@@ -19,20 +21,21 @@ public class CreateUserCommandHandle
         CancellationToken cancellationToken
     )
     {
-        IdentityResult result = await _userManager.CreateAsync(
-            new AppUser()
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = request.Name,
-                Email = request.Email,
-                UserName = request.UserName,
-            },
-            request.Password
-        );
+        AppUser user = new AppUser
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = request.Name,
+            Email = request.Email,
+            UserName = request.UserName,
+        };
+
+        IdentityResult userResult = await _userManager.CreateAsync(user, request.Password);
+
+        bool basketResult = await _basketService.CreateBasket(user.Id.ToString());
 
         CreateUserCommandResponse response = new CreateUserCommandResponse();
 
-        if (result.Succeeded)
+        if (userResult.Succeeded && basketResult)
         {
             response.Succeeded = true;
             response.Message = "Kullanıcı Başarıyla Oluşturulmuştur";
@@ -40,7 +43,7 @@ public class CreateUserCommandHandle
         else
         {
             response.Succeeded = false;
-            foreach (var e in result.Errors)
+            foreach (var e in userResult.Errors)
                 response.Message += $"{e.Code} - {e.Description}\n";
         }
         return response;

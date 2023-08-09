@@ -10,11 +10,17 @@ public class GoogleLoginCommandHandler
 {
     readonly UserManager<AppUser> _userManager;
     readonly ITokenHandler _tokenHandler;
+    readonly IBasketService _basketService;
 
-    public GoogleLoginCommandHandler(UserManager<AppUser> userManager, ITokenHandler tokenHandler)
+    public GoogleLoginCommandHandler(
+        UserManager<AppUser> userManager,
+        ITokenHandler tokenHandler,
+        IBasketService basketService
+    )
     {
         _userManager = userManager;
         _tokenHandler = tokenHandler;
+        _basketService = basketService;
     }
 
     public async Task<GoogleLoginCommandResponse> Handle(
@@ -35,6 +41,7 @@ public class GoogleLoginCommandHandler
             var payload = await GoogleJsonWebSignature.ValidateAsync(request.IdToken, settings);
 
             var user = await _userManager.FindByLoginAsync(request.Provider, payload.Subject);
+            var userId = user != null ? user.Id : null;
 
             if (user == null)
             {
@@ -49,7 +56,11 @@ public class GoogleLoginCommandHandler
                         UserName = payload.Email,
                         Name = payload.Name
                     };
+
+                    userId = user.Id;
                     var identityResult = await _userManager.CreateAsync(user);
+
+                    await _basketService.CreateBasket(user.Id.ToString());
 
                     if (!identityResult.Succeeded)
                     {
@@ -63,7 +74,8 @@ public class GoogleLoginCommandHandler
                 new UserLoginInfo(request.Provider, payload.Subject, request.Provider)
             );
 
-            Token token = _tokenHandler.CreateAccessToken(180);
+            Token token = await _tokenHandler.CreateAccessToken(180, userId.ToString());
+
             return new GoogleLoginCommandResponse { Token = token };
         }
         catch (Exception ex)

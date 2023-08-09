@@ -45,7 +45,7 @@ public class LoginUserCommandHandler
         if (signInResult.Succeeded)
         {
             //yetki belirleme
-            Token token = _tokenHandler.CreateAccessToken(180);
+            Token token = await _tokenHandler.CreateAccessToken(180, user.Id);
 
             return new LoginUserSuccessCommandResponse() { Token = token };
         }
