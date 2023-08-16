@@ -29,9 +29,14 @@ public class OrderService : IOrderService
         _completedOrderReadRepository = completedOrderReadRepository;
     }
 
-    public async Task CompleteOrder(string id)
+    public async Task<(bool, CompletedOrderDTO)> CompleteOrderAsync(string id)
     {
-        Order order = await _orderReadRepository.GetByIdAsync(id);
+        // Order order = await _orderReadRepository.GetByIdAsync(id);
+        Order? order = await _orderReadRepository.Table
+            .Include(o => o.User)
+            .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.Product)
+            .FirstOrDefaultAsync(o => o.Id == Guid.Parse(id));
 
         if (order != null)
         {
@@ -42,13 +47,21 @@ public class OrderService : IOrderService
             if (!completeOrder)
             {
                 await _completedOrderWriteRepository.AddAsync(new() { OrderId = Guid.Parse(id) });
-                await _completedOrderWriteRepository.SaveAsync();
+                return (
+                    await _completedOrderWriteRepository.SaveAsync() > 0,
+                    new()
+                    {
+                        OrderCode = order.OrderCode,
+                        OrderDate = order.CreatedDate,
+                        Username = order.User.UserName,
+                        EMail = order.User.Email
+                    }
+                );
             }
             else
                 throw new Exception("Order Zaten Onaylandı");
         }
-        else
-            throw new Exception("Beklenmeyen bir hatayla karşılaşıldı");
+        return (false, null);
     }
 
     public async Task CreateOrderAsync(CreateOrder createOrder)
