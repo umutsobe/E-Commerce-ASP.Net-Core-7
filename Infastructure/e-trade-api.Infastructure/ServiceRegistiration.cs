@@ -9,6 +9,7 @@ public static class ServiceRegistiration
     {
         services.AddScoped<IStorageService, StorageService>();
         services.AddScoped<ITokenHandler, TokenHandler>();
+        services.AddScoped<IMailService, MailService>();
     }
 
     public static void AddStorage<T>(this IServiceCollection services)

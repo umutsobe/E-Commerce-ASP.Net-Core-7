@@ -11,10 +11,12 @@ namespace e_trade_api.API.Controllers;
 public class UsersController : ControllerBase
 {
     readonly IMediator _mediator;
+    readonly IMailService _mailService;
 
-    public UsersController(IMediator mediator)
+    public UsersController(IMediator mediator, IMailService mailService)
     {
         _mediator = mediator;
+        _mailService = mailService;
     }
 
     [HttpPost]
@@ -38,6 +40,17 @@ public class UsersController : ControllerBase
     {
         GoogleLoginCommandResponse response = await _mediator.Send(googleLoginCommandRequest);
         return Ok(response);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ExampleMailTest()
+    {
+        await _mailService.SendMessageAsync(
+            "umuttsobeksk@gmail.com",
+            "Örnek Mail",
+            "<strong>Bu bir örnek maildir.</strong>"
+        );
+        return Ok();
     }
 
     // [HttpGet("{UserId}")] //sakın userid olarak yazma gidior
