@@ -8,6 +8,7 @@ namespace e_trade_api.domain.Entities
         public AppUser User { get; set; }
         public string Description { get; set; }
         public string Adress { get; set; }
+        public string OrderCode { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; }
     }
 }

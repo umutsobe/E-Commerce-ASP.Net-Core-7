@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using e_trade_api.application;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -7,14 +8,16 @@ namespace e_trade_api.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = "Admin")]
+// [Authorize(AuthenticationSchemes = "Admin")]
 public class OrderController : ControllerBase
 {
     readonly IMediator _mediator;
+    readonly IOrderService _orderService;
 
-    public OrderController(IMediator mediator)
+    public OrderController(IMediator mediator, IOrderService orderService)
     {
         _mediator = mediator;
+        _orderService = orderService;
     }
 
     [HttpPost]
@@ -24,6 +27,24 @@ public class OrderController : ControllerBase
     {
         CreateOrderCommandResponse response = await _mediator.Send(createOrderCommandRequest);
 
+        return Ok(response);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllOrders(
+        [FromQuery] GetAllOrdersQueryRequest getAllOrdersQueryRequest
+    )
+    {
+        GetAllOrdersQueryResponse response = await _mediator.Send(getAllOrdersQueryRequest);
+        return Ok(response);
+    }
+
+    [HttpGet("{Id}")]
+    public async Task<ActionResult> GetOrderById(
+        [FromRoute] GetOrderByIdQueryRequest getOrderByIdQueryRequest
+    )
+    {
+        GetOrderByIdQueryResponse response = await _mediator.Send(getOrderByIdQueryRequest);
         return Ok(response);
     }
 }

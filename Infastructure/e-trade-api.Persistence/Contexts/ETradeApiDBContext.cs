@@ -23,28 +23,12 @@ namespace e_trade_api.Persistence.Contexts
         public DbSet<Basket> Baskets { get; set; }
         public DbSet<BasketItem> BasketItems { get; set; }
 
-        // protected override void OnModelCreating(ModelBuilder modelBuilder) //migrationda bir şeyi değiştirmedi
-        // {
-        //     modelBuilder
-        //         .Entity<Order>()
-        //         .HasMany(o => o.OrderItems)
-        //         .WithOne(oi => oi.Order)
-        //         .HasForeignKey(oi => oi.OrderId);
+        protected override void OnModelCreating(ModelBuilder modelBuilder) //migrationda bir şeyi değiştirmedi
+        {
+            modelBuilder.Entity<Order>().HasIndex(o => o.OrderCode).IsUnique();
 
-        //     modelBuilder
-        //         .Entity<AppUser>()
-        //         .HasMany(u => u.Orders)
-        //         .WithOne(o => o.User)
-        //         .HasForeignKey(o => o.UserId);
-
-        //     modelBuilder
-        //         .Entity<Product>()
-        //         .HasMany(p => p.OrderItems)
-        //         .WithOne(p => p.Product)
-        //         .HasForeignKey(p => p.ProductId);
-
-        //     base.OnModelCreating(modelBuilder);
-        // }
+            base.OnModelCreating(modelBuilder);
+        }
 
         public override async Task<int> SaveChangesAsync(
             CancellationToken cancellationToken = default
