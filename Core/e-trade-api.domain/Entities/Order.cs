@@ -10,5 +10,6 @@ namespace e_trade_api.domain.Entities
         public string Adress { get; set; }
         public string OrderCode { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; }
+        public CompletedOrder CompletedOrder { get; set; }
     }
 }

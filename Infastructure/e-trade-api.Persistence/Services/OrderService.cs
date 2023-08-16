@@ -1,5 +1,7 @@
 using System.Text;
 using e_trade_api.application;
+using e_trade_api.domain;
+using e_trade_api.domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace e_trade_api.Persistence;
@@ -9,16 +11,44 @@ public class OrderService : IOrderService
     readonly IOrderWriteRepository _orderWriteRepository;
     readonly IOrderReadRepository _orderReadRepository;
     readonly IOrderItemWriteRepository _orderItemWriteRepository;
+    readonly ICompletedOrderWriteRepository _completedOrderWriteRepository;
+    readonly ICompletedOrderReadRepository _completedOrderReadRepository;
 
     public OrderService(
         IOrderWriteRepository orderWriteRepository,
         IOrderItemWriteRepository orderItemWriteRepository,
-        IOrderReadRepository orderReadRepository
+        IOrderReadRepository orderReadRepository,
+        ICompletedOrderWriteRepository completedOrderWriteRepository,
+        ICompletedOrderReadRepository completedOrderReadRepository
     )
     {
         _orderWriteRepository = orderWriteRepository;
         _orderItemWriteRepository = orderItemWriteRepository;
         _orderReadRepository = orderReadRepository;
+        _completedOrderWriteRepository = completedOrderWriteRepository;
+        _completedOrderReadRepository = completedOrderReadRepository;
+    }
+
+    public async Task CompleteOrder(string id)
+    {
+        Order order = await _orderReadRepository.GetByIdAsync(id);
+
+        if (order != null)
+        {
+            bool completeOrder = await _completedOrderReadRepository.Table
+                .Select(co => co.OrderId == Guid.Parse(id))
+                .FirstOrDefaultAsync();
+
+            if (!completeOrder)
+            {
+                await _completedOrderWriteRepository.AddAsync(new() { OrderId = Guid.Parse(id) });
+                await _completedOrderWriteRepository.SaveAsync();
+            }
+            else
+                throw new Exception("Order Zaten Onaylandı");
+        }
+        else
+            throw new Exception("Beklenmeyen bir hatayla karşılaşıldı");
     }
 
     public async Task CreateOrderAsync(CreateOrder createOrder)
@@ -66,10 +96,27 @@ public class OrderService : IOrderService
 
         var data = query.Skip(page * size).Take(size);
 
+        var data2 =
+            from order in data
+            join completedOrder in _completedOrderReadRepository.Table
+                on order.Id equals completedOrder.OrderId
+                into co
+            from _co in co.DefaultIfEmpty()
+            select new
+            {
+                Id = order.Id,
+                CreatedDate = order.CreatedDate,
+                OrderCode = order.OrderCode,
+                OrderItems = order.OrderItems,
+                UserName = order.User.UserName,
+                Completed = _co != null ? true : false
+            };
+
         return new()
         {
             TotalOrderCount = await query.CountAsync(),
-            Orders = await data.Select(
+            Orders = await data2
+                .Select(
                     o =>
                         new
                         {
@@ -77,7 +124,8 @@ public class OrderService : IOrderService
                             CreatedDate = o.CreatedDate,
                             OrderCode = o.OrderCode,
                             TotalPrice = o.OrderItems.Sum(bi => bi.Product.Price * bi.Quantity),
-                            UserName = o.User.UserName
+                            UserName = o.UserName,
+                            Completed = o.Completed
                         }
                 )
                 .ToListAsync()

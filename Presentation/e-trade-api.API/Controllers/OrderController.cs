@@ -47,4 +47,11 @@ public class OrderController : ControllerBase
         GetOrderByIdQueryResponse response = await _mediator.Send(getOrderByIdQueryRequest);
         return Ok(response);
     }
+
+    [HttpGet("complete-order/{Id}")]
+    public async Task<IActionResult> CompleteOrder([FromRoute] CompleteOrderCommandRequest request)
+    {
+        CompleteOrderCommandResponse response = await _mediator.Send(request);
+        return Ok(response);
+    }
 }

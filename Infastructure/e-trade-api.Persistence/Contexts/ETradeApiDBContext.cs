@@ -23,9 +23,17 @@ namespace e_trade_api.Persistence.Contexts
         public DbSet<Basket> Baskets { get; set; }
         public DbSet<BasketItem> BasketItems { get; set; }
 
+        public DbSet<CompletedOrder> CompletedOrders { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder) //migrationda bir şeyi değiştirmedi
         {
             modelBuilder.Entity<Order>().HasIndex(o => o.OrderCode).IsUnique();
+
+            modelBuilder
+                .Entity<Order>()
+                .HasOne(o => o.CompletedOrder)
+                .WithOne(c => c.Order)
+                .HasForeignKey<CompletedOrder>(c => c.OrderId);
 
             base.OnModelCreating(modelBuilder);
         }
