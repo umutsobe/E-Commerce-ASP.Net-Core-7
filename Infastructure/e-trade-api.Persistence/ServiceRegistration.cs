@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using e_trade_api.application;
 using e_trade_api.domain;
+using Microsoft.AspNetCore.Identity;
 
 namespace e_trade_api.Persistence
 {
@@ -23,7 +24,9 @@ namespace e_trade_api.Persistence
                     options.Password.RequireLowercase = false;
                     options.Password.RequireUppercase = false;
                 })
-                .AddEntityFrameworkStores<ETradeApiDBContext>();
+                .AddEntityFrameworkStores<ETradeApiDBContext>()
+                .AddDefaultTokenProviders();
+
             services.AddScoped<ICustomerReadRepository, CustomerReadRepository>();
             services.AddScoped<ICustomerWriteRepository, CustomerWriteRepository>();
 
@@ -51,6 +54,9 @@ namespace e_trade_api.Persistence
             services.AddScoped<IOrderItemReadRepository, OrderItemReadRepository>();
             services.AddScoped<IOrderItemWriteRepository, OrderItemWriteRepository>();
             services.AddScoped<IOrderService, OrderService>();
+
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserService, UserService>();
         }
     }
 }

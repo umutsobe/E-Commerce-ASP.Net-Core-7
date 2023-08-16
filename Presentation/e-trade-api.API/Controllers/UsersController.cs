@@ -42,24 +42,43 @@ public class UsersController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> ExampleMailTest()
+    // [HttpGet]
+    // public async Task<IActionResult> ExampleMailTest()
+    // {
+    //     await _mailService.SendMailAsync(
+    //         "umuttsobeksk@gmail.com",
+    //         "Örnek Mail",
+    //         "<strong>Bu bir örnek maildir.</strong>"
+    //     );
+    //     return Ok();
+    // }
+
+    [HttpPost("password-reset")]
+    public async Task<IActionResult> PasswordReset(
+        [FromBody] PasswordResetCommandRequest passwordResetCommandRequest
+    )
     {
-        await _mailService.SendMessageAsync(
-            "umuttsobeksk@gmail.com",
-            "Örnek Mail",
-            "<strong>Bu bir örnek maildir.</strong>"
-        );
-        return Ok();
+        PasswordResetCommandResponse response = await _mediator.Send(passwordResetCommandRequest);
+        return Ok(response);
     }
 
-    // [HttpGet("{UserId}")] //sakın userid olarak yazma gidior
-    // [Authorize(AuthenticationSchemes = "Admin")]
-    // public async Task<IActionResult> GetUserBasketId(
-    //     [FromRoute] GetUserBasketIdQueryRequest getUserBasketIdQueryRequest
-    // )
-    // {
-    //     GetUserBasketIdQueryResponse response = await _mediator.Send(getUserBasketIdQueryRequest);
-    //     return Ok(response);
-    // }
+    [HttpPost("verify-reset-token")]
+    public async Task<IActionResult> VerifyResetToken(
+        [FromBody] VerifyResetTokenCommandRequest verifyResetTokenCommandRequest
+    )
+    {
+        VerifyResetTokenCommandResponse response = await _mediator.Send(
+            verifyResetTokenCommandRequest
+        );
+        return Ok(response);
+    }
+
+    [HttpPost("update-password")]
+    public async Task<IActionResult> UpdatePassword(
+        [FromBody] UpdatePasswordCommandRequest updatePasswordCommandRequest
+    )
+    {
+        UpdatePasswordCommandResponse response = await _mediator.Send(updatePasswordCommandRequest);
+        return Ok(response);
+    }
 }
