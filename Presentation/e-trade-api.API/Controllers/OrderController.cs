@@ -21,6 +21,11 @@ public class OrderController : ControllerBase
     }
 
     [HttpPost]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Orders,
+        ActionType = ActionType.Writing,
+        Definition = "Create Order"
+    )]
     public async Task<IActionResult> CreateOrder(
         CreateOrderCommandRequest createOrderCommandRequest
     )
@@ -31,6 +36,11 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Orders,
+        ActionType = ActionType.Reading,
+        Definition = "Get All Orders"
+    )]
     public async Task<IActionResult> GetAllOrders(
         [FromQuery] GetAllOrdersQueryRequest getAllOrdersQueryRequest
     )
@@ -40,6 +50,11 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("{Id}")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Orders,
+        ActionType = ActionType.Reading,
+        Definition = "Get Order By Id"
+    )]
     public async Task<ActionResult> GetOrderById(
         [FromRoute] GetOrderByIdQueryRequest getOrderByIdQueryRequest
     )
@@ -49,6 +64,11 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("complete-order/{Id}")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Orders,
+        ActionType = ActionType.Updating,
+        Definition = "Complete Order"
+    )]
     public async Task<IActionResult> CompleteOrder([FromRoute] CompleteOrderCommandRequest request)
     {
         CompleteOrderCommandResponse response = await _mediator.Send(request);

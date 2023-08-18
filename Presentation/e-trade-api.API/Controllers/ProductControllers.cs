@@ -34,6 +34,11 @@ public class ProductControllers : ControllerBase
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = "Admin")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Products,
+        ActionType = ActionType.Writing,
+        Definition = "Create Product"
+    )]
     public async Task<IActionResult> Post(CreateProductCommandRequest createProductCommandRequest)
     {
         CreateProductCommandResponse createProductCommandResponse = await _mediator.Send(
@@ -44,6 +49,11 @@ public class ProductControllers : ControllerBase
 
     [HttpPut]
     [Authorize(AuthenticationSchemes = "Admin")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Products,
+        ActionType = ActionType.Updating,
+        Definition = "Update Product"
+    )]
     public async Task<IActionResult> Put(
         [FromBody] UpdateProductCommandRequest updateProductCommandRequest
     )
@@ -55,6 +65,11 @@ public class ProductControllers : ControllerBase
 
     [HttpDelete("{Id}")]
     [Authorize(AuthenticationSchemes = "Admin")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Products,
+        ActionType = ActionType.Deleting,
+        Definition = "Delete Product"
+    )]
     public async Task<IActionResult> Delete(
         [FromRoute] DeleteProductByIdCommandRequest deleteProductByIdCommandRequest
     )
@@ -68,6 +83,11 @@ public class ProductControllers : ControllerBase
 
     [HttpPost("[action]")]
     [Authorize(AuthenticationSchemes = "Admin")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Products,
+        ActionType = ActionType.Writing,
+        Definition = "Upload Product File"
+    )]
     public async Task<IActionResult> Upload(
         [FromQuery] UploadProductImageCommandRequest uploadProductImageCommandRequest
     )
@@ -79,6 +99,11 @@ public class ProductControllers : ControllerBase
 
     [HttpGet("[action]/{Id}")]
     [Authorize(AuthenticationSchemes = "Admin")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Products,
+        ActionType = ActionType.Reading,
+        Definition = "Get Products Images"
+    )]
     public async Task<IActionResult> GetProductImages(
         [FromRoute] GetProductImageQueryRequest getProductImageQueryRequest
     )
@@ -91,6 +116,11 @@ public class ProductControllers : ControllerBase
 
     [HttpDelete("[action]/{ProductId}")] //alttaki isimle buradaki isim aynı olmak zorunda. buradaki productId, pareametredeki productId
     [Authorize(AuthenticationSchemes = "Admin")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Products,
+        ActionType = ActionType.Deleting,
+        Definition = "Delete Product Image"
+    )]
     public async Task<IActionResult> DeleteImage(
         [FromRoute] DeleteProductImageCommandRequest deleteProductImageCommandRequest,
         [FromQuery] string imageId
@@ -105,6 +135,11 @@ public class ProductControllers : ControllerBase
 
     [HttpGet("[action]")]
     [Authorize(AuthenticationSchemes = "Admin")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Products,
+        ActionType = ActionType.Updating,
+        Definition = "Change Showcase Image"
+    )]
     public async Task<IActionResult> ChangeShowcaseImage(
         [FromQuery] ChangeShowcaseImageCommandRequest changeShowcaseImageCommandRequest
     )
