@@ -11,14 +11,14 @@ namespace e_trade_api.Infrastructure
 {
     public class ApplicationService : IApplicationService
     {
-        public List<Menu> GetAuthorizeDefinitionEndpoints(Type type)
+        public List<MenuDTO> GetAuthorizeDefinitionEndpoints(Type type)
         {
             Assembly? assembly = Assembly.GetAssembly(type);
             var controllers = assembly
                 ?.GetTypes()
                 .Where(t => t.IsAssignableTo(typeof(ControllerBase)));
 
-            List<Menu> menus = new List<Menu>();
+            List<MenuDTO> menus = new List<MenuDTO>();
 
             if (controllers != null)
             {
@@ -71,7 +71,7 @@ namespace e_trade_api.Infrastructure
 
                                     if (existingMenu == null)
                                     {
-                                        var newMenu = new Menu
+                                        var newMenu = new MenuDTO
                                         {
                                             Name = menuName,
                                             Actions = new List<application.Action>()

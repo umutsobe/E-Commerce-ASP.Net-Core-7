@@ -22,6 +22,21 @@ namespace e_trade_api.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("AppRoleEndpoint", b =>
+                {
+                    b.Property<Guid>("EndpointsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("RolesId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("EndpointsId", "RolesId");
+
+                    b.HasIndex("RolesId");
+
+                    b.ToTable("AppRoleEndpoint");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -315,6 +330,40 @@ namespace e_trade_api.Persistence.Migrations
                     b.ToTable("CompletedOrders");
                 });
 
+            modelBuilder.Entity("e_trade_api.domain.Endpoint", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ActionType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Definition")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HttpType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("MenuId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MenuId");
+
+                    b.ToTable("Endpoints");
+                });
+
             modelBuilder.Entity("e_trade_api.domain.Entities.Customer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -427,6 +476,26 @@ namespace e_trade_api.Persistence.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("e_trade_api.domain.Menu", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Menus");
+                });
+
             modelBuilder.Entity("e_trade_api.domain.OrderItem", b =>
                 {
                     b.Property<Guid>("Id")
@@ -478,6 +547,21 @@ namespace e_trade_api.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.HasDiscriminator().HasValue("ProductImageFile");
+                });
+
+            modelBuilder.Entity("AppRoleEndpoint", b =>
+                {
+                    b.HasOne("e_trade_api.domain.Endpoint", null)
+                        .WithMany()
+                        .HasForeignKey("EndpointsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("e_trade_api.domain.AppRole", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -585,6 +669,15 @@ namespace e_trade_api.Persistence.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("e_trade_api.domain.Endpoint", b =>
+                {
+                    b.HasOne("e_trade_api.domain.Menu", "Menu")
+                        .WithMany("Endpoints")
+                        .HasForeignKey("MenuId");
+
+                    b.Navigation("Menu");
+                });
+
             modelBuilder.Entity("e_trade_api.domain.Entities.Order", b =>
                 {
                     b.HasOne("e_trade_api.domain.AppUser", "User")
@@ -637,6 +730,11 @@ namespace e_trade_api.Persistence.Migrations
                     b.Navigation("BasketItems");
 
                     b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("e_trade_api.domain.Menu", b =>
+                {
+                    b.Navigation("Endpoints");
                 });
 #pragma warning restore 612, 618
         }

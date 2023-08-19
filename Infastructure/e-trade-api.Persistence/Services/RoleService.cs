@@ -33,10 +33,14 @@ public class RoleService : IRoleService
     {
         var query = _roleManager.Roles;
 
-        return (
-            query.Skip(page * size).Take(size).Select(r => new { r.Id, r.Name }),
-            query.Count()
-        );
+        IQueryable<AppRole> rolesQuery = null;
+
+        if (page != -1 && size != -1) //iş kuralı. endpointe tıklandığında bütün rolleri almak istiyoruz. clinettan -1,-1 gönderilirse tüm rolleri yolluyoruz
+            rolesQuery = query.Skip(page * size).Take(size);
+        else
+            rolesQuery = query;
+
+        return (rolesQuery.Select(r => new { r.Id, r.Name }), query.Count());
     }
 
     public async Task<(string id, string name)> GetRoleById(string id)

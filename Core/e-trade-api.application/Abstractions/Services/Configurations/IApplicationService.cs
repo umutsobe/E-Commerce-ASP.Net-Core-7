@@ -2,5 +2,5 @@ namespace e_trade_api.application;
 
 public interface IApplicationService
 {
-    List<Menu> GetAuthorizeDefinitionEndpoints(Type type);
+    List<MenuDTO> GetAuthorizeDefinitionEndpoints(Type type);
 }

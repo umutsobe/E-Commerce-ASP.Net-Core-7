@@ -24,6 +24,8 @@ namespace e_trade_api.Persistence.Contexts
         public DbSet<BasketItem> BasketItems { get; set; }
 
         public DbSet<CompletedOrder> CompletedOrders { get; set; }
+        public DbSet<Endpoint> Endpoints { get; set; }
+        public DbSet<Menu> Menus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) //migrationda bir şeyi değiştirmedi
         {
