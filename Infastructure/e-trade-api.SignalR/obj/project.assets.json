@@ -2313,8 +2313,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj": {
-              "projectPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj"
+            "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj": {
+              "projectPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj"
             }
           }
         }

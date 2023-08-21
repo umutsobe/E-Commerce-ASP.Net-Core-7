@@ -8,10 +8,15 @@ namespace e_trade_api.Persistence;
 public class UserService : IUserService
 {
     readonly UserManager<AppUser> _userManager;
+    readonly IEndpointReadRepository _endpointReadRepository;
 
-    public UserService(UserManager<AppUser> userManager)
+    public UserService(
+        UserManager<AppUser> userManager,
+        IEndpointReadRepository endpointReadRepository
+    )
     {
         _userManager = userManager;
+        _endpointReadRepository = endpointReadRepository;
     }
 
     public async Task UpdatePasswordAsync(string userId, string resetToken, string newPassword)
@@ -65,14 +70,44 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<string[]> GetRolesToUserAsync(string userId)
+    public async Task<string[]> GetRolesToUserAsync(string userIdOrName)
     {
-        AppUser user = await _userManager.FindByIdAsync(userId);
+        AppUser user = await _userManager.FindByIdAsync(userIdOrName);
+        if (user == null)
+            user = await _userManager.FindByNameAsync(userIdOrName);
+
         if (user != null)
         {
             var userRoles = await _userManager.GetRolesAsync(user);
             return userRoles.ToArray();
         }
         return new string[] { };
+    }
+
+    public async Task<bool> HasRolePermissionToEndpointAsync(string name, string code)
+    {
+        var userRoles = await GetRolesToUserAsync(name);
+
+        if (!userRoles.Any())
+            return false;
+
+        Endpoint? endpoint = await _endpointReadRepository.Table
+            .Include(e => e.Roles)
+            .FirstOrDefaultAsync(e => e.Code == code);
+
+        if (endpoint == null)
+            return false;
+
+        var hasRole = false;
+        var endpointRoles = endpoint.Roles.Select(r => r.Name);
+
+        foreach (var userRole in userRoles)
+        {
+            foreach (var endpointRole in endpointRoles)
+                if (userRole == endpointRole)
+                    return true;
+        }
+
+        return false;
     }
 }

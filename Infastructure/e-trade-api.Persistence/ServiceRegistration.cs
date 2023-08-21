@@ -12,7 +12,7 @@ namespace e_trade_api.Persistence
         public static void AddPersistenceServices(this IServiceCollection services)
         {
             services.AddDbContext<ETradeApiDBContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString()),
+                options => options.UseSqlServer(MyConfigurationManager.GetConnectionString()),
                 ServiceLifetime.Scoped
             );
             services

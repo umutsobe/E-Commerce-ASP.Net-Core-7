@@ -57,7 +57,7 @@ public class MailService : IMailService
             "Merhaba<br>Eğer yeni şifre talebinde bulunduysanız aşağıdaki linkten şifrenizi yenileyebilirsiniz.<br>"
         );
         mail.AppendLine(
-            $"<strong><a target=\"_blank\" href=\"{_configuration["AngularClientUrl"]}/update-password/{userId}/{resetToken}\">Yeni şifre talebi için tıklayınız...</a></strong><br><br>"
+            $"<strong><a target=\"_blank\" href=\"{MyConfigurationManager.GetClientUrl()}/update-password/{userId}/{resetToken}\">Yeni şifre talebi için tıklayınız...</a></strong><br><br>"
         );
         mail.AppendLine(
             "<span style=\"font-size:12px;\">NOT: Eğer bu talep tarafınızca gerçekleştirilmemişse lütfen bu maili ciddiye almayınız.</span><br>Saygılarımızla...<br><br><br>Sobe E Ticaret"

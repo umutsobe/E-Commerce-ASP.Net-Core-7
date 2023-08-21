@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.SignalR\\e-trade-api.SignalR.csproj": {}
+    "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.SignalR\\e-trade-api.SignalR.csproj": {}
   },
   "projects": {
-    "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj": {
+    "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj",
+        "projectUniqueName": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj",
         "projectName": "e-trade-api.application",
-        "projectPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj",
+        "projectPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj",
         "packagesPath": "C:\\Users\\umutt\\.nuget\\packages\\",
-        "outputPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\obj\\",
+        "outputPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\umutt\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -28,8 +28,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj": {
-                "projectPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj"
+              "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj": {
+                "projectPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj"
               }
             }
           }
@@ -97,14 +97,14 @@
         }
       }
     },
-    "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj": {
+    "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj",
+        "projectUniqueName": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj",
         "projectName": "e-trade-api.domain",
-        "projectPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj",
+        "projectPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj",
         "packagesPath": "C:\\Users\\umutt\\.nuget\\packages\\",
-        "outputPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\obj\\",
+        "outputPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\umutt\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -162,14 +162,14 @@
         }
       }
     },
-    "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.SignalR\\e-trade-api.SignalR.csproj": {
+    "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.SignalR\\e-trade-api.SignalR.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.SignalR\\e-trade-api.SignalR.csproj",
+        "projectUniqueName": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.SignalR\\e-trade-api.SignalR.csproj",
         "projectName": "e-trade-api.SignalR",
-        "projectPath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.SignalR\\e-trade-api.SignalR.csproj",
+        "projectPath": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.SignalR\\e-trade-api.SignalR.csproj",
         "packagesPath": "C:\\Users\\umutt\\.nuget\\packages\\",
-        "outputPath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.SignalR\\obj\\",
+        "outputPath": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.SignalR\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\umutt\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -186,8 +186,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj": {
-                "projectPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj"
+              "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj": {
+                "projectPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj"
               }
             }
           }

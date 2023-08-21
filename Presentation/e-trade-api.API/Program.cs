@@ -17,8 +17,6 @@ builder.Services.AddApplicationServices();
 builder.Services.AddSignalRServices();
 builder.Services.AddControllers();
 
-// builder.Services.AddStorage<LocalStorage>();
-
 builder.Services.AddStorage<AzureStorage>();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -55,7 +53,11 @@ builder.Services.AddCors(
         options.AddDefaultPolicy(
             policy =>
                 policy
-                    .WithOrigins("http://localhost:4200", "https://localhost:4200")
+                    .WithOrigins(
+                        "http://localhost:4200",
+                        "https://localhost:4200",
+                        "https://mini-e-trade.azurewebsites.net"
+                    )
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials()
@@ -64,6 +66,11 @@ builder.Services.AddCors(
 
 builder.Services.AddControllers();
 builder.Services.AddValidationsServices();
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<RolePermissionFilter>();
+});
 
 var app = builder.Build();
 

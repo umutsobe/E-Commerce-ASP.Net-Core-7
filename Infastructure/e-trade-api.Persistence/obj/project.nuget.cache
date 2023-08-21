@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Aj+i+2B9yiFD6mD1iD2alZF1mTSw93zlHt4IcHIfLChgE0nLHmCMNpAEcZQRGnuzQA3Pmib7exLdknpJl24ZFA==",
+  "dgSpecHash": "70ekjmvj8lit5jSeq2Klvcu88tmr2StwbKvIaUwPfc6j+Gebojshsq23ic60spoHO67CC/UtAaYIKeYzVcUegg==",
   "success": true,
-  "projectFilePath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj",
+  "projectFilePath": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\umutt\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",

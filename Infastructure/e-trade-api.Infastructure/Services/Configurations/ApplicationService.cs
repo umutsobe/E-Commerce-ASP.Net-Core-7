@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
@@ -82,7 +79,8 @@ namespace e_trade_api.Infrastructure
                                             ActionType = actionType,
                                             Definition = definition,
                                             HttpType = httpType,
-                                            Code = actionCode
+                                            Code = actionCode,
+                                            MenuName = menuName,
                                         };
 
                                         newMenu.Actions.Add(newAction);
@@ -95,7 +93,8 @@ namespace e_trade_api.Infrastructure
                                             ActionType = actionType,
                                             Definition = definition,
                                             HttpType = httpType,
-                                            Code = actionCode
+                                            Code = actionCode,
+                                            MenuName = menuName,
                                         };
 
                                         existingMenu.Actions.Add(newAction);

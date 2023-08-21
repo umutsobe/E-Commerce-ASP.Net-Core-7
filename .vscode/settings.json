@@ -1,3 +1,4 @@
 {
-  "dotnet.defaultSolution": "e-trade-api.sln"
+  "dotnet.defaultSolution": "e-trade-api.sln",
+  "appService.defaultWebAppToDeploy": "None"
 }

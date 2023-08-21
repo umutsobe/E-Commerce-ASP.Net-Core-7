@@ -2274,11 +2274,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj",
+      "projectUniqueName": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj",
       "projectName": "e-trade-api.application",
-      "projectPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj",
+      "projectPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj",
       "packagesPath": "C:\\Users\\umutt\\.nuget\\packages\\",
-      "outputPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\obj\\",
+      "outputPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\umutt\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -2295,8 +2295,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj": {
-              "projectPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj"
+            "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj": {
+              "projectPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj"
             }
           }
         }

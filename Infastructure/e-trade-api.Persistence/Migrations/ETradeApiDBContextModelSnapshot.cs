@@ -351,7 +351,7 @@ namespace e_trade_api.Persistence.Migrations
                     b.Property<string>("HttpType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("MenuId")
+                    b.Property<Guid>("MenuId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -673,7 +673,9 @@ namespace e_trade_api.Persistence.Migrations
                 {
                     b.HasOne("e_trade_api.domain.Menu", "Menu")
                         .WithMany("Endpoints")
-                        .HasForeignKey("MenuId");
+                        .HasForeignKey("MenuId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Menu");
                 });
