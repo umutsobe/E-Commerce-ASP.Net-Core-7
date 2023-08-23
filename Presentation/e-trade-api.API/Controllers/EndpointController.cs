@@ -32,69 +32,67 @@ public class EndpointController : ControllerBase
         _endpointWriteRepository = endpointWriteRepository;
     }
 
-    [HttpGet("[action]")]
-    public async Task<IActionResult> SetMenu()
+    public async Task SetMenu() //okey
     {
-        List<Menu> _menus = await _menuReadRepository.Table.ToListAsync(); //tüm menuleri siliyoruz
+        List<Menu> databaseMenus = await _menuReadRepository.Table.ToListAsync(); //database'teki menüleri aldık
 
-        if (_menus != null)
-        {
-            _menuWriteRepository.RemoveRange(_menus);
-            await _menuWriteRepository.SaveAsync(); //sildik
-        }
-
-        List<MenuDTO> menus = _applicationService.GetAuthorizeDefinitionEndpoints(typeof(Program));
+        List<MenuDTO> menus = _applicationService.GetAuthorizeDefinitionEndpoints(typeof(Program)); //programdaki menüleri aldık
 
         foreach (MenuDTO menu in menus)
         {
-            Menu _menu = new() { Name = menu.Name, Id = Guid.NewGuid() };
-            await _menuWriteRepository.AddAsync(_menu);
+            if (databaseMenus.FirstOrDefault(m => m.Name == menu.Name) == null) //eğer  programdan aldığımız menü adında database'de bir menü bulunmuyorsa o menüyü ekle
+            {
+                Menu _menu = new() { Name = menu.Name, Id = Guid.NewGuid() };
+                await _menuWriteRepository.AddAsync(_menu);
+            }
         }
-        await _menuWriteRepository.SaveAsync();
 
-        return Ok();
+        await _menuWriteRepository.SaveAsync();
     }
 
-    [HttpGet("[action]")]
-    public async Task<IActionResult> SetEndpoint()
+    public async Task SetEndpoint()
     {
-        List<Endpoint> endpoints = await _endpointReadRepository.Table.ToListAsync(); //tüm endpointleri siliyoruz
+        List<Endpoint> databaseEndpoints = await _endpointReadRepository.Table.ToListAsync(); //database'teki endpointleri aldık
 
-        if (endpoints != null)
-        {
-            _endpointWriteRepository.RemoveRange(endpoints);
-
-            await _endpointWriteRepository.SaveAsync(); //sildik
-        }
-
-        List<MenuDTO> menus = _applicationService.GetAuthorizeDefinitionEndpoints(typeof(Program));
+        List<MenuDTO> menus = _applicationService.GetAuthorizeDefinitionEndpoints(typeof(Program)); //programdaki endpointleri aldık
 
         foreach (MenuDTO menu in menus)
         {
             foreach (Action action in menu.Actions)
             {
-                Menu? _menu = await _menuReadRepository.Table
-                    .Where(m => m.Name == action.MenuName)
-                    .FirstOrDefaultAsync();
-
-                if (_menu != null)
+                if (databaseEndpoints.FirstOrDefault(e => e.Code == action.Code) == null) //eğer bu endpoint koduna ait bir kod bulunmuyorsa yeni bir endpoint oluşturuyoruz
                 {
-                    Endpoint endpoint =
-                        new()
-                        {
-                            ActionType = action.ActionType,
-                            Code = action.Code,
-                            Definition = action.Definition,
-                            Id = Guid.NewGuid(),
-                            HttpType = action.HttpType,
-                            MenuId = _menu.Id
-                        };
+                    Menu? _menu = await _menuReadRepository.Table
+                        .Where(m => m.Name == action.MenuName)
+                        .FirstOrDefaultAsync();
 
-                    await _endpointWriteRepository.AddAsync(endpoint);
+                    if (_menu != null)
+                    {
+                        Endpoint endpoint =
+                            new()
+                            {
+                                ActionType = action.ActionType,
+                                Code = action.Code,
+                                Definition = action.Definition,
+                                Id = Guid.NewGuid(),
+                                HttpType = action.HttpType,
+                                MenuId = _menu.Id
+                            };
+
+                        await _endpointWriteRepository.AddAsync(endpoint);
+                    }
                 }
             }
         }
         await _endpointWriteRepository.SaveAsync();
+    }
+
+    [HttpGet("[action]")]
+    public async Task<ActionResult> UpdateMenusAndEndpoints()
+    {
+        await SetMenu();
+        await SetEndpoint();
+
         return Ok();
     }
 }
