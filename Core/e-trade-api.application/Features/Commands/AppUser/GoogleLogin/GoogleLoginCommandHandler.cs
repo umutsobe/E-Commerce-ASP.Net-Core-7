@@ -74,6 +74,11 @@ public class GoogleLoginCommandHandler
                 new UserLoginInfo(request.Provider, payload.Subject, request.Provider)
             );
 
+            IList<string> userRoles = await _userManager.GetRolesAsync(user);
+            
+            if(userRoles.Count == 0)
+            await _userManager.AddToRoleAsync(user,"normalUser");
+
             Token token = await _tokenHandler.CreateAccessToken(180, userId.ToString());
 
             return new GoogleLoginCommandResponse { Token = token };

@@ -35,10 +35,10 @@ builder.Services
                 ValidateIssuer = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidAudience = builder.Configuration["Token:Audience"],
-                ValidIssuer = builder.Configuration["Token:Issuer"],
+                ValidAudience = MyConfigurationManager.GetTokenModel().Audience,
+                ValidIssuer = MyConfigurationManager.GetTokenModel().Issuer,
                 IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"])
+                    Encoding.UTF8.GetBytes(MyConfigurationManager.GetTokenModel().SecurityKey)
                 ),
                 //LifetimeValidator'ı neden oluşturduk. çünkü authorize olduktan sonra expiration date geçse dahi admin panelinde sayfayı yenilemeden route veya http istekleri yaptığımızda bu istekler karşılanıyordu. onun için expired olduktan sonra client artık backende erişemeyecek 401 authorize hatası alacak
                 LifetimeValidator = (notBefore, expires, securityToken, validationParameters) =>
@@ -53,11 +53,7 @@ builder.Services.AddCors(
         options.AddDefaultPolicy(
             policy =>
                 policy
-                    .WithOrigins(
-                        "http://localhost:4200",
-                        "https://localhost:4200",
-                        "https://mini-e-trade.azurewebsites.net"
-                    )
+                    .WithOrigins(MyConfigurationManager.GetClientUrl())
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials()

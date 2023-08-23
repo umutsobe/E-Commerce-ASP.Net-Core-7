@@ -2,7 +2,6 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using e_trade_api.application;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 
 namespace e_trade_api.Infastructure;
 
@@ -11,9 +10,9 @@ public class AzureStorage : IAzureStorage
     readonly BlobServiceClient _blobServiceClient; //hesaba bağlanırken
     BlobContainerClient _blobContainerClient; // hesapta dosya işlemleri için
 
-    public AzureStorage(IConfiguration configuration)
+    public AzureStorage()
     {
-        _blobServiceClient = new(configuration["Storage:Azure"]);
+        _blobServiceClient = new(MyConfigurationManager.GetAzureStorageConnectionString());
     }
 
     public async Task DeleteAsync(string containerName, string fileName)

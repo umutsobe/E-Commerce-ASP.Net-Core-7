@@ -27,9 +27,6 @@ namespace e_trade_api.Persistence
                 .AddEntityFrameworkStores<ETradeApiDBContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddScoped<ICustomerReadRepository, CustomerReadRepository>();
-            services.AddScoped<ICustomerWriteRepository, CustomerWriteRepository>();
-
             services.AddScoped<IOrderReadRepository, OrderReadRepository>();
             services.AddScoped<IOrderWriteRepository, OrderWriteRepository>();
 

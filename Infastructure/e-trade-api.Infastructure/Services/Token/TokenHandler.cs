@@ -11,17 +11,11 @@ namespace e_trade_api.Infastructure;
 
 public class TokenHandler : ITokenHandler
 {
-    readonly IConfiguration _configuration;
     readonly IBasketService _basketService;
     readonly UserManager<AppUser> _userManager;
 
-    public TokenHandler(
-        IConfiguration configuration,
-        IBasketService basketService,
-        UserManager<AppUser> userManager
-    )
+    public TokenHandler(IBasketService basketService, UserManager<AppUser> userManager)
     {
-        _configuration = configuration;
         _basketService = basketService;
         _userManager = userManager;
     }
@@ -32,7 +26,7 @@ public class TokenHandler : ITokenHandler
 
         //Security Key'in simetriğini alıyoruz.
         SymmetricSecurityKey securityKey =
-            new(Encoding.UTF8.GetBytes(_configuration["Token:SecurityKey"]));
+            new(Encoding.UTF8.GetBytes(MyConfigurationManager.GetTokenModel().SecurityKey));
 
         //Şifrelenmiş kimliği oluşturuyoruz.
         SigningCredentials signingCredentials = new(securityKey, SecurityAlgorithms.HmacSha256);
@@ -45,12 +39,18 @@ public class TokenHandler : ITokenHandler
         AppUser user = await _userManager.FindByIdAsync(userId);
 
         string basketId = await _basketService.GetBasketId(userId);
+
+        IList<string> roles = await _userManager.GetRolesAsync(user);
+        List<string> rolesList = new(roles);
+        string roleName = rolesList.FirstOrDefault();
+
         Claim basketIdClaim = new("basketId", basketId);
+        Claim roleNameClaim = new("roleName", roleName);
 
         JwtSecurityToken securityToken =
             new(
-                audience: _configuration["Token:Audience"],
-                issuer: _configuration["Token:Issuer"],
+                audience: MyConfigurationManager.GetTokenModel().Audience,
+                issuer: MyConfigurationManager.GetTokenModel().Issuer,
                 expires: token.Expiration,
                 notBefore: DateTime.UtcNow,
                 signingCredentials: signingCredentials,
@@ -58,6 +58,7 @@ public class TokenHandler : ITokenHandler
                 {
                     userIdClaim,
                     basketIdClaim,
+                    roleNameClaim,
                     new(ClaimTypes.Name, user.UserName)
                 }
             );

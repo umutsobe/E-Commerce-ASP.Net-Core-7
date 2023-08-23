@@ -23,13 +23,54 @@ public static class MyConfigurationManager
         }
     }
 
-    public static string GetClientUrl()
+    public static string GetClientUrl() //ok
     {
         return ConfigurationManager().GetSection("AngularClientUrl").Get<string>();
     }
 
-    public static string GetConnectionString()
+    public static string GetConnectionString() //ok
     {
         return ConfigurationManager().GetSection("ConnectionStrings:SqlServer").Get<string>();
     }
+
+    public static string GetAzureStorageConnectionString() //ok
+    {
+        return ConfigurationManager().GetSection("Storage:Azure").Get<string>();
+    }
+
+    public static string GetBaseAzureStorageUrl()
+    {
+        return ConfigurationManager().GetSection("BaseStorageUrl").Get<string>();
+    }
+
+    public static MailConfiguraiton GetMailModel() //ok
+    {
+        return ConfigurationManager().GetSection("Mail").Get<MailConfiguraiton>();
+    }
+
+    public static TokenConfiguration GetTokenModel() //ok
+    {
+        return ConfigurationManager().GetSection("Token").Get<TokenConfiguration>();
+    }
+}
+
+// GetAzureStorageConnectionString
+// GetBaseAzureStorageUrl
+// GetMailModel
+// GetTokenModel
+
+public class MailConfiguraiton
+{
+    public string Username { get; set; }
+    public string Password { get; set; }
+    public string Host { get; set; }
+    public int Port { get; set; }
+    public string EmailHeader { get; set; }
+}
+
+public class TokenConfiguration
+{
+    public string Audience { get; set; }
+    public string Issuer { get; set; }
+    public string SecurityKey { get; set; }
 }

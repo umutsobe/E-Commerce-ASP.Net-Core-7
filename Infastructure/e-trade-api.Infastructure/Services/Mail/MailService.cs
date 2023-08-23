@@ -8,13 +8,6 @@ namespace e_trade_api.Infastructure;
 
 public class MailService : IMailService
 {
-    readonly IConfiguration _configuration;
-
-    public MailService(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-
     public async Task SendMailAsync(string to, string subject, string body, bool isBodyHtml = true)
     {
         await SendMailAsync(new[] { to }, subject, body, isBodyHtml);
@@ -34,19 +27,19 @@ public class MailService : IMailService
         mail.Subject = subject;
         mail.Body = body;
         mail.From = new(
-            _configuration["Mail:Username"],
-            "Sobe E Ticaret",
+            MyConfigurationManager.GetMailModel().Username,
+            MyConfigurationManager.GetMailModel().EmailHeader,
             System.Text.Encoding.UTF8
         );
 
         SmtpClient smtp = new();
         smtp.Credentials = new NetworkCredential(
-            _configuration["Mail:Username"],
-            _configuration["Mail:Password"]
+            MyConfigurationManager.GetMailModel().Username,
+            MyConfigurationManager.GetMailModel().Password
         );
-        smtp.Port = 587;
+        smtp.Port = MyConfigurationManager.GetMailModel().Port;
         smtp.EnableSsl = true;
-        smtp.Host = _configuration["Mail:Host"];
+        smtp.Host = MyConfigurationManager.GetMailModel().Host;
         await smtp.SendMailAsync(mail);
     }
 

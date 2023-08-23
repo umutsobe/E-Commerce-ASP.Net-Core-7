@@ -9,11 +9,14 @@ public class CreateUserCommandHandle
 {
     readonly UserManager<AppUser> _userManager; //repository işlevi gören usermanager
     readonly IBasketService _basketService;
+    readonly RoleManager<AppRole> _roleManager;
 
-    public CreateUserCommandHandle(UserManager<AppUser> userManager, IBasketService basketService)
+    public CreateUserCommandHandle(UserManager<AppUser> userManager, IBasketService basketService, RoleManager<AppRole> roleManager)
     {
         _userManager = userManager;
         _basketService = basketService;
+        _roleManager = roleManager;
+
     }
 
     public async Task<CreateUserCommandResponse> Handle(
@@ -33,9 +36,28 @@ public class CreateUserCommandHandle
 
         bool basketResult = await _basketService.CreateBasket(user.Id.ToString());
 
+        IdentityResult roleResult = new();
+        
+        if(user.UserName == "umutsobe"){
+
+            await _roleManager.CreateAsync(new(){
+                Id=Guid.NewGuid().ToString(),
+                Name = "admin"
+            });
+
+            await _roleManager.CreateAsync(new(){
+                Id=Guid.NewGuid().ToString(),
+                Name = "normalUser"
+            });
+
+            await _userManager.AddToRoleAsync(user, "admin");
+        }
+        else
+            roleResult = await _userManager.AddToRoleAsync(user, "normalUser");
+
         CreateUserCommandResponse response = new CreateUserCommandResponse();
 
-        if (userResult.Succeeded && basketResult)
+        if (userResult.Succeeded && basketResult && roleResult.Succeeded)
         {
             response.Succeeded = true;
             response.Message = "Kullanıcı Başarıyla Oluşturulmuştur";
