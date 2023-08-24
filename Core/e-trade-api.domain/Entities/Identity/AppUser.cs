@@ -8,4 +8,5 @@ public class AppUser : IdentityUser<string>
     public string Name { get; set; }
     public Basket Basket { get; set; }
     public ICollection<Order> Orders { get; set; }
+    public ICollection<Adress> Adresses { get; set; }
 }

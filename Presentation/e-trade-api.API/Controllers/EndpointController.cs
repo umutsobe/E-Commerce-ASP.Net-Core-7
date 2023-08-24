@@ -1,5 +1,6 @@
 using e_trade_api.application;
 using e_trade_api.domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Action = e_trade_api.application.Action;
@@ -32,8 +33,17 @@ public class EndpointController : ControllerBase
         _endpointWriteRepository = endpointWriteRepository;
     }
 
-    public async Task SetMenu() //okey
+    [HttpGet("[action]")]
+    [Authorize(AuthenticationSchemes = "Admin")]
+    [AuthorizeDefinition(
+        Menu = "Endpoint",
+        ActionType = ActionType.Updating,
+        Definition = "Update All Menus And Endpoints"
+    )]
+    public async Task<ActionResult> UpdateMenusAndEndpoints()
     {
+        ////////////// menu set
+
         List<Menu> databaseMenus = await _menuReadRepository.Table.ToListAsync(); //database'teki menüleri aldık
 
         List<MenuDTO> menus = _applicationService.GetAuthorizeDefinitionEndpoints(typeof(Program)); //programdaki menüleri aldık
@@ -48,13 +58,10 @@ public class EndpointController : ControllerBase
         }
 
         await _menuWriteRepository.SaveAsync();
-    }
 
-    public async Task SetEndpoint()
-    {
+        ////////////// endpoint set
+
         List<Endpoint> databaseEndpoints = await _endpointReadRepository.Table.ToListAsync(); //database'teki endpointleri aldık
-
-        List<MenuDTO> menus = _applicationService.GetAuthorizeDefinitionEndpoints(typeof(Program)); //programdaki endpointleri aldık
 
         foreach (MenuDTO menu in menus)
         {
@@ -85,13 +92,6 @@ public class EndpointController : ControllerBase
             }
         }
         await _endpointWriteRepository.SaveAsync();
-    }
-
-    [HttpGet("[action]")]
-    public async Task<ActionResult> UpdateMenusAndEndpoints()
-    {
-        await SetMenu();
-        await SetEndpoint();
 
         return Ok();
     }
