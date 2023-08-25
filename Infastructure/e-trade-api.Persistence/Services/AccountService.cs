@@ -11,6 +11,8 @@ public class AccountService : IAccountService
     readonly UserManager<AppUser> _userManager;
     readonly SignInManager<AppUser> _signInManager;
     readonly ITokenHandler _tokenHandler;
+    readonly IAddressWriteRepository _addressWriteRepository;
+    readonly IAddressReadRepository _addressReadRepository;
 
     readonly IOrderReadRepository _orderReadRepository;
 
@@ -18,13 +20,17 @@ public class AccountService : IAccountService
         UserManager<AppUser> userManager,
         IOrderReadRepository orderReadRepository,
         SignInManager<AppUser> signInManager,
-        ITokenHandler tokenHandler
+        ITokenHandler tokenHandler,
+        IAddressWriteRepository addressWriteRepository,
+        IAddressReadRepository addressReadRepository
     )
     {
         _userManager = userManager;
         _orderReadRepository = orderReadRepository;
         _signInManager = signInManager;
         _tokenHandler = tokenHandler;
+        _addressWriteRepository = addressWriteRepository;
+        _addressReadRepository = addressReadRepository;
     }
 
     public async Task<ListUserDetailsDTO> GetUserDetails(string userId)
@@ -133,5 +139,62 @@ public class AccountService : IAccountService
         }
 
         throw new Exception("Bir sorunla karşılaşıldı.");
+    }
+
+    public async Task AddUserAddress(CreateUserAddress model)
+    {
+        AppUser appUser = await _userManager.FindByIdAsync(model.UserId);
+
+        if (appUser != null)
+        {
+            Adress adress =
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = appUser.Id,
+                    Definition = model.Definition,
+                    FullAdress = model.Address,
+                };
+
+            await _addressWriteRepository.AddAsync(adress);
+
+            await _addressWriteRepository.SaveAsync();
+        }
+    }
+
+    public async Task<List<GetUserAddress>> GetUserAddresses(string userId)
+    {
+        List<Adress> databaseAdresses = await _addressReadRepository.Table
+            .Where(a => a.UserId == userId)
+            .ToListAsync();
+
+        List<GetUserAddress> addressesDto = new();
+
+        foreach (var databaseAddress in databaseAdresses)
+        {
+            GetUserAddress adressDto =
+                new()
+                {
+                    Id = databaseAddress.Id.ToString(),
+                    Address = databaseAddress.FullAdress,
+                    Definition = databaseAddress.Definition
+                };
+
+            addressesDto.Add(adressDto);
+        }
+
+        return addressesDto;
+    }
+
+    public async Task DeleteUserAdsress(string addressId)
+    {
+        Adress adress = await _addressReadRepository.GetByIdAsync(addressId);
+
+        if (adress != null)
+        {
+            await _addressWriteRepository.RemoveAsync(adress.Id.ToString());
+
+            await _addressWriteRepository.SaveAsync();
+        }
     }
 }

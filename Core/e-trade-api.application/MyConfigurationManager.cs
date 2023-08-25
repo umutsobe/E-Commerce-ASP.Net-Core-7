@@ -2,13 +2,22 @@ using Microsoft.Extensions.Configuration;
 
 namespace e_trade_api.application;
 
+public enum Status
+{
+    Development,
+    Production,
+    UpdateServerOnLocal
+}
+
 public static class MyConfigurationManager
 {
     public static ConfigurationManager ConfigurationManager()
     {
         ConfigurationManager configurationManager = new();
 
-        try //burada hata alırsak catch bloğuna git. publishteyken hata alabiliriz çünkü orada her şey aynı dizinde. buradaki dizin işleminde hata alacağız. burada hata almıyorsak development sürecindeyizdir zaten
+        Status projectStatus = Status.Development;
+
+        if (projectStatus == Status.Development)
         {
             configurationManager.SetBasePath(
                 Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/e-trade-api.API")
@@ -16,11 +25,21 @@ public static class MyConfigurationManager
             configurationManager.AddJsonFile("appsettings.json");
             return configurationManager;
         }
-        catch //yukarıda hata alıyorsak publishdeyizdir zaten
+        else if (projectStatus == Status.UpdateServerOnLocal)
+        {
+            configurationManager.SetBasePath(
+                Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/e-trade-api.API")
+            );
+            configurationManager.AddJsonFile("appsettings.Production.json");
+            return configurationManager;
+        }
+        else if (projectStatus == Status.Production)
         {
             configurationManager.AddJsonFile("appsettings.Production.json");
             return configurationManager;
         }
+
+        throw new Exception("MyConfigurationManager uzerinde hata");
     }
 
     public static string GetClientUrl() //ok

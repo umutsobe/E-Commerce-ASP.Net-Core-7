@@ -41,6 +41,7 @@ public class TokenHandler : ITokenHandler
         string basketId = await _basketService.GetBasketId(userId);
 
         IList<string> roles = await _userManager.GetRolesAsync(user);
+
         List<string> rolesList = new(roles);
         string roleName = rolesList.FirstOrDefault();
 

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj": {}
+    "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj": {}
   },
   "projects": {
-    "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj": {
+    "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj",
+        "projectUniqueName": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj",
         "projectName": "e-trade-api.domain",
-        "projectPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj",
+        "projectPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj",
         "packagesPath": "C:\\Users\\umutt\\.nuget\\packages\\",
-        "outputPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\obj\\",
+        "outputPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\umutt\\AppData\\Roaming\\NuGet\\NuGet.Config"

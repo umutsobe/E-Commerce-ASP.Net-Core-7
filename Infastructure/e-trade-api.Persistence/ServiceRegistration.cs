@@ -67,6 +67,9 @@ namespace e_trade_api.Persistence
 
             services.AddScoped<IAuthorizationEndpointService, AuthorizationEndpointService>();
             services.AddScoped<IAccountService, AccountService>();
+
+            services.AddScoped<IAddressReadRepository, AddressReadRepository>();
+            services.AddScoped<IAddressWriteRepository, AddressWriteRepository>();
         }
     }
 }

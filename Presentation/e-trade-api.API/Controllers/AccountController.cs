@@ -81,4 +81,46 @@ public class AccountController : ControllerBase
         token.Expiration = DateTime.Now;
         return Ok(token);
     }
+
+    [Authorize(AuthenticationSchemes = "Admin")]
+    [AuthorizeDefinition(
+        Menu = "Account",
+        ActionType = ActionType.Writing,
+        Definition = "Add User Address"
+    )]
+    [HttpPost("[action]")]
+    public async Task<IActionResult> AddUserAddress([FromBody] CreateUserAddress model) //ok
+    {
+        await _accountService.AddUserAddress(model);
+
+        return Ok();
+    }
+
+    [Authorize(AuthenticationSchemes = "Admin")]
+    [AuthorizeDefinition(
+        Menu = "Account",
+        ActionType = ActionType.Reading,
+        Definition = "Get User Addresess"
+    )]
+    [HttpGet("[action]/{userId}")]
+    public async Task<IActionResult> GetUserAddresses([FromRoute] string userId)
+    {
+        List<GetUserAddress> response = await _accountService.GetUserAddresses(userId);
+
+        return Ok(response);
+    }
+
+    [Authorize(AuthenticationSchemes = "Admin")]
+    [AuthorizeDefinition(
+        Menu = "Account",
+        ActionType = ActionType.Deleting,
+        Definition = "Delete User Address"
+    )]
+    [HttpDelete("[action]/{addressId}")]
+    public async Task<IActionResult> DeleteUserAdsress([FromRoute] string addressId)
+    {
+        await _accountService.DeleteUserAdsress(addressId);
+
+        return Ok();
+    }
 }
