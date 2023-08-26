@@ -8,16 +8,11 @@ using MediatR;
 public class CreateProductCommandHandler
     : IRequestHandler<CreateProductCommandRequest, CreateProductCommandResponse>
 {
-    readonly IProductWriteRepository _productWriteRepository;
-    readonly IProductHubServices _productHubServices;
+    readonly IProductService _productService;
 
-    public CreateProductCommandHandler(
-        IProductWriteRepository productWriteRepository,
-        IProductHubServices productHubServices
-    )
+    public CreateProductCommandHandler(IProductService productService)
     {
-        _productWriteRepository = productWriteRepository;
-        _productHubServices = productHubServices;
+        _productService = productService;
     }
 
     public async Task<CreateProductCommandResponse> Handle(
@@ -25,18 +20,15 @@ public class CreateProductCommandHandler
         CancellationToken cancellationToken
     )
     {
-        await _productWriteRepository.AddAsync(
-            new Product()
+        await _productService.CreateProduct(
+            new()
             {
                 Name = request.Name,
                 Price = request.Price,
-                Stock = request.Stock
+                Stock = request.Stock,
             }
         );
-        await _productWriteRepository.SaveAsync();
-        await _productHubServices.ProductAddedMessageAsync(
-            $"{request.Name} isminde bir ürün eklenmiştir!!"
-        );
+
         return new();
     }
 }

@@ -2,19 +2,22 @@ using MediatR;
 
 namespace e_trade_api.application;
 
-public class DeleteProductByIdCommandHandler : IRequestHandler<DeleteProductByIdCommandRequest, DeleteProductByIdCommandResponse>
+public class DeleteProductByIdCommandHandler
+    : IRequestHandler<DeleteProductByIdCommandRequest, DeleteProductByIdCommandResponse>
 {
-    readonly IProductWriteRepository _productWriteRepository;
+    readonly IProductService _productService;
 
-    public DeleteProductByIdCommandHandler(IProductWriteRepository productWriteRepository)
+    public DeleteProductByIdCommandHandler(IProductService productService)
     {
-        _productWriteRepository = productWriteRepository;
+        _productService = productService;
     }
 
-    public async Task<DeleteProductByIdCommandResponse> Handle(DeleteProductByIdCommandRequest request, CancellationToken cancellationToken)
+    public async Task<DeleteProductByIdCommandResponse> Handle(
+        DeleteProductByIdCommandRequest request,
+        CancellationToken cancellationToken
+    )
     {
-        await _productWriteRepository.RemoveAsync(request.Id);
-        await _productWriteRepository.SaveAsync();
+        await _productService.DeleteProductById(request.Id);
 
         return new();
     }

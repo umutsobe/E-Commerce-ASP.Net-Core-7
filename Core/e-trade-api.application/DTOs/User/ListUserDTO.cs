@@ -1,6 +1,6 @@
 namespace e_trade_api.application;
 
-public class ListUser
+public class ListUserDTO
 {
     public string Id { get; set; }
     public string Email { get; set; }

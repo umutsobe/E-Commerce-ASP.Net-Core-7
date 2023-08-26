@@ -6,43 +6,26 @@ using Microsoft.EntityFrameworkCore;
 public class GetAllProductQueryHandler
     : IRequestHandler<GetAllProductQueryRequest, GetAllProductQueryResponse>
 {
-    readonly IProductReadRepository _productReadRepository;
+    readonly IProductService _productService;
 
-    public GetAllProductQueryHandler(IProductReadRepository productReadRepository)
+    public GetAllProductQueryHandler(IProductService productService)
     {
-        _productReadRepository = productReadRepository;
+        _productService = productService;
     }
 
-    public Task<GetAllProductQueryResponse> Handle(
+    public async Task<GetAllProductQueryResponse> Handle(
         GetAllProductQueryRequest request,
         CancellationToken cancellationToken
     )
     {
-        var totalProductCount = _productReadRepository.GetAll(false).Count();
+        GetAllProductsResponseDTO responseDTO = await _productService.GetAllProducts(
+            new() { Page = request.Page, Size = request.Size, }
+        );
 
-        var products = _productReadRepository
-            .GetAll(false)
-            .Skip(request.Page * request.Size)
-            .Take(request.Size)
-            .Include(p => p.ProductImageFiles)
-            .Select(
-                p =>
-                    new
-                    {
-                        p.Id,
-                        p.Name,
-                        p.Stock,
-                        p.Price,
-                        p.CreatedDate,
-                        p.UpdatedDate,
-                        p.ProductImageFiles
-                    }
-            )
-            .ToList();
-
-        GetAllProductQueryResponse response =
-            new() { TotalProductCount = totalProductCount, Products = products };
-
-        return Task.FromResult(response);
+        return new()
+        {
+            Products = responseDTO.Products,
+            TotalProductCount = responseDTO.TotalProductCount,
+        };
     }
 }

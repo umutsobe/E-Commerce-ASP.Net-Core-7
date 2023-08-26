@@ -5,21 +5,25 @@ namespace e_trade_api.application;
 
 public class GetByIdQueryHandler : IRequestHandler<GetByIdQueryRequest, GetByIdQueryResponse>
 {
-    readonly IProductReadRepository _productReadRepository;
+    readonly IProductService _productService;
 
-    public GetByIdQueryHandler(IProductReadRepository productReadRepository)
+    public GetByIdQueryHandler(IProductService productService)
     {
-        _productReadRepository = productReadRepository;
+        _productService = productService;
     }
 
-    public async Task<GetByIdQueryResponse> Handle(GetByIdQueryRequest request, CancellationToken cancellationToken)
+    public async Task<GetByIdQueryResponse> Handle(
+        GetByIdQueryRequest request,
+        CancellationToken cancellationToken
+    )
     {
-        Product product = await _productReadRepository.GetByIdAsync(request.Id, false);
+        GetProductByIdDTO productDTO = await _productService.GetProductById(request.Id);
+
         return new()
         {
-            Name = product.Name,
-            Price = product.Price,
-            Stock = product.Stock,
+            Name = productDTO.Name,
+            Price = productDTO.Price,
+            Stock = productDTO.Stock,
         };
     }
 }

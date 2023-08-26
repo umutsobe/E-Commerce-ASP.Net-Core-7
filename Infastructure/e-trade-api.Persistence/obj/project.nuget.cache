@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "v+5SJ6XeE9zy7kF4hpXkaS+77VtxKIRJgnHj9vceTxRdEWUpG5MOxWB2miYNsw0vnFbnHA2qLv/5sbPDnPed/w==",
+  "dgSpecHash": "CmhFGPDsx4qeuyQY6pMDDWkfTh6HFhJoaKd5wlzb6431OZ1sk+Tc96Ly9+3Exo8KGE03VW4A94DAqgWQqNwoWA==",
   "success": true,
-  "projectFilePath": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj",
+  "projectFilePath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation\\11.6.0\\fluentvalidation.11.6.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",

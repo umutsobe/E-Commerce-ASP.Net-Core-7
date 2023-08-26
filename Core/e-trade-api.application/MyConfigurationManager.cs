@@ -2,22 +2,15 @@ using Microsoft.Extensions.Configuration;
 
 namespace e_trade_api.application;
 
-public enum Status
-{
-    Development,
-    Production,
-    UpdateServerOnLocal
-}
-
 public static class MyConfigurationManager
 {
     public static ConfigurationManager ConfigurationManager()
     {
         ConfigurationManager configurationManager = new();
 
-        Status projectStatus = Status.Development;
+        ProjectStatus projectStatus = ProjectStatus.Development;
 
-        if (projectStatus == Status.Development)
+        if (projectStatus == ProjectStatus.Development)
         {
             configurationManager.SetBasePath(
                 Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/e-trade-api.API")
@@ -25,7 +18,7 @@ public static class MyConfigurationManager
             configurationManager.AddJsonFile("appsettings.json");
             return configurationManager;
         }
-        else if (projectStatus == Status.UpdateServerOnLocal)
+        else if (projectStatus == ProjectStatus.UpdateServerOnLocal)
         {
             configurationManager.SetBasePath(
                 Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/e-trade-api.API")
@@ -33,7 +26,7 @@ public static class MyConfigurationManager
             configurationManager.AddJsonFile("appsettings.Production.json");
             return configurationManager;
         }
-        else if (projectStatus == Status.Production)
+        else if (projectStatus == ProjectStatus.Production)
         {
             configurationManager.AddJsonFile("appsettings.Production.json");
             return configurationManager;
