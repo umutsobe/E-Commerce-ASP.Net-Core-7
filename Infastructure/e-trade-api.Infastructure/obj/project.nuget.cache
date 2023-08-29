@@ -1,15 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "BZog98ztxcQtSX8YEgn72XQ6ogjotWhPs0rz0wZawgiALJXXNg/5K7cEfRLNGwbTcLYREcgxaq3SszsyoBesRA==",
+  "dgSpecHash": "Zg9Mo6kAVDz1x0iskaXaKaUC60aZGZoNrvftnqBr//EVfzpEzRuBnUIpUObqXLN9A6ZQRQnHdNru3xusFZIPlQ==",
   "success": true,
   "projectFilePath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\e-trade-api.Infastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\umutt\\.nuget\\packages\\azure.core\\1.33.0\\azure.core.1.33.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\azure.storage.blobs\\12.17.0\\azure.storage.blobs.12.17.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\azure.storage.common\\12.16.0\\azure.storage.common.12.16.0.nupkg.sha512",
-    "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation\\11.6.0\\fluentvalidation.11.6.0.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation\\11.7.1\\fluentvalidation.11.7.1.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
-    "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.6.0\\fluentvalidation.dependencyinjectionextensions.11.6.0.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.7.1\\fluentvalidation.dependencyinjectionextensions.11.7.1.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\google.apis\\1.61.0\\google.apis.1.61.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\google.apis.auth\\1.61.0\\google.apis.auth.1.61.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\google.apis.core\\1.61.0\\google.apis.core.1.61.0.nupkg.sha512",

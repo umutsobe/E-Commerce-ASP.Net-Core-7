@@ -49,7 +49,7 @@ namespace e_trade_api.Persistence.Migrations
 
                     b.HasIndex("ProductsId");
 
-                    b.ToTable("CategoryProduct");
+                    b.ToTable("ProductCategory", (string)null);
                 });
 
             modelBuilder.Entity("e_trade_api.domain.Adress", b =>
@@ -359,9 +359,6 @@ namespace e_trade_api.Persistence.Migrations
                     b.Property<float>("Price")
                         .HasColumnType("real");
 
-                    b.Property<float>("Star")
-                        .HasColumnType("real");
-
                     b.Property<int>("Stock")
                         .HasColumnType("int");
 
@@ -456,6 +453,39 @@ namespace e_trade_api.Persistence.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("OrderItems");
+                });
+
+            modelBuilder.Entity("e_trade_api.domain.ProductRating", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Star")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ProductRatings");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -716,6 +746,23 @@ namespace e_trade_api.Persistence.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("e_trade_api.domain.ProductRating", b =>
+                {
+                    b.HasOne("e_trade_api.domain.Entities.Product", "Product")
+                        .WithMany("ProductRatings")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("e_trade_api.domain.AppUser", "User")
+                        .WithMany("ProductRatings")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("e_trade_api.domain.AppRole", null)
@@ -789,6 +836,8 @@ namespace e_trade_api.Persistence.Migrations
                     b.Navigation("Basket");
 
                     b.Navigation("Orders");
+
+                    b.Navigation("ProductRatings");
                 });
 
             modelBuilder.Entity("e_trade_api.domain.Basket", b =>
@@ -808,6 +857,8 @@ namespace e_trade_api.Persistence.Migrations
                     b.Navigation("BasketItems");
 
                     b.Navigation("OrderItems");
+
+                    b.Navigation("ProductRatings");
                 });
 
             modelBuilder.Entity("e_trade_api.domain.Menu", b =>

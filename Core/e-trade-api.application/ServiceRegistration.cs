@@ -1,4 +1,5 @@
 using e_trade_api.domain;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -27,9 +27,12 @@ namespace e_trade_api.Persistence.Contexts
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Adress> Adresses { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<ProductRating> ProductRatings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) //migrationda bir şeyi değiştirmedi
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Order>().HasIndex(o => o.OrderCode).IsUnique();
 
             modelBuilder
@@ -38,7 +41,11 @@ namespace e_trade_api.Persistence.Contexts
                 .WithOne(c => c.Order)
                 .HasForeignKey<CompletedOrder>(c => c.OrderId);
 
-            base.OnModelCreating(modelBuilder);
+            modelBuilder
+                .Entity<Product>()
+                .HasMany(p => p.Categories) // Bir ürünün birden fazla kategorisi olabilir.
+                .WithMany(c => c.Products) // Bir kategorinin birden fazla ürünü olabilir.
+                .UsingEntity(j => j.ToTable("ProductCategory")); // Ara tablo adını belirtiyoruz.
         }
 
         public override async Task<int> SaveChangesAsync(

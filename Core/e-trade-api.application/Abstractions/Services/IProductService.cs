@@ -12,4 +12,9 @@ public interface IProductService
 
     public Task<GetAllProductsResponseDTO> GetAllProducts(GetAllProductRequestDTO model);
     public Task<GetProductByIdDTO> GetProductById(string Id);
+    Task AssignCategoryToProduct(AssignCategoryToProductRequestDTO model);
+    Task<GetAllProductsResponseDTO> GetProductsByCategory(GetAllProductByCategoryRequestDTO model);
+
+    Task<List<string>> GetCategoriesByProduct(string productId);
+    Task AddProductsToCategory(AddProductsToCategoryRequestDTO model);
 }

@@ -44,7 +44,7 @@
           "dependencies": {
             "FluentValidation": {
               "target": "Package",
-              "version": "[11.6.0, )"
+              "version": "[11.7.1, )"
             },
             "FluentValidation.AspNetCore": {
               "target": "Package",
@@ -52,7 +52,7 @@
             },
             "FluentValidation.DependencyInjectionExtensions": {
               "target": "Package",
-              "version": "[11.6.0, )"
+              "version": "[11.7.1, )"
             },
             "Google.Apis.Auth": {
               "target": "Package",

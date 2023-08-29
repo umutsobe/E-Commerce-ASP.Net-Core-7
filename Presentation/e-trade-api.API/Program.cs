@@ -23,6 +23,18 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<RolePermissionFilter>();
+});
+
+// .AddFluentValidation(
+//     configuration =>
+//         configuration.RegisterValidatorsFromAssemblyContaining<CreateProductValidator>()
+// );
+
+builder.Services.AddValidationsServices();
+
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(
@@ -59,14 +71,6 @@ builder.Services.AddCors(
                     .AllowCredentials()
         )
 );
-
-builder.Services.AddControllers();
-builder.Services.AddValidationsServices();
-
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<RolePermissionFilter>();
-});
 
 var app = builder.Build();
 

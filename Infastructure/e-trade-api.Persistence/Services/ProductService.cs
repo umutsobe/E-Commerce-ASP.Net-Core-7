@@ -1,4 +1,6 @@
+using System.Linq;
 using e_trade_api.application;
+using e_trade_api.domain;
 using e_trade_api.domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,18 +12,21 @@ public class ProductService : IProductService
     readonly IProductReadRepository _productReadRepository;
     readonly IProductWriteRepository _productWriteRepository;
     readonly IProductHubServices _productHubServices;
+    readonly ICategoryReadRepository _categoryReadRepository;
 
     public ProductService(
         IProductImageFileWriteRepository productImageFileWriteRepository,
         IProductReadRepository productReadRepository,
         IProductWriteRepository productWriteRepository,
-        IProductHubServices productHubServices
+        IProductHubServices productHubServices,
+        ICategoryReadRepository categoryReadRepository
     )
     {
         _productImageFileWriteRepository = productImageFileWriteRepository;
         _productReadRepository = productReadRepository;
         _productWriteRepository = productWriteRepository;
         _productHubServices = productHubServices;
+        _categoryReadRepository = categoryReadRepository;
     }
 
     //commands
@@ -48,12 +53,22 @@ public class ProductService : IProductService
 
     public async Task CreateProduct(CreateProductDTO model)
     {
+        Guid productId = Guid.NewGuid();
+
+        List<Category> categories = _categoryReadRepository.Table
+            .Where(c => model.CategoryNames.Contains(c.Name))
+            .ToList();
+
         await _productWriteRepository.AddAsync(
             new Product()
             {
+                Id = productId,
                 Name = model.Name,
                 Price = model.Price,
-                Stock = model.Stock
+                Stock = model.Stock,
+                Description = model.Description,
+                isActive = model.isActive,
+                Categories = categories
             }
         );
 
@@ -91,6 +106,7 @@ public class ProductService : IProductService
             .Skip(model.Page * model.Size)
             .Take(model.Size)
             .Include(p => p.ProductImageFiles)
+            .OrderBy(p => p.Name)
             .Select(
                 p =>
                     new
@@ -151,5 +167,123 @@ public class ProductService : IProductService
             Price = product.Price,
             Stock = product.Stock,
         };
+    }
+
+    //category
+    public async Task AssignCategoryToProduct(AssignCategoryToProductRequestDTO model)
+    {
+        var product = await _productReadRepository.Table
+            .Include(p => p.Categories)
+            .FirstOrDefaultAsync(p => p.Id == Guid.Parse(model.ProductId));
+
+        if (product != null)
+        {
+            product.Categories.Clear();
+
+            foreach (var categoryName in model.CategoryNames)
+            {
+                Category? category = await _categoryReadRepository.Table.FirstOrDefaultAsync(
+                    c => c.Name == categoryName
+                );
+
+                if (category != null)
+                    product.Categories.Add(category);
+            }
+
+            await _productWriteRepository.SaveAsync();
+        }
+        else
+        {
+            throw new Exception("Product Not Found");
+        }
+    }
+
+    public async Task<GetAllProductsResponseDTO> GetProductsByCategory(
+        GetAllProductByCategoryRequestDTO model
+    )
+    {
+        var query = _categoryReadRepository.Table
+            .Where(c => c.Name == model.CategoryName)
+            .Select(
+                c =>
+                    new GetAllProductsResponseDTO
+                    {
+                        TotalProductCount = c.Products.Count,
+                        Products = c.Products
+                            .OrderBy(p => p.Name) //  sıralama
+                            .Skip(model.Page * model.Size)
+                            .Take(model.Size)
+                            .Select(
+                                p =>
+                                    new ProductResponseDTO
+                                    {
+                                        Id = p.Id.ToString(),
+                                        Name = p.Name,
+                                        Stock = p.Stock,
+                                        Price = p.Price,
+                                        CreatedDate = p.CreatedDate,
+                                        UpdatedDate = p.UpdatedDate,
+                                        ProductImageFiles = p.ProductImageFiles, // Gerekirse bu kısmı doldurun
+                                    }
+                            )
+                            .ToList()
+                    }
+            );
+
+        var result = await query.FirstOrDefaultAsync();
+
+        if (result != null)
+        {
+            return result;
+        }
+        else
+        {
+            throw new Exception("Kategori bulunamadı.");
+        }
+    }
+
+    public async Task<List<string>> GetCategoriesByProduct(string productId)
+    {
+        var product = _productReadRepository.Table
+            .Include(p => p.Categories)
+            .FirstOrDefault(p => p.Id == Guid.Parse(productId));
+
+        if (product != null)
+        {
+            var categoriesForProduct = product.Categories.Select(c => c.Name).ToList();
+
+            return categoriesForProduct;
+        }
+        else
+        {
+            throw new Exception("Ürün bulunamadı.");
+        }
+    }
+
+    public async Task AddProductsToCategory(AddProductsToCategoryRequestDTO model) //ürün daha önce eklenmişse ürünü eklemiyor. sadece eklenmemiş ürünleri ekliyor
+    {
+        var category = await _categoryReadRepository.Table
+            .Include(c => c.Products)
+            .FirstOrDefaultAsync(c => c.Id == Guid.Parse(model.CategoryId));
+
+        if (category != null)
+        {
+            var productIds = model.Products.Select(p => Guid.Parse(p.ProductId)).ToList();
+
+            var productsToAdd = await _productReadRepository.Table
+                .Where(p => productIds.Contains(p.Id))
+                .ToListAsync();
+
+            foreach (var product in productsToAdd)
+            {
+                category.Products.Add(product);
+            }
+
+            await _productWriteRepository.SaveAsync();
+        }
+        else
+        {
+            throw new Exception("Kategori bulunamadı.");
+        }
     }
 }

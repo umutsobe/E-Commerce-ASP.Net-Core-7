@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "CmhFGPDsx4qeuyQY6pMDDWkfTh6HFhJoaKd5wlzb6431OZ1sk+Tc96Ly9+3Exo8KGE03VW4A94DAqgWQqNwoWA==",
+  "dgSpecHash": "Qmd3IvKxsveHVnLUY6YKl8Rbk1zb+hU4XGgrzUM0ut8e/Sd7/QGzSp68G6FrBm+T0xal6VrKbu+6m8ldAbxSoA==",
   "success": true,
   "projectFilePath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation\\11.6.0\\fluentvalidation.11.6.0.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation\\11.7.1\\fluentvalidation.11.7.1.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
-    "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.6.0\\fluentvalidation.dependencyinjectionextensions.11.6.0.nupkg.sha512",
+    "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.7.1\\fluentvalidation.dependencyinjectionextensions.11.7.1.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\google.apis\\1.61.0\\google.apis.1.61.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\google.apis.auth\\1.61.0\\google.apis.auth.1.61.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\google.apis.core\\1.61.0\\google.apis.core.1.61.0.nupkg.sha512",

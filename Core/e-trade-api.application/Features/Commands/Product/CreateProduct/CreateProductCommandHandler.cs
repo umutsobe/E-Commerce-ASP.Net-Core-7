@@ -26,6 +26,9 @@ public class CreateProductCommandHandler
                 Name = request.Name,
                 Price = request.Price,
                 Stock = request.Stock,
+                isActive = request.isActive,
+                CategoryNames = request.CategoryNames,
+                Description = request.Description,
             }
         );
 

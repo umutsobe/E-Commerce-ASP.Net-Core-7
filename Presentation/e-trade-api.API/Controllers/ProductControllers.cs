@@ -10,14 +10,16 @@ namespace e_trade_api.API;
 public class ProductControllers : ControllerBase
 {
     readonly IMediator _mediator;
+    readonly IProductService _productService;
 
-    public ProductControllers(IMediator mediator)
+    public ProductControllers(IMediator mediator, IProductService productService)
     {
         _mediator = mediator;
+        _productService = productService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Get(
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetAllProducts(
         [FromQuery] GetAllProductQueryRequest getAllProductQueryRequest
     ) // eğer api üzerinden bir şey geriye döndürüyorsak iactionresult döndürmek zorundayız
     {
@@ -25,36 +27,40 @@ public class ProductControllers : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("{Id}")]
-    public async Task<IActionResult> Get([FromRoute] GetByIdQueryRequest getByIdQueryRequest) // eğer api üzerinden bir şey geriye döndürüyorsak iactionresult döndürmek zorundayız
+    [HttpGet("[action]/{Id}")]
+    public async Task<IActionResult> GetProductById(
+        [FromRoute] GetByIdQueryRequest getByIdQueryRequest
+    ) // eğer api üzerinden bir şey geriye döndürüyorsak iactionresult döndürmek zorundayız
     {
         GetByIdQueryResponse response = await _mediator.Send(getByIdQueryRequest);
         return Ok(response);
     }
 
-    [HttpPost]
+    [HttpPost("[action]")]
     [Authorize(AuthenticationSchemes = "Admin")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Products,
         ActionType = ActionType.Writing,
         Definition = "Create Product"
     )]
-    public async Task<IActionResult> Post(CreateProductCommandRequest createProductCommandRequest)
+    public async Task<IActionResult> CreateProduct(
+        CreateProductCommandRequest createProductCommandRequest
+    )
     {
         CreateProductCommandResponse createProductCommandResponse = await _mediator.Send(
             createProductCommandRequest
         );
-        return StatusCode(201);
+        return Ok();
     }
 
-    [HttpPut]
+    [HttpPut("[action]")]
     [Authorize(AuthenticationSchemes = "Admin")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Products,
         ActionType = ActionType.Updating,
         Definition = "Update Product"
     )]
-    public async Task<IActionResult> Put(
+    public async Task<IActionResult> UpdateProduct(
         [FromBody] UpdateProductCommandRequest updateProductCommandRequest
     )
     {
@@ -63,14 +69,14 @@ public class ProductControllers : ControllerBase
         return Ok();
     }
 
-    [HttpDelete("{Id}")]
+    [HttpDelete("[action]/{Id}")]
     [Authorize(AuthenticationSchemes = "Admin")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Products,
         ActionType = ActionType.Deleting,
         Definition = "Delete Product"
     )]
-    public async Task<IActionResult> Delete(
+    public async Task<IActionResult> DeleteProductById(
         [FromRoute] DeleteProductByIdCommandRequest deleteProductByIdCommandRequest
     )
     {
@@ -88,7 +94,7 @@ public class ProductControllers : ControllerBase
         ActionType = ActionType.Writing,
         Definition = "Upload Product File"
     )]
-    public async Task<IActionResult> Upload(
+    public async Task<IActionResult> UploadProductImage(
         [FromQuery] UploadProductImageCommandRequest uploadProductImageCommandRequest
     )
     {
@@ -98,7 +104,7 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpGet("[action]/{Id}")]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    // [Authorize(AuthenticationSchemes = "Admin")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Products,
         ActionType = ActionType.Reading,
@@ -148,5 +154,60 @@ public class ProductControllers : ControllerBase
             changeShowcaseImageCommandRequest
         );
         return Ok(response);
+    }
+
+    [HttpPost("[action]")]
+    [Authorize(AuthenticationSchemes = "Admin")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Products,
+        ActionType = ActionType.Writing,
+        Definition = "Assign Category To Product"
+    )]
+    [Authorize(AuthenticationSchemes = "Admin")]
+    public async Task<IActionResult> AssignCategoryToProduct(
+        AssignCategoryToProductRequestDTO model
+    )
+    {
+        await _productService.AssignCategoryToProduct(model);
+        return Ok();
+    }
+
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetProductsByCategory( //ok
+        [FromQuery] GetAllProductByCategoryRequestDTO model
+    )
+    {
+        GetAllProductsResponseDTO response = await _productService.GetProductsByCategory(model);
+
+        return Ok(response);
+    }
+
+    [HttpGet("[action]/{productId}")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Products,
+        ActionType = ActionType.Reading,
+        Definition = "Get Categories By Product"
+    )]
+    [Authorize(AuthenticationSchemes = "Admin")]
+    public async Task<IActionResult> GetCategoriesByProduct([FromRoute] string productId)
+    {
+        List<string> response = await _productService.GetCategoriesByProduct(productId);
+
+        return Ok(response);
+    }
+
+    [HttpPost("[action]")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Products,
+        ActionType = ActionType.Writing,
+        Definition = "Add Products To Category"
+    )]
+    [Authorize(AuthenticationSchemes = "Admin")]
+    public async Task<IActionResult> AddProductsToCategory(
+        [FromBody] AddProductsToCategoryRequestDTO model
+    )
+    {
+        await _productService.AddProductsToCategory(model);
+        return Ok();
     }
 }

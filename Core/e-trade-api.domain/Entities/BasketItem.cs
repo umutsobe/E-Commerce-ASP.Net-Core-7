@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using e_trade_api.domain.Entities;
 using e_trade_api.domain.Entities.Common;
 
@@ -11,5 +12,6 @@ public class BasketItem : BaseEntity
     public Product Product { get; set; }
     public Guid ProductId { get; set; }
 
+    [Range(0, int.MaxValue)]
     public int Quantity { get; set; }
 }

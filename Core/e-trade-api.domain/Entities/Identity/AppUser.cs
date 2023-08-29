@@ -9,4 +9,5 @@ public class AppUser : IdentityUser<string>
     public Basket Basket { get; set; }
     public ICollection<Order> Orders { get; set; }
     public ICollection<Adress> Adresses { get; set; }
+    public ICollection<ProductRating> ProductRatings { get; set; }
 }

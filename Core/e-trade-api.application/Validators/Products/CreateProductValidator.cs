@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace e_trade_api.application;
 
-public class CreateProductValidator : AbstractValidator<VM_Create_Product>
+public class CreateProductValidator : AbstractValidator<CreateProductCommandRequest> //controllera ilk ulaşan classı koy
 {
     public CreateProductValidator()
     {
@@ -26,5 +26,30 @@ public class CreateProductValidator : AbstractValidator<VM_Create_Product>
             .WithMessage("Lütfen Ürün stok bilgisini boş geçmeyiniz")
             .Must(p => p >= 0)
             .WithMessage("Stok bilgisi negatif olamaz. Geçerli stok bilgisi giriniz.");
+
+        RuleFor(p => p.Description)
+            .NotEmpty()
+            .NotNull()
+            .WithMessage("Lütfen Ürün ayrıntı alanını boş geçmeyiniz")
+            .MaximumLength(1500)
+            .WithMessage(
+                "Ürün ayrıntı alanı 1500 karakterden az olmalıdır. Lütfen daha kısa ayrıntı giriniz"
+            );
+
+        RuleFor(p => p.CategoryNames)
+            .NotEmpty()
+            .NotNull()
+            .WithMessage("Kategori isimleri boş olamaz")
+            .ForEach(p =>
+            {
+                p.Length(1, 100)
+                    .WithMessage("Her kategori ismi 1 ila 100 karakter arasında olmalıdır.");
+            });
+
+        RuleFor(p => p.isActive)
+            .NotEmpty()
+            .NotNull()
+            .WithMessage("Aktiflik bilgisi boş olamaz")
+            .Must(p => p == true || p == false);
     }
 }
