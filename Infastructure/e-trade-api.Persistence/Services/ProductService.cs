@@ -88,9 +88,17 @@ public class ProductService : IProductService
     public async Task UpdateProduct(UpdateProductDTO model)
     {
         Product product = await _productReadRepository.GetByIdAsync(model.Id);
+
+        List<Category> categories = _categoryReadRepository.Table
+            .Where(c => model.CategoryNames.Contains(c.Name))
+            .ToList();
+
         product.Name = model.Name;
         product.Price = model.Price;
         product.Stock = model.Stock;
+        product.Description = model.Description;
+        product.isActive = model.isActive;
+        product.Categories = categories;
 
         await _productWriteRepository.SaveAsync();
     }
@@ -106,7 +114,6 @@ public class ProductService : IProductService
             .Skip(model.Page * model.Size)
             .Take(model.Size)
             .Include(p => p.ProductImageFiles)
-            .OrderBy(p => p.Name)
             .Select(
                 p =>
                     new
@@ -198,50 +205,6 @@ public class ProductService : IProductService
         }
     }
 
-    public async Task<GetAllProductsResponseDTO> GetProductsByCategory(
-        GetAllProductByCategoryRequestDTO model
-    )
-    {
-        var query = _categoryReadRepository.Table
-            .Where(c => c.Name == model.CategoryName)
-            .Select(
-                c =>
-                    new GetAllProductsResponseDTO
-                    {
-                        TotalProductCount = c.Products.Count,
-                        Products = c.Products
-                            .OrderBy(p => p.Name) //  sıralama
-                            .Skip(model.Page * model.Size)
-                            .Take(model.Size)
-                            .Select(
-                                p =>
-                                    new ProductResponseDTO
-                                    {
-                                        Id = p.Id.ToString(),
-                                        Name = p.Name,
-                                        Stock = p.Stock,
-                                        Price = p.Price,
-                                        CreatedDate = p.CreatedDate,
-                                        UpdatedDate = p.UpdatedDate,
-                                        ProductImageFiles = p.ProductImageFiles, // Gerekirse bu kısmı doldurun
-                                    }
-                            )
-                            .ToList()
-                    }
-            );
-
-        var result = await query.FirstOrDefaultAsync();
-
-        if (result != null)
-        {
-            return result;
-        }
-        else
-        {
-            throw new Exception("Kategori bulunamadı.");
-        }
-    }
-
     public async Task<List<string>> GetCategoriesByProduct(string productId)
     {
         var product = _productReadRepository.Table
@@ -286,4 +249,91 @@ public class ProductService : IProductService
             throw new Exception("Kategori bulunamadı.");
         }
     }
+
+    public async Task<GetAllProductsResponseDTO> GetProductsByFilter(GetProductsByFilterDTO model)
+    {
+        var query = _productReadRepository.Table
+            .Include(p => p.Categories)
+            .Include(p => p.ProductImageFiles)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(model.Keyword))
+            query = query.Where(p => EF.Functions.Like(p.Name, $"%{model.Keyword}%"));
+
+        if (!string.IsNullOrEmpty(model.CategoryName))
+            query = query.Where(p => p.Categories.Any(c => c.Name == model.CategoryName));
+
+        if (model.MinPrice.HasValue)
+            query = query.Where(p => p.Price >= model.MinPrice);
+
+        if (model.MaxPrice.HasValue)
+            query = query.Where(p => p.Price <= model.MaxPrice);
+
+        int totalProductCount = await query.CountAsync(); //skip take yapmadan önce count yaptık
+
+        if (model.Sort == "desc")
+            query = query.OrderByDescending(p => p.Price);
+        else if (model.Sort == "asc")
+            query = query.OrderBy(p => p.Price);
+        else if (model.Sort == "sales")
+            query = query.OrderByDescending(p => p.TotalOrderNumber);
+
+        query = query.Skip(model.Page * model.Size).Take(model.Size);
+
+        var filteredProducts = await query
+            .Select(
+                p =>
+                    new
+                    {
+                        p.Id,
+                        p.Name,
+                        p.Stock,
+                        p.Price,
+                        p.CreatedDate,
+                        p.UpdatedDate,
+                        p.ProductImageFiles
+                    }
+            )
+            .ToListAsync();
+
+        GetAllProductsResponseDTO productsDTO = new();
+        productsDTO.Products = new();
+
+        if (filteredProducts != null)
+        {
+            foreach (var product in filteredProducts)
+            {
+                if (product != null)
+                {
+                    ProductResponseDTO productDTO =
+                        new()
+                        {
+                            Id = product.Id.ToString(),
+                            Name = product.Name,
+                            Stock = product.Stock,
+                            Price = product.Price,
+                            CreatedDate = product.CreatedDate,
+                            UpdatedDate = product.UpdatedDate,
+                            ProductImageFiles = product.ProductImageFiles,
+                        };
+
+                    productsDTO.Products.Add(productDTO);
+                }
+            }
+
+            productsDTO = new()
+            {
+                TotalProductCount = totalProductCount,
+                Products = productsDTO.Products
+            };
+        }
+
+        return productsDTO;
+    }
+
+    public Task<GetAllProductsResponseDTO> GetProductsBySearch(GetProductsBySearchRequestDTO model)
+    {
+        throw new NotImplementedException();
+    }
 }
+// .Name.Equals(model.CategoryName, StringComparison.OrdinalIgnoreCase)

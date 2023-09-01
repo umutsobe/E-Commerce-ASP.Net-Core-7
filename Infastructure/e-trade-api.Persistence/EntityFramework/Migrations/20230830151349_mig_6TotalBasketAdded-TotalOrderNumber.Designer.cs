@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using e_trade_api.Persistence.Contexts;
 
@@ -11,9 +12,10 @@ using e_trade_api.Persistence.Contexts;
 namespace e_trade_api.Persistence.Migrations
 {
     [DbContext(typeof(ETradeApiDBContext))]
-    partial class ETradeApiDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230830151349_mig_6TotalBasketAdded-TotalOrderNumber")]
+    partial class mig_6TotalBasketAddedTotalOrderNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -360,6 +362,12 @@ namespace e_trade_api.Persistence.Migrations
                         .HasColumnType("real");
 
                     b.Property<int>("Stock")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalBasketAdded")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalOrderNumber")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedDate")

@@ -12,12 +12,10 @@ namespace e_trade_api.API.Controllers;
 public class OrderController : ControllerBase
 {
     readonly IMediator _mediator;
-    readonly IOrderService _orderService;
 
-    public OrderController(IMediator mediator, IOrderService orderService)
+    public OrderController(IMediator mediator)
     {
         _mediator = mediator;
-        _orderService = orderService;
     }
 
     [HttpPost]

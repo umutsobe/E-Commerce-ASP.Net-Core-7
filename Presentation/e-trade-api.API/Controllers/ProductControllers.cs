@@ -50,7 +50,7 @@ public class ProductControllers : ControllerBase
         CreateProductCommandResponse createProductCommandResponse = await _mediator.Send(
             createProductCommandRequest
         );
-        return Ok();
+        return Ok(createProductCommandResponse);
     }
 
     [HttpPut("[action]")]
@@ -172,16 +172,6 @@ public class ProductControllers : ControllerBase
         return Ok();
     }
 
-    [HttpGet("[action]")]
-    public async Task<IActionResult> GetProductsByCategory( //ok
-        [FromQuery] GetAllProductByCategoryRequestDTO model
-    )
-    {
-        GetAllProductsResponseDTO response = await _productService.GetProductsByCategory(model);
-
-        return Ok(response);
-    }
-
     [HttpGet("[action]/{productId}")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Products,
@@ -209,5 +199,15 @@ public class ProductControllers : ControllerBase
     {
         await _productService.AddProductsToCategory(model);
         return Ok();
+    }
+
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetProductsByFilter( //ok
+        [FromQuery] GetProductsByFilterDTO model
+    )
+    {
+        GetAllProductsResponseDTO response = await _productService.GetProductsByFilter(model);
+
+        return Ok(response);
     }
 }

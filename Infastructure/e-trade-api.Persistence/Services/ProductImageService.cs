@@ -10,16 +10,19 @@ public class ProductImageService : IProductImageService
     IProductReadRepository _productReadRepository;
     IProductImageFileWriteRepository _productImageFileWriteRepository;
     IStorageService _storageService;
+    readonly IProductImageFileReadRepository _productImageFileReadRepository;
 
     public ProductImageService(
         IStorageService storageService,
         IProductImageFileWriteRepository productImageFileWriteRepository,
-        IProductReadRepository productReadRepository
+        IProductReadRepository productReadRepository,
+        IProductImageFileReadRepository productImageFileReadRepository
     )
     {
         _storageService = storageService;
         _productImageFileWriteRepository = productImageFileWriteRepository;
         _productReadRepository = productReadRepository;
+        _productImageFileReadRepository = productImageFileReadRepository;
     }
 
     public async Task DeleteProductImage(ProductImageDeleteRequestDTO model)
@@ -49,20 +52,26 @@ public class ProductImageService : IProductImageService
 
         Product product = await _productReadRepository.GetByIdAsync(model.Id);
 
-        await _productImageFileWriteRepository.AddRangeAsync(
-            datas
-                .Select(
-                    d =>
-                        new ProductImageFile()
-                        {
-                            FileName = d.fileName,
-                            Path = d.path,
-                            Storage = _storageService.StorageName,
-                            Products = new List<Product>() { product }
-                        }
-                )
-                .ToList()
-        );
+        List<ProductImageFile> imageFiles = datas
+            .Select(
+                d =>
+                    new ProductImageFile()
+                    {
+                        FileName = d.fileName,
+                        Path = d.path,
+                        Storage = _storageService.StorageName,
+                        Products = new List<Product>() { product },
+                        Showcase = product.ProductImageFiles == null // İlk dosya için sadece bu true, diğerleri false
+                    }
+            )
+            .ToList();
+
+        if (imageFiles.Count > 0)
+        {
+            imageFiles[0].Showcase = true;
+        }
+
+        await _productImageFileWriteRepository.AddRangeAsync(imageFiles);
         await _productImageFileWriteRepository.SaveAsync();
     }
 

@@ -1,6 +1,5 @@
 using e_trade_api.application;
 using e_trade_api.domain;
-using e_trade_api.domain.Entities;
 
 namespace e_trade_api.Persistence;
 

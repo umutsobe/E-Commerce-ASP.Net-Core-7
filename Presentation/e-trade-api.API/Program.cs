@@ -10,7 +10,6 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddPersistenceServices();
 builder.Services.AddInfrastructureService();
 builder.Services.AddApplicationServices();
@@ -27,11 +26,6 @@ builder.Services.AddControllers(options =>
 {
     options.Filters.Add<RolePermissionFilter>();
 });
-
-// .AddFluentValidation(
-//     configuration =>
-//         configuration.RegisterValidatorsFromAssemblyContaining<CreateProductValidator>()
-// );
 
 builder.Services.AddValidationsServices();
 

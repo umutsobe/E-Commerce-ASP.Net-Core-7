@@ -13,13 +13,21 @@ public class OrderService : IOrderService
     readonly IOrderItemWriteRepository _orderItemWriteRepository;
     readonly ICompletedOrderWriteRepository _completedOrderWriteRepository;
     readonly ICompletedOrderReadRepository _completedOrderReadRepository;
+    readonly IBasketItemWriteRepository _basketItemWriteRepository;
+    readonly IBasketItemReadRepository _basketItemReadRepository;
+    readonly IBasketReadRepository _basketReadRepository;
+    readonly IProductReadRepository _productReadRepository;
 
     public OrderService(
         IOrderWriteRepository orderWriteRepository,
         IOrderItemWriteRepository orderItemWriteRepository,
         IOrderReadRepository orderReadRepository,
         ICompletedOrderWriteRepository completedOrderWriteRepository,
-        ICompletedOrderReadRepository completedOrderReadRepository
+        ICompletedOrderReadRepository completedOrderReadRepository,
+        IBasketItemWriteRepository basketItemWriteRepository,
+        IBasketReadRepository basketReadRepository,
+        IBasketItemReadRepository basketItemReadRepository,
+        IProductReadRepository productReadRepository
     )
     {
         _orderWriteRepository = orderWriteRepository;
@@ -27,6 +35,10 @@ public class OrderService : IOrderService
         _orderReadRepository = orderReadRepository;
         _completedOrderWriteRepository = completedOrderWriteRepository;
         _completedOrderReadRepository = completedOrderReadRepository;
+        _basketItemWriteRepository = basketItemWriteRepository;
+        _basketReadRepository = basketReadRepository;
+        _basketItemReadRepository = basketItemReadRepository;
+        _productReadRepository = productReadRepository;
     }
 
     public async Task<(bool, CompletedOrderDTO)> CompleteOrderAsync(string id)
@@ -85,6 +97,12 @@ public class OrderService : IOrderService
 
         foreach (var orderItem in createOrder.OrderItems)
         {
+            Product? product = await _productReadRepository.Table.FirstOrDefaultAsync(
+                p => p.Id == Guid.Parse(orderItem.ProductId)
+            );
+
+            product.TotalOrderNumber += orderItem.Quantity;
+
             await _orderItemWriteRepository.AddAsync(
                 new()
                 {
@@ -95,6 +113,19 @@ public class OrderService : IOrderService
                     Quantity = orderItem.Quantity
                 }
             );
+        }
+
+        Basket? basket = await _basketReadRepository.Table.FirstOrDefaultAsync(
+            b => b.UserId == createOrder.UserId
+        );
+
+        if (basket != null)
+        {
+            List<BasketItem>? basketItems = await _basketItemReadRepository.Table
+                .Where(bi => bi.BasketId == basket.Id)
+                .ToListAsync();
+
+            _basketItemWriteRepository.RemoveRange(basketItems);
         }
 
         await _orderItemWriteRepository.SaveAsync();

@@ -1,5 +1,6 @@
 using e_trade_api.application;
 using e_trade_api.domain;
+using e_trade_api.domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,8 @@ public class BasketService : IBasketService
     readonly IBasketReadRepository _basketReadRepository;
     readonly IBasketItemWriteRepository _basketItemWriteRepository;
     readonly IBasketItemReadRepository _basketItemReadRepository;
+    readonly IProductReadRepository _productReadRepository;
+    readonly IProductWriteRepository _productWriteRepository;
 
     public BasketService(
         IHttpContextAccessor httpContextAccessor,
@@ -23,7 +26,9 @@ public class BasketService : IBasketService
         IBasketWriteRepository basketWriteRepository,
         IBasketItemWriteRepository basketItemWriteRepository,
         IBasketItemReadRepository basketItemReadRepository,
-        IBasketReadRepository basketReadRepository
+        IBasketReadRepository basketReadRepository,
+        IProductReadRepository productReadRepository,
+        IProductWriteRepository productWriteRepository
     )
     {
         _httpContextAccessor = httpContextAccessor;
@@ -33,6 +38,8 @@ public class BasketService : IBasketService
         _basketItemWriteRepository = basketItemWriteRepository;
         _basketItemReadRepository = basketItemReadRepository;
         _basketReadRepository = basketReadRepository;
+        _productReadRepository = productReadRepository;
+        _productWriteRepository = productWriteRepository;
     }
 
     public async Task<bool> CreateBasket(string userId)
@@ -58,24 +65,34 @@ public class BasketService : IBasketService
         return basket.Id.ToString();
     }
 
-    public async Task AddItemToBasketAsync(VM_Create_BasketItem basketItem, string basketId)
+    public async Task AddItemToBasketAsync(CreateBasketItemRequestDTO basketItem, string basketId)
     {
         Basket basket = await GetBasket(basketId);
+
         BasketItem _basketItem = await _basketItemReadRepository.GetSingleAsync( //burada basketItem daha önce var mı onu kontrol ediyoruz
             bi => bi.BasketId == basket.Id && bi.ProductId == Guid.Parse(basketItem.ProductId)
         );
+        Product? product = await _productReadRepository.Table.FirstOrDefaultAsync(
+            p => p.Id == Guid.Parse(basketItem.ProductId)
+        );
 
-        if (_basketItem != null) //basketItem daha önce eklenmişse
-            _basketItem.Quantity++; // miktarı arttır
+        if (_basketItem != null)
+        {
+            _basketItem.Quantity++;
+            product.TotalBasketAdded++;
+        }
         else // basketItem daha önce eklenmemişse
+        {
             await _basketItemWriteRepository.AddAsync( //yeni basketItem oluştur
                 new()
                 {
                     BasketId = basket.Id,
                     ProductId = Guid.Parse(basketItem.ProductId),
-                    Quantity = basketItem.Quantity,
+                    Quantity = 1,
                 }
             );
+            product.TotalBasketAdded++;
+        }
 
         await _basketItemWriteRepository.SaveAsync();
     }
@@ -102,14 +119,25 @@ public class BasketService : IBasketService
         }
     }
 
-    public async Task UpdateQuantityAsync(VM_Update_BasketItem basketItem)
+    public async Task UpdateQuantityAsync(UpdateBasketItemRequestDTO basketItemDTO)
     {
-        BasketItem? _basketItem = await _basketItemReadRepository.GetByIdAsync(
-            basketItem.BasketItemId
+        BasketItem? databaseBasketItem = await _basketItemReadRepository.GetByIdAsync(
+            basketItemDTO.BasketItemId
         );
-        if (_basketItem != null)
+
+        Product? product = await _productReadRepository.Table.FirstOrDefaultAsync(
+            p => p.Id == databaseBasketItem.ProductId
+        );
+
+        if (databaseBasketItem != null)
         {
-            _basketItem.Quantity = basketItem.Quantity;
+            if (databaseBasketItem.Quantity <= basketItemDTO.Quantity) //sadece quantity artarken arttır. quantity azalırken arttırma
+            {
+                product.TotalBasketAdded++;
+                await _basketItemWriteRepository.SaveAsync();
+            }
+
+            databaseBasketItem.Quantity = basketItemDTO.Quantity;
             await _basketItemWriteRepository.SaveAsync();
         }
     }
