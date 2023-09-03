@@ -8,9 +8,9 @@
     ".NETCoreApp,Version=v6.0": {
       "e-trade-api.application/1.0.0": {
         "dependencies": {
-          "FluentValidation": "11.6.0",
+          "FluentValidation": "11.7.1",
           "FluentValidation.AspNetCore": "11.3.0",
-          "FluentValidation.DependencyInjectionExtensions": "11.6.0",
+          "FluentValidation.DependencyInjectionExtensions": "11.7.1",
           "Google.Apis.Auth": "1.61.0",
           "MediatR": "10.0.1",
           "MediatR.Extensions.Microsoft.DependencyInjection": "10.0.1",
@@ -22,18 +22,18 @@
           "e-trade-api.application.dll": {}
         }
       },
-      "FluentValidation/11.6.0": {
+      "FluentValidation/11.7.1": {
         "runtime": {
           "lib/net6.0/FluentValidation.dll": {
             "assemblyVersion": "11.0.0.0",
-            "fileVersion": "11.6.0.0"
+            "fileVersion": "11.7.1.0"
           }
         }
       },
       "FluentValidation.AspNetCore/11.3.0": {
         "dependencies": {
-          "FluentValidation": "11.6.0",
-          "FluentValidation.DependencyInjectionExtensions": "11.6.0"
+          "FluentValidation": "11.7.1",
+          "FluentValidation.DependencyInjectionExtensions": "11.7.1"
         },
         "runtime": {
           "lib/net6.0/FluentValidation.AspNetCore.dll": {
@@ -42,15 +42,15 @@
           }
         }
       },
-      "FluentValidation.DependencyInjectionExtensions/11.6.0": {
+      "FluentValidation.DependencyInjectionExtensions/11.7.1": {
         "dependencies": {
-          "FluentValidation": "11.6.0",
+          "FluentValidation": "11.7.1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0"
         },
         "runtime": {
           "lib/netstandard2.1/FluentValidation.DependencyInjectionExtensions.dll": {
             "assemblyVersion": "11.0.0.0",
-            "fileVersion": "11.6.0.0"
+            "fileVersion": "11.7.1.0"
           }
         }
       },
@@ -488,12 +488,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "FluentValidation/11.6.0": {
+    "FluentValidation/11.7.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-DWKd0jHA33d7BXVWytSoN5Oafj9nYuiLUyyFoaUboOZZiaN5tlXdcJpkRbmrrWBUTWdSxjTwIoyUs38KSU/7OQ==",
-      "path": "fluentvalidation/11.6.0",
-      "hashPath": "fluentvalidation.11.6.0.nupkg.sha512"
+      "sha512": "sha512-w9Al4gls6iVGFbTd/NPOPlwzqDTghH+ntL4c4FYUatc+LeybpIwhYArLykZJP/VjF2n3ihj3ws+1yd7KR5lQlg==",
+      "path": "fluentvalidation/11.7.1",
+      "hashPath": "fluentvalidation.11.7.1.nupkg.sha512"
     },
     "FluentValidation.AspNetCore/11.3.0": {
       "type": "package",
@@ -502,12 +502,12 @@
       "path": "fluentvalidation.aspnetcore/11.3.0",
       "hashPath": "fluentvalidation.aspnetcore.11.3.0.nupkg.sha512"
     },
-    "FluentValidation.DependencyInjectionExtensions/11.6.0": {
+    "FluentValidation.DependencyInjectionExtensions/11.7.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-3jyyy5VMzKsdGNzfBKtEYX3fd3YzSSzd7JEq7uJcqjqqkoCexT4khgTlNT8upXOeU6mT1MSW7H7OjvUG9W1bRw==",
-      "path": "fluentvalidation.dependencyinjectionextensions/11.6.0",
-      "hashPath": "fluentvalidation.dependencyinjectionextensions.11.6.0.nupkg.sha512"
+      "sha512": "sha512-q3R6mJ0SzWvHJkJ/9d4FAZeuhJp6Cv8WpQItRWyN0v5qxKtwZt6Ol/8HNv8THDOrywTdsNUVKpgDJalVY7hUdw==",
+      "path": "fluentvalidation.dependencyinjectionextensions/11.7.1",
+      "hashPath": "fluentvalidation.dependencyinjectionextensions.11.7.1.nupkg.sha512"
     },
     "Google.Apis/1.61.0": {
       "type": "package",

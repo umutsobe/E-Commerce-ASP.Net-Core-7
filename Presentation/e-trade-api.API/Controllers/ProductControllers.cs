@@ -18,24 +18,6 @@ public class ProductControllers : ControllerBase
         _productService = productService;
     }
 
-    [HttpGet("[action]")]
-    public async Task<IActionResult> GetAllProducts(
-        [FromQuery] GetAllProductQueryRequest getAllProductQueryRequest
-    ) // eğer api üzerinden bir şey geriye döndürüyorsak iactionresult döndürmek zorundayız
-    {
-        GetAllProductQueryResponse response = await _mediator.Send(getAllProductQueryRequest);
-        return Ok(response);
-    }
-
-    [HttpGet("[action]/{Id}")]
-    public async Task<IActionResult> GetProductById(
-        [FromRoute] GetByIdQueryRequest getByIdQueryRequest
-    ) // eğer api üzerinden bir şey geriye döndürüyorsak iactionresult döndürmek zorundayız
-    {
-        GetByIdQueryResponse response = await _mediator.Send(getByIdQueryRequest);
-        return Ok(response);
-    }
-
     [HttpPost("[action]")]
     [Authorize(AuthenticationSchemes = "Admin")]
     [AuthorizeDefinition(
@@ -208,6 +190,30 @@ public class ProductControllers : ControllerBase
     {
         GetAllProductsResponseDTO response = await _productService.GetProductsByFilter(model);
 
+        return Ok(response);
+    }
+
+    [HttpGet("[action]")]
+    public async Task<IActionResult> QuickCreateProduct()
+    {
+        await _productService.QuickCreateProduct();
+        return Ok();
+    }
+
+    [HttpGet("[action]/{urlId}")]
+    public async Task<IActionResult> GetProductByUrlIdRequest([FromRoute] string urlId)
+    {
+        GetProductByIdDTO response = await _productService.GetProductByUrlId(urlId);
+        return Ok(response);
+    }
+
+    //adminlik ekle
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetAllProductsAdmin(
+        [FromQuery] GetAllProductAdminQueryRequest getAllProductQueryRequest
+    )
+    {
+        GetAllProductAdminQueryResponse response = await _mediator.Send(getAllProductQueryRequest);
         return Ok(response);
     }
 }

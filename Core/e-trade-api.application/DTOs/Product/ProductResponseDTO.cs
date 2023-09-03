@@ -6,8 +6,7 @@ public class ProductResponseDTO
     public string Name { get; set; }
     public int Stock { get; set; }
     public float Price { get; set; }
-    public DateTime CreatedDate { get; set; }
-    public DateTime UpdatedDate { get; set; }
+    public string Url { get; set; }
     public object ProductImageFiles { get; set; }
 }
 // p.Id,

@@ -10,12 +10,15 @@ public interface IProductService
 
     //queryies
 
-    Task<GetAllProductsResponseDTO> GetAllProducts(GetAllProductRequestDTO model);
-    Task<GetProductByIdDTO> GetProductById(string Id);
+    Task<GetAllProductsResponseAdminDTO> GetAllProductsAdmin(GetProductsByFilterDTO model);
+    Task<GetProductByIdDTO> GetProductByUrlId(string urlId);
     Task AssignCategoryToProduct(AssignCategoryToProductRequestDTO model);
 
     Task<List<string>> GetCategoriesByProduct(string productId);
     Task AddProductsToCategory(AddProductsToCategoryRequestDTO model);
     Task<GetAllProductsResponseDTO> GetProductsByFilter(GetProductsByFilterDTO model);
-    Task<GetAllProductsResponseDTO> GetProductsBySearch(GetProductsBySearchRequestDTO model);
+
+    //develeopment
+
+    public Task QuickCreateProduct();
 }

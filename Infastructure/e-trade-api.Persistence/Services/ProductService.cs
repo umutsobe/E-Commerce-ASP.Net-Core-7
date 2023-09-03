@@ -31,6 +31,7 @@ public class ProductService : IProductService
 
     //commands
 
+
     public async Task ChangeShowcaseImage(ChangeShowCaseImageRequestDTO model)
     {
         var query = _productImageFileWriteRepository.Table
@@ -54,6 +55,7 @@ public class ProductService : IProductService
     public async Task CreateProduct(CreateProductDTO model)
     {
         Guid productId = Guid.NewGuid();
+        string productUrl = UrlBuilder.ProductUrlBuilder(model.Name).ToLower();
 
         List<Category> categories = _categoryReadRepository.Table
             .Where(c => model.CategoryNames.Contains(c.Name))
@@ -63,11 +65,12 @@ public class ProductService : IProductService
             new Product()
             {
                 Id = productId,
-                Name = model.Name,
+                Name = model.Name.Trim(),
                 Price = model.Price,
                 Stock = model.Stock,
-                Description = model.Description,
+                Description = model.Description.Trim(),
                 isActive = model.isActive,
+                Url = productUrl,
                 Categories = categories
             }
         );
@@ -104,16 +107,40 @@ public class ProductService : IProductService
     }
 
     //queries
-    public Task<GetAllProductsResponseDTO> GetAllProducts(GetAllProductRequestDTO model)
+    public async Task<GetAllProductsResponseAdminDTO> GetAllProductsAdmin(
+        GetProductsByFilterDTO model
+    )
     {
-        var totalProductCount = _productReadRepository.GetAll(false).Where(p => p.isActive).Count();
-
-        var databaseProducts = _productReadRepository
-            .GetAll(false)
-            .Where(p => p.isActive)
-            .Skip(model.Page * model.Size)
-            .Take(model.Size)
+        model.Size = 8;
+        var query = _productReadRepository.Table
+            .Include(p => p.Categories)
             .Include(p => p.ProductImageFiles)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(model.Keyword))
+            query = query.Where(p => EF.Functions.Like(p.Name, $"%{model.Keyword}%"));
+
+        if (!string.IsNullOrEmpty(model.CategoryName))
+            query = query.Where(p => p.Categories.Any(c => c.Name == model.CategoryName));
+
+        if (model.MinPrice.HasValue)
+            query = query.Where(p => p.Price >= model.MinPrice);
+
+        if (model.MaxPrice.HasValue)
+            query = query.Where(p => p.Price <= model.MaxPrice);
+
+        int totalProductCount = await query.CountAsync(); //skip take yapmadan önce count yaptık
+
+        if (model.Sort == "desc")
+            query = query.OrderByDescending(p => p.Price);
+        else if (model.Sort == "asc")
+            query = query.OrderBy(p => p.Price);
+        else if (model.Sort == "sales")
+            query = query.OrderByDescending(p => p.TotalOrderNumber);
+
+        query = query.Skip(model.Page * model.Size).Take(model.Size);
+
+        var filteredProducts = await query
             .Select(
                 p =>
                     new
@@ -122,32 +149,42 @@ public class ProductService : IProductService
                         p.Name,
                         p.Stock,
                         p.Price,
+                        p.Url,
                         p.CreatedDate,
                         p.UpdatedDate,
-                        p.ProductImageFiles
+                        p.ProductImageFiles,
+                        p.isActive,
+                        p.Description,
+                        p.TotalBasketAdded,
+                        p.TotalOrderNumber
                     }
             )
-            .ToList();
+            .ToListAsync();
 
-        GetAllProductsResponseDTO productsDTO = new GetAllProductsResponseDTO();
-        productsDTO.Products = new List<ProductResponseDTO>(); // !!!! aşağıda buna eleman ekliyoruz. null hatası almamak için sınıfın instance'ını oluşturduk
+        GetAllProductsResponseAdminDTO productsDTO = new();
+        productsDTO.Products = new();
 
-        if (databaseProducts != null)
+        if (filteredProducts != null)
         {
-            foreach (var product in databaseProducts)
+            foreach (var product in filteredProducts)
             {
                 if (product != null)
                 {
-                    ProductResponseDTO productDTO =
+                    ProductResponseAdminDTO productDTO =
                         new()
                         {
                             Id = product.Id.ToString(),
                             Name = product.Name,
                             Stock = product.Stock,
                             Price = product.Price,
+                            ProductImageFiles = product.ProductImageFiles,
+                            Url = product.Url,
                             CreatedDate = product.CreatedDate,
                             UpdatedDate = product.UpdatedDate,
-                            ProductImageFiles = product.ProductImageFiles,
+                            Description = product.Description,
+                            IsActive = product.isActive,
+                            TotalBasketAdded = product.TotalBasketAdded,
+                            TotalOrderNumber = product.TotalOrderNumber
                         };
 
                     productsDTO.Products.Add(productDTO);
@@ -161,19 +198,28 @@ public class ProductService : IProductService
             };
         }
 
-        return Task.FromResult(productsDTO);
+        return productsDTO;
     }
 
-    public async Task<GetProductByIdDTO> GetProductById(string Id)
+    public async Task<GetProductByIdDTO> GetProductByUrlId(string urlId)
     {
-        Product product = await _productReadRepository.GetByIdAsync(Id, false);
+        Product? product = await _productReadRepository.Table
+            .Where(p => p.Url == urlId)
+            .FirstOrDefaultAsync();
 
-        return new()
-        {
-            Name = product.Name,
-            Price = product.Price,
-            Stock = product.Stock,
-        };
+        if (product != null)
+            return new()
+            {
+                Id = product.Id.ToString(),
+                Name = product.Name,
+                Price = product.Price,
+                Stock = product.Stock,
+                Description = product.Description,
+                ProductImageFiles = product.ProductImageFiles,
+                Url = product.Url
+            };
+        else
+            throw new Exception("Product Not Found");
     }
 
     //category
@@ -250,12 +296,14 @@ public class ProductService : IProductService
         }
     }
 
-    public async Task<GetAllProductsResponseDTO> GetProductsByFilter(GetProductsByFilterDTO model)
+    public async Task<GetAllProductsResponseDTO> GetProductsByFilter(GetProductsByFilterDTO model) //kullanıcı için
     {
         var query = _productReadRepository.Table
             .Include(p => p.Categories)
             .Include(p => p.ProductImageFiles)
             .AsQueryable();
+
+        query = query.Where(p => p.isActive); //sadece aktifler gelecek
 
         if (!string.IsNullOrEmpty(model.Keyword))
             query = query.Where(p => EF.Functions.Like(p.Name, $"%{model.Keyword}%"));
@@ -289,6 +337,7 @@ public class ProductService : IProductService
                         p.Name,
                         p.Stock,
                         p.Price,
+                        p.Url,
                         p.CreatedDate,
                         p.UpdatedDate,
                         p.ProductImageFiles
@@ -312,9 +361,8 @@ public class ProductService : IProductService
                             Name = product.Name,
                             Stock = product.Stock,
                             Price = product.Price,
-                            CreatedDate = product.CreatedDate,
-                            UpdatedDate = product.UpdatedDate,
                             ProductImageFiles = product.ProductImageFiles,
+                            Url = product.Url
                         };
 
                     productsDTO.Products.Add(productDTO);
@@ -331,9 +379,38 @@ public class ProductService : IProductService
         return productsDTO;
     }
 
-    public Task<GetAllProductsResponseDTO> GetProductsBySearch(GetProductsBySearchRequestDTO model)
+    public async Task QuickCreateProduct()
     {
-        throw new NotImplementedException();
+        Random random = new();
+        for (int i = 0; i < 120; i++)
+        {
+            Guid productId = Guid.NewGuid();
+            string name = $"Product {i + 1}";
+            float price = 10 * (i + 1);
+            int stock = 10 * (i + 1);
+            string description = $"<h1>{name} description</h1>";
+            int totalBasketAdded = random.Next(0, 100);
+            int totalOrderNumber = random.Next(0, 100);
+
+            string productUrl = UrlBuilder.ProductUrlBuilder(name).ToLower();
+
+            await _productWriteRepository.AddAsync(
+                new Product()
+                {
+                    Id = productId,
+                    Name = name.Trim(),
+                    Price = price,
+                    Stock = stock,
+                    Description = description.Trim(),
+                    isActive = true,
+                    Url = productUrl,
+                    TotalBasketAdded = totalBasketAdded,
+                    TotalOrderNumber = totalOrderNumber,
+                }
+            );
+        }
+
+        await _productWriteRepository.SaveAsync();
     }
 }
 // .Name.Equals(model.CategoryName, StringComparison.OrdinalIgnoreCase)

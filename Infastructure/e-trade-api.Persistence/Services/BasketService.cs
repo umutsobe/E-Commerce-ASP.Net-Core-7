@@ -78,7 +78,7 @@ public class BasketService : IBasketService
 
         if (_basketItem != null)
         {
-            _basketItem.Quantity++;
+            _basketItem.Quantity += basketItem.Quantity;
             product.TotalBasketAdded++;
         }
         else // basketItem daha önce eklenmemişse
@@ -88,7 +88,7 @@ public class BasketService : IBasketService
                 {
                     BasketId = basket.Id,
                     ProductId = Guid.Parse(basketItem.ProductId),
-                    Quantity = 1,
+                    Quantity = basketItem.Quantity,
                 }
             );
             product.TotalBasketAdded++;

@@ -371,6 +371,9 @@ namespace e_trade_api.Persistence.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("isActive")
                         .HasColumnType("bit");
 
