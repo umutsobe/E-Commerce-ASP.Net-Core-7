@@ -15,6 +15,8 @@ public class AzureStorage : IAzureStorage
         _blobServiceClient = new(MyConfigurationManager.GetAzureStorageConnectionString());
     }
 
+    public string StorageName => GetType().Name;
+
     public async Task DeleteAsync(string containerName, string fileName)
     {
         _blobContainerClient = _blobServiceClient.GetBlobContainerClient(containerName);
@@ -29,44 +31,46 @@ public class AzureStorage : IAzureStorage
         return _blobContainerClient.GetBlobs().Select(b => b.Name).ToList();
     }
 
-    public bool HasFile(string containerName, string fileName)
+    public async Task<bool> HasFile(string containerName, string fileName)
     {
         _blobContainerClient = _blobServiceClient.GetBlobContainerClient(containerName);
-        return _blobContainerClient.GetBlobs().Any(b => b.Name == fileName);
+        await foreach (BlobItem blobItem in _blobContainerClient.GetBlobsAsync())
+        {
+            if (blobItem.Name == fileName)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public async Task<List<(string fileName, string path)>> UploadAsync(
-        string containerName,
-        IFormFileCollection files
-    )
+    public async Task<List<StorageFile>> UploadAsync(UploadProductImageRequest model)
     {
-        _blobContainerClient = _blobServiceClient.GetBlobContainerClient(containerName); // hesaptan container alınır. servis sadece burada kullanıldı. gerisi containerclient'ın işi.
+        _blobContainerClient = _blobServiceClient.GetBlobContainerClient(model.ContainerName); // hesaptan container alınır. servis sadece burada kullanıldı. gerisi containerclient'ın işi.
 
         await _blobContainerClient.CreateIfNotExistsAsync(); // o isimde container yoksa yeni oluşturulur
         await _blobContainerClient.SetAccessPolicyAsync(PublicAccessType.BlobContainer); //containera genel erişim sağlanır
 
-        List<(string fileName, string path)> datas = new(); // yüklenecek dosya ayrıntılarını görmek için liste oluşturuldu
+        List<StorageFile> datas = new(); // yüklenecek dosya ayrıntılarını veritabanına eklemek için liste oluşturuldu
 
-        foreach (IFormFile file in files) //client'tan gelen dosyalar üzerinde geziniyoruz
+        foreach (IFormFile file in model.Files)
         {
-            string fileNewName = await FileRenameAsync(file.Name);
-            BlobClient blobClient = _blobContainerClient.GetBlobClient(fileNewName); // her döngüde blobclient oluşturulacak. blobclient bizim yükleyeceğimiz tekil dosyayı temsil ediyor. senkron şekilde dosya ismini verdik. çünkü isim lazım.
+            string extension = Path.GetExtension(file.Name);
+            string productFileName =
+                $"{model.ProductName}-{Guid.NewGuid().ToString().Substring(0, 7)}{extension}"; //5 haneli guid productName yanına geldi
 
-            await blobClient.UploadAsync(file.OpenReadStream()); //bir üst satırda oluşturduğumuz her döngüde yeni oluşturulan blobclient ile dosyayı azure'a gönderiyoruz.
+            BlobClient blobClient = _blobContainerClient.GetBlobClient(productFileName);
 
-            datas.Add((file.Name, $"{containerName}/{fileNewName}")); // dosyayı bizim görmemiz için listeye ismi ve container ismini(dosyayı atmıyoruz) ekliyoruz
+            await blobClient.UploadAsync(file.OpenReadStream());
+
+            datas.Add(
+                new()
+                {
+                    FileName = productFileName,
+                    Path = $"{model.ContainerName}/{productFileName}"
+                }
+            ); //veritabanına atmak için
         }
         return datas;
-    }
-
-    private Task<string> FileRenameAsync(string fileName)
-    {
-        string extension = Path.GetExtension(fileName);
-        string oldName = Path.GetFileNameWithoutExtension(fileName);
-        DateTime now = DateTime.Now;
-        string dateTime = now.ToString("yyyy-MM-dd-HH-mm-ss-fff-fffffff");
-
-        string newFileName = $"{NameOperation.CharacterRegulatory(oldName)}-{dateTime}{extension}";
-        return Task.FromResult(newFileName);
     }
 }

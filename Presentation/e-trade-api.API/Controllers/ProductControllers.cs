@@ -69,22 +69,6 @@ public class ProductControllers : ControllerBase
         return Ok(response);
     }
 
-    [HttpPost("[action]")]
-    [Authorize(AuthenticationSchemes = "Admin")]
-    [AuthorizeDefinition(
-        Menu = AuthorizeDefinitionConstants.Products,
-        ActionType = ActionType.Writing,
-        Definition = "Upload Product File"
-    )]
-    public async Task<IActionResult> UploadProductImage(
-        [FromQuery] UploadProductImageCommandRequest uploadProductImageCommandRequest
-    )
-    {
-        uploadProductImageCommandRequest.Files = Request.Form.Files; //application katmanında gelen dosyaları yakalayamadık. o yüzden böyle yazdık
-        await _mediator.Send(uploadProductImageCommandRequest);
-        return Ok();
-    }
-
     [HttpGet("[action]/{Id}")]
     // [Authorize(AuthenticationSchemes = "Admin")]
     [AuthorizeDefinition(
@@ -117,23 +101,6 @@ public class ProductControllers : ControllerBase
         deleteProductImageCommandRequest.ImageId = imageId;
         DeleteProductImageCommandResponse response = await _mediator.Send(
             deleteProductImageCommandRequest
-        );
-        return Ok(response);
-    }
-
-    [HttpGet("[action]")]
-    [Authorize(AuthenticationSchemes = "Admin")]
-    [AuthorizeDefinition(
-        Menu = AuthorizeDefinitionConstants.Products,
-        ActionType = ActionType.Updating,
-        Definition = "Change Showcase Image"
-    )]
-    public async Task<IActionResult> ChangeShowcaseImage(
-        [FromQuery] ChangeShowcaseImageCommandRequest changeShowcaseImageCommandRequest
-    )
-    {
-        ChangeShowcaseImageCommandResponse response = await _mediator.Send(
-            changeShowcaseImageCommandRequest
         );
         return Ok(response);
     }
@@ -215,5 +182,38 @@ public class ProductControllers : ControllerBase
     {
         GetAllProductAdminQueryResponse response = await _mediator.Send(getAllProductQueryRequest);
         return Ok(response);
+    }
+
+    // [HttpGet("[action]")]
+    // [Authorize(AuthenticationSchemes = "Admin")]
+    // [AuthorizeDefinition(
+    //     Menu = AuthorizeDefinitionConstants.Products,
+    //     ActionType = ActionType.Updating,
+    //     Definition = "Change Showcase Image"
+    // )]
+    // public async Task<IActionResult> ChangeShowcaseImage(
+    //     [FromQuery] ChangeShowcaseImageCommandRequest changeShowcaseImageCommandRequest
+    // )
+    // {
+    //     ChangeShowcaseImageCommandResponse response = await _mediator.Send(
+    //         changeShowcaseImageCommandRequest
+    //     );
+    //     return Ok(response);
+    // }
+
+    [HttpPost("[action]")]
+    [Authorize(AuthenticationSchemes = "Admin")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Products,
+        ActionType = ActionType.Writing,
+        Definition = "Upload Product File"
+    )]
+    public async Task<IActionResult> UploadProductImage(
+        [FromQuery] UploadProductImageCommandRequest uploadProductImageCommandRequest
+    )
+    {
+        uploadProductImageCommandRequest.Files = Request.Form.Files; //application katmanında gelen dosyaları yakalayamadık. o yüzden böyle yazdık
+        await _mediator.Send(uploadProductImageCommandRequest);
+        return Ok();
     }
 }

@@ -3005,11 +3005,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\e-trade-api.Infastructure.csproj",
+      "projectUniqueName": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\e-trade-api.Infastructure.csproj",
       "projectName": "e-trade-api.Infastructure",
-      "projectPath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\e-trade-api.Infastructure.csproj",
+      "projectPath": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\e-trade-api.Infastructure.csproj",
       "packagesPath": "C:\\Users\\umutt\\.nuget\\packages\\",
-      "outputPath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\obj\\",
+      "outputPath": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\umutt\\AppData\\Roaming\\NuGet\\NuGet.Config"

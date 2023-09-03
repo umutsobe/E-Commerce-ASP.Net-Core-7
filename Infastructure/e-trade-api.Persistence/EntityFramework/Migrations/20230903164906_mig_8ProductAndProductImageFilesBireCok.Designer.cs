@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using e_trade_api.Persistence.Contexts;
 
@@ -11,9 +12,10 @@ using e_trade_api.Persistence.Contexts;
 namespace e_trade_api.Persistence.Migrations
 {
     [DbContext(typeof(ETradeApiDBContext))]
-    partial class ETradeApiDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230903164906_mig_8ProductAndProductImageFilesBireCok")]
+    partial class mig_8ProductAndProductImageFilesBireCok
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -473,7 +475,7 @@ namespace e_trade_api.Persistence.Migrations
                     b.Property<string>("Path")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ProductId")
+                    b.Property<Guid?>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Showcase")
@@ -749,9 +751,7 @@ namespace e_trade_api.Persistence.Migrations
                 {
                     b.HasOne("e_trade_api.domain.Entities.Product", "Product")
                         .WithMany("ProductImageFiles")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductId");
 
                     b.Navigation("Product");
                 });

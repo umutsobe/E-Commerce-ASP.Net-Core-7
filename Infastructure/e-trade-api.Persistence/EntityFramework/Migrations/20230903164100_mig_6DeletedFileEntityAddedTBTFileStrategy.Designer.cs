@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using e_trade_api.Persistence.Contexts;
 
@@ -11,9 +12,10 @@ using e_trade_api.Persistence.Contexts;
 namespace e_trade_api.Persistence.Migrations
 {
     [DbContext(typeof(ETradeApiDBContext))]
-    partial class ETradeApiDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230903164100_mig_6DeletedFileEntityAddedTBTFileStrategy")]
+    partial class mig_6DeletedFileEntityAddedTBTFileStrategy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -397,6 +399,9 @@ namespace e_trade_api.Persistence.Migrations
                     b.Property<string>("Path")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Storage")
                         .HasColumnType("nvarchar(max)");
 
@@ -473,9 +478,6 @@ namespace e_trade_api.Persistence.Migrations
                     b.Property<string>("Path")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("Showcase")
                         .HasColumnType("bit");
 
@@ -483,8 +485,6 @@ namespace e_trade_api.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductImageFiles");
                 });
@@ -628,6 +628,21 @@ namespace e_trade_api.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ProductProductImageFile", b =>
+                {
+                    b.Property<Guid>("ProductImageFilesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ProductImageFilesId", "ProductsId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("ProductProductImageFile");
+                });
+
             modelBuilder.Entity("AppRoleEndpoint", b =>
                 {
                     b.HasOne("e_trade_api.domain.Endpoint", null)
@@ -745,17 +760,6 @@ namespace e_trade_api.Persistence.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("e_trade_api.domain.ProductImageFile", b =>
-                {
-                    b.HasOne("e_trade_api.domain.Entities.Product", "Product")
-                        .WithMany("ProductImageFiles")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("e_trade_api.domain.ProductRating", b =>
                 {
                     b.HasOne("e_trade_api.domain.Entities.Product", "Product")
@@ -824,6 +828,21 @@ namespace e_trade_api.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProductProductImageFile", b =>
+                {
+                    b.HasOne("e_trade_api.domain.ProductImageFile", null)
+                        .WithMany()
+                        .HasForeignKey("ProductImageFilesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("e_trade_api.domain.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("e_trade_api.domain.AppUser", b =>
                 {
                     b.Navigation("Adresses");
@@ -852,8 +871,6 @@ namespace e_trade_api.Persistence.Migrations
                     b.Navigation("BasketItems");
 
                     b.Navigation("OrderItems");
-
-                    b.Navigation("ProductImageFiles");
 
                     b.Navigation("ProductRatings");
                 });

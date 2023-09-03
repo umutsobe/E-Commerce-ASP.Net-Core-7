@@ -15,7 +15,6 @@ namespace e_trade_api.Persistence.Contexts
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
 
-        public DbSet<domain.File> Files { get; set; }
         public DbSet<ProductImageFile> ProductImageFiles { get; set; }
         public DbSet<InvoiceFile> InvoiceFiles { get; set; }
 
@@ -46,6 +45,12 @@ namespace e_trade_api.Persistence.Contexts
                 .HasMany(p => p.Categories) // Bir ürünün birden fazla kategorisi olabilir.
                 .WithMany(c => c.Products) // Bir kategorinin birden fazla ürünü olabilir.
                 .UsingEntity(j => j.ToTable("ProductCategory")); // Ara tablo adını belirtiyoruz.
+
+            modelBuilder
+                .Entity<ProductImageFile>()
+                .HasOne(pif => pif.Product)
+                .WithMany(p => p.ProductImageFiles)
+                .HasForeignKey(pif => pif.ProductId);
         }
 
         public override async Task<int> SaveChangesAsync(

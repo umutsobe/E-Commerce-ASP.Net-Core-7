@@ -5,38 +5,35 @@ namespace e_trade_api.Infastructure;
 
 public class StorageService : IStorageService
 {
-    private readonly IStorage _storage;
+    private readonly IStorageService _storageService;
 
-    public StorageService(IStorage storage)
+    public StorageService(IStorageService storageService)
     {
-        _storage = storage;
+        _storageService = storageService;
     }
 
     public string StorageName
     {
-        get => _storage.GetType().Name;
+        get => _storageService.GetType().Name;
     }
 
-    public async Task DeleteAsync(string pathOrContainerName, string fileName)
+    public async Task DeleteAsync(string ContainerName, string fileName)
     {
-        await _storage.DeleteAsync(pathOrContainerName, fileName);
+        await _storageService.DeleteAsync(ContainerName, fileName);
     }
 
-    public List<string> GetFiles(string pathOrContainerName)
+    public List<string> GetFiles(string ContainerName)
     {
-        return _storage.GetFiles(pathOrContainerName);
+        return _storageService.GetFiles(ContainerName);
     }
 
-    public bool HasFile(string pathOrContainerName, string fileName)
+    public async Task<bool> HasFile(string ContainerName, string fileName)
     {
-        return _storage.HasFile(pathOrContainerName, fileName);
+        return await _storageService.HasFile(ContainerName, fileName);
     }
 
-    public async Task<List<(string fileName, string path)>> UploadAsync(
-        string pathOrContainerName,
-        IFormFileCollection files
-    )
+    public async Task<List<StorageFile>> UploadAsync(UploadProductImageRequest model)
     {
-        return await _storage.UploadAsync(pathOrContainerName, files);
+        return await _storageService.UploadAsync(model);
     }
 }

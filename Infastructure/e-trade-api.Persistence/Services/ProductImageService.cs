@@ -10,19 +10,16 @@ public class ProductImageService : IProductImageService
     IProductReadRepository _productReadRepository;
     IProductImageFileWriteRepository _productImageFileWriteRepository;
     IStorageService _storageService;
-    readonly IProductImageFileReadRepository _productImageFileReadRepository;
 
     public ProductImageService(
         IStorageService storageService,
         IProductImageFileWriteRepository productImageFileWriteRepository,
-        IProductReadRepository productReadRepository,
-        IProductImageFileReadRepository productImageFileReadRepository
+        IProductReadRepository productReadRepository
     )
     {
         _storageService = storageService;
         _productImageFileWriteRepository = productImageFileWriteRepository;
         _productReadRepository = productReadRepository;
-        _productImageFileReadRepository = productImageFileReadRepository;
     }
 
     public async Task DeleteProductImage(ProductImageDeleteRequestDTO model)
@@ -45,22 +42,26 @@ public class ProductImageService : IProductImageService
 
     public async Task UploadProductImage(UploadProductImageRequestDTO model)
     {
-        List<(string fileName, string path)> datas = await _storageService.UploadAsync(
-            "product-image",
-            model.Files
-        );
-
         Product product = await _productReadRepository.GetByIdAsync(model.Id);
+
+        List<StorageFile> datas = await _storageService.UploadAsync(
+            new()
+            {
+                ContainerName = "product-image",
+                Files = model.Files,
+                ProductName = product.Name
+            }
+        );
 
         List<ProductImageFile> imageFiles = datas
             .Select(
                 d =>
                     new ProductImageFile()
                     {
-                        FileName = d.fileName,
-                        Path = d.path,
+                        FileName = d.FileName,
+                        Path = d.Path,
                         Storage = _storageService.StorageName,
-                        Products = new List<Product>() { product },
+                        Product = product,
                         Showcase = product.ProductImageFiles == null // İlk dosya için sadece bu true, diğerleri false
                     }
             )

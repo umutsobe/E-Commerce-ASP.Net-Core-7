@@ -15,8 +15,8 @@ public static class ServiceRegistiration
     }
 
     public static void AddStorage<T>(this IServiceCollection services)
-        where T : class, IStorage // normalde sadece IStorage demeliydik. ama interface olduğu için class da dedik. yani istorage'dan türeyen bir class oraya gelsin diyoruz.
+        where T : class, IStorageService //T sadece IStorageService'ten türeyen bir class olabilir. Şimdilik azure storage. daha sonra başkaları da eklenebilir.
     {
-        services.AddScoped<IStorage, T>();
+        services.AddScoped<IStorageService, AzureStorage>();
     }
 }
