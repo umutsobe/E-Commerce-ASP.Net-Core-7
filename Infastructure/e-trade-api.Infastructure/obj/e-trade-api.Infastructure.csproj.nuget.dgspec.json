@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\e-trade-api.Infastructure.csproj": {}
+    "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\e-trade-api.Infastructure.csproj": {}
   },
   "projects": {
     "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj": {
@@ -158,14 +158,14 @@
         }
       }
     },
-    "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\e-trade-api.Infastructure.csproj": {
+    "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\e-trade-api.Infastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\e-trade-api.Infastructure.csproj",
+        "projectUniqueName": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\e-trade-api.Infastructure.csproj",
         "projectName": "e-trade-api.Infastructure",
-        "projectPath": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\e-trade-api.Infastructure.csproj",
+        "projectPath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\e-trade-api.Infastructure.csproj",
         "packagesPath": "C:\\Users\\umutt\\.nuget\\packages\\",
-        "outputPath": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\obj\\",
+        "outputPath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\umutt\\AppData\\Roaming\\NuGet\\NuGet.Config"

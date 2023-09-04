@@ -8,18 +8,21 @@ namespace e_trade_api.Persistence;
 public class ProductImageService : IProductImageService
 {
     IProductReadRepository _productReadRepository;
+    IProductImageFileReadRepository _productImageFileReadRepository;
     IProductImageFileWriteRepository _productImageFileWriteRepository;
     IStorageService _storageService;
 
     public ProductImageService(
         IStorageService storageService,
         IProductImageFileWriteRepository productImageFileWriteRepository,
-        IProductReadRepository productReadRepository
+        IProductReadRepository productReadRepository,
+        IProductImageFileReadRepository productImageFileReadRepository
     )
     {
         _storageService = storageService;
         _productImageFileWriteRepository = productImageFileWriteRepository;
         _productReadRepository = productReadRepository;
+        _productImageFileReadRepository = productImageFileReadRepository;
     }
 
     public async Task DeleteProductImage(ProductImageDeleteRequestDTO model)
@@ -62,17 +65,23 @@ public class ProductImageService : IProductImageService
                         Path = d.Path,
                         Storage = _storageService.StorageName,
                         Product = product,
-                        Showcase = product.ProductImageFiles == null // İlk dosya için sadece bu true, diğerleri false
                     }
             )
             .ToList();
 
-        if (imageFiles.Count > 0)
+        await _productImageFileWriteRepository.AddRangeAsync(imageFiles);
+        await _productImageFileWriteRepository.SaveAsync();
+
+        List<ProductImageFile> productImageFiles = _productImageFileReadRepository.Table
+            .Where(pif => pif.ProductId == product.Id)
+            .ToList();
+
+        foreach (var item in productImageFiles)
         {
-            imageFiles[0].Showcase = true;
+            item.Showcase = false;
         }
 
-        await _productImageFileWriteRepository.AddRangeAsync(imageFiles);
+        productImageFiles[0].Showcase = true;
         await _productImageFileWriteRepository.SaveAsync();
     }
 
@@ -87,13 +96,25 @@ public class ProductImageService : IProductImageService
                 p =>
                     new GetProductImageQueryResponse
                     {
+                        Id = p.Id.ToString(),
                         Path = $"{MyConfigurationManager.GetBaseAzureStorageUrl()}/{p.Path}",
-                        FileName = p.FileName,
-                        Id = p.Id.ToString()
+                        IsShowCase = p.Showcase
                     }
             )
             .ToList();
 
         return responses;
+    }
+
+    public async Task<GetProductShowcaseImageResponse> GetProductShowcaseImage(string productId)
+    {
+        ProductImageFile? productImageFile = await _productImageFileReadRepository.Table
+            .Where(pif => pif.ProductId == Guid.Parse(productId) && pif.Showcase == true)
+            .FirstOrDefaultAsync();
+
+        if (productImageFile != null)
+            return new() { Path = productImageFile.Path };
+
+        return new();
     }
 }

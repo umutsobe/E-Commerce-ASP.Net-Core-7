@@ -69,23 +69,6 @@ public class ProductControllers : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("[action]/{Id}")]
-    // [Authorize(AuthenticationSchemes = "Admin")]
-    [AuthorizeDefinition(
-        Menu = AuthorizeDefinitionConstants.Products,
-        ActionType = ActionType.Reading,
-        Definition = "Get Products Images"
-    )]
-    public async Task<IActionResult> GetProductImages(
-        [FromRoute] GetProductImageQueryRequest getProductImageQueryRequest
-    )
-    {
-        List<GetProductImageQueryResponse> response = await _mediator.Send(
-            getProductImageQueryRequest
-        );
-        return Ok(response);
-    }
-
     [HttpDelete("[action]/{ProductId}")] //alttaki isimle buradaki isim aynı olmak zorunda. buradaki productId, pareametredeki productId
     [Authorize(AuthenticationSchemes = "Admin")]
     [AuthorizeDefinition(
@@ -184,22 +167,20 @@ public class ProductControllers : ControllerBase
         return Ok(response);
     }
 
-    // [HttpGet("[action]")]
-    // [Authorize(AuthenticationSchemes = "Admin")]
-    // [AuthorizeDefinition(
-    //     Menu = AuthorizeDefinitionConstants.Products,
-    //     ActionType = ActionType.Updating,
-    //     Definition = "Change Showcase Image"
-    // )]
-    // public async Task<IActionResult> ChangeShowcaseImage(
-    //     [FromQuery] ChangeShowcaseImageCommandRequest changeShowcaseImageCommandRequest
-    // )
-    // {
-    //     ChangeShowcaseImageCommandResponse response = await _mediator.Send(
-    //         changeShowcaseImageCommandRequest
-    //     );
-    //     return Ok(response);
-    // }
+    [HttpGet("[action]")]
+    [Authorize(AuthenticationSchemes = "Admin")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Products,
+        ActionType = ActionType.Updating,
+        Definition = "Change Showcase Image"
+    )]
+    public async Task<IActionResult> ChangeShowcaseImage(
+        [FromQuery] ChangeShowCaseImageRequestDTO requestDTO
+    )
+    {
+        await _productService.ChangeShowcaseImage(requestDTO);
+        return Ok();
+    }
 
     [HttpPost("[action]")]
     [Authorize(AuthenticationSchemes = "Admin")]
@@ -215,5 +196,21 @@ public class ProductControllers : ControllerBase
         uploadProductImageCommandRequest.Files = Request.Form.Files; //application katmanında gelen dosyaları yakalayamadık. o yüzden böyle yazdık
         await _mediator.Send(uploadProductImageCommandRequest);
         return Ok();
+    }
+
+    [HttpGet("[action]/{Id}")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Products,
+        ActionType = ActionType.Reading,
+        Definition = "Get Products Images"
+    )]
+    public async Task<IActionResult> GetProductImages(
+        [FromRoute] GetProductImageQueryRequest getProductImageQueryRequest
+    )
+    {
+        List<GetProductImageQueryResponse> response = await _mediator.Send(
+            getProductImageQueryRequest
+        );
+        return Ok(response);
     }
 }

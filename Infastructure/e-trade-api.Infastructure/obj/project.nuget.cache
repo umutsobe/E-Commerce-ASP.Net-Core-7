@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0Ydojsv1tGSzD4ularLgzIykiv0D+2S7Y4nsD6ype6cle8ZUFWfSYLxXaW5F55SoxZLqDomP4JgekHYG8CQwgg==",
+  "dgSpecHash": "Zg9Mo6kAVDz1x0iskaXaKaUC60aZGZoNrvftnqBr//EVfzpEzRuBnUIpUObqXLN9A6ZQRQnHdNru3xusFZIPlQ==",
   "success": true,
-  "projectFilePath": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\e-trade-api.Infastructure.csproj",
+  "projectFilePath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Infastructure\\e-trade-api.Infastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\umutt\\.nuget\\packages\\azure.core\\1.33.0\\azure.core.1.33.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\azure.storage.blobs\\12.17.0\\azure.storage.blobs.12.17.0.nupkg.sha512",

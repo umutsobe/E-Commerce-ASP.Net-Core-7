@@ -5,7 +5,7 @@ public interface IProductService
     //commands
     public Task CreateProduct(CreateProductDTO model);
 
-    // public Task ChangeShowcaseImage(ChangeShowCaseImageRequestDTO model);
+    public Task ChangeShowcaseImage(ChangeShowCaseImageRequestDTO model);
     public Task DeleteProductById(string Id);
     public Task UpdateProduct(UpdateProductDTO model);
 

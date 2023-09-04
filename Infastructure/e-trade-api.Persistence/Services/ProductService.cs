@@ -9,17 +9,21 @@ namespace e_trade_api.Persistence;
 public class ProductService : IProductService
 {
     readonly IProductImageFileWriteRepository _productImageFileWriteRepository;
+    readonly IProductImageFileReadRepository _productImageFileReadRepository;
     readonly IProductReadRepository _productReadRepository;
     readonly IProductWriteRepository _productWriteRepository;
     readonly IProductHubServices _productHubServices;
     readonly ICategoryReadRepository _categoryReadRepository;
+    readonly IProductImageService _productImageService;
 
     public ProductService(
         IProductImageFileWriteRepository productImageFileWriteRepository,
         IProductReadRepository productReadRepository,
         IProductWriteRepository productWriteRepository,
         IProductHubServices productHubServices,
-        ICategoryReadRepository categoryReadRepository
+        ICategoryReadRepository categoryReadRepository,
+        IProductImageService productImageService,
+        IProductImageFileReadRepository productImageFileReadRepository
     )
     {
         _productImageFileWriteRepository = productImageFileWriteRepository;
@@ -27,30 +31,33 @@ public class ProductService : IProductService
         _productWriteRepository = productWriteRepository;
         _productHubServices = productHubServices;
         _categoryReadRepository = categoryReadRepository;
+        _productImageService = productImageService;
+        _productImageFileReadRepository = productImageFileReadRepository;
     }
 
     //commands
 
 
-    // public async Task ChangeShowcaseImage(ChangeShowCaseImageRequestDTO model)
-    // {
-    //     var query = _productImageFileWriteRepository.Table
-    //         .Include(p => p.Product)
-    //         .SelectMany(p => p.Product, (pif, p) => new { pif, p });
+    public async Task ChangeShowcaseImage(ChangeShowCaseImageRequestDTO model)
+    {
+        List<ProductImageFile> productImageFiles = _productImageFileReadRepository.Table
+            .Where(pif => pif.ProductId == Guid.Parse(model.ProductId))
+            .ToList();
 
-    //     var data = await query.FirstOrDefaultAsync(
-    //         p => p.p.Id == Guid.Parse(model.ProductId) && p.pif.Showcase
-    //     );
+        foreach (var item in productImageFiles)
+        {
+            item.Showcase = false;
+        }
 
-    //     if (data != null)
-    //         data.pif.Showcase = false;
+        await _productImageFileWriteRepository.SaveAsync();
 
-    //     var image = await query.FirstOrDefaultAsync(p => p.pif.Id == Guid.Parse(model.ImageId));
-    //     if (image != null)
-    //         image.pif.Showcase = true;
+        ProductImageFile productImageFile = await _productImageFileReadRepository.GetByIdAsync(
+            model.ImageId
+        );
+        productImageFile.Showcase = true;
 
-    //     await _productImageFileWriteRepository.SaveAsync();
-    // }
+        await _productImageFileWriteRepository.SaveAsync();
+    }
 
     public async Task CreateProduct(CreateProductDTO model)
     {
@@ -106,7 +113,6 @@ public class ProductService : IProductService
         await _productWriteRepository.SaveAsync();
     }
 
-    //queries
     public async Task<GetAllProductsResponseAdminDTO> GetAllProductsAdmin(
         GetProductsByFilterDTO model
     )
@@ -298,10 +304,7 @@ public class ProductService : IProductService
 
     public async Task<GetAllProductsResponseDTO> GetProductsByFilter(GetProductsByFilterDTO model) //kullanıcı için
     {
-        var query = _productReadRepository.Table
-            .Include(p => p.Categories)
-            .Include(p => p.ProductImageFiles)
-            .AsQueryable();
+        var query = _productReadRepository.Table.Include(p => p.Categories).AsQueryable();
 
         query = query.Where(p => p.isActive); //sadece aktifler gelecek
 
@@ -340,7 +343,6 @@ public class ProductService : IProductService
                         p.Url,
                         p.CreatedDate,
                         p.UpdatedDate,
-                        p.ProductImageFiles
                     }
             )
             .ToListAsync();
@@ -354,6 +356,9 @@ public class ProductService : IProductService
             {
                 if (product != null)
                 {
+                    GetProductShowcaseImageResponse response =
+                        await _productImageService.GetProductShowcaseImage(product.Id.ToString());
+
                     ProductResponseDTO productDTO =
                         new()
                         {
@@ -361,7 +366,7 @@ public class ProductService : IProductService
                             Name = product.Name,
                             Stock = product.Stock,
                             Price = product.Price,
-                            ProductImageFiles = product.ProductImageFiles,
+                            ProductImageShowCasePath = response.Path,
                             Url = product.Url
                         };
 

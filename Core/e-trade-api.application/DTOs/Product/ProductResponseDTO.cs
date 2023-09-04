@@ -7,7 +7,7 @@ public class ProductResponseDTO
     public int Stock { get; set; }
     public float Price { get; set; }
     public string Url { get; set; }
-    public object ProductImageFiles { get; set; }
+    public string ProductImageShowCasePath { get; set; }
 }
 // p.Id,
 // p.Name,
