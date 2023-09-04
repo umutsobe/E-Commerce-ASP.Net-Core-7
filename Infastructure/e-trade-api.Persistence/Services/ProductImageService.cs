@@ -98,7 +98,7 @@ public class ProductImageService : IProductImageService
                     {
                         Id = p.Id.ToString(),
                         Path = $"{MyConfigurationManager.GetBaseAzureStorageUrl()}/{p.Path}",
-                        IsShowCase = p.Showcase
+                        Showcase = p.Showcase
                     }
             )
             .ToList();

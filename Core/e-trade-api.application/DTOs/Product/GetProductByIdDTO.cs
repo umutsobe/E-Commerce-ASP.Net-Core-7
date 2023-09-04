@@ -8,5 +8,5 @@ public class GetProductByIdDTO
     public float Price { get; set; }
     public string Url { get; set; }
     public string Description { get; set; }
-    public object ProductImageFiles { get; set; }
+    public List<ProductImageFileResponseDTO> ProductImageFiles { get; set; }
 }

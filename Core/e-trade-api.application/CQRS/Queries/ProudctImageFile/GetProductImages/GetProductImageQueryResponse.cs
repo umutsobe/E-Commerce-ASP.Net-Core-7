@@ -4,5 +4,5 @@ public class GetProductImageQueryResponse
 {
     public string Id { get; set; }
     public string Path { get; set; }
-    public bool IsShowCase { get; set; }
+    public bool Showcase { get; set; }
 }

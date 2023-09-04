@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 using e_trade_api.API;
 using e_trade_api.application;
 using e_trade_api.Infastructure;
@@ -22,10 +23,16 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<RolePermissionFilter>();
-});
+builder.Services
+    .AddControllers(options =>
+    {
+        options.Filters.Add<RolePermissionFilter>();
+    })
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
 
 builder.Services.AddValidationsServices();
 

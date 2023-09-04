@@ -176,6 +176,21 @@ public class ProductService : IProductService
             {
                 if (product != null)
                 {
+                    List<ProductImageFileResponseDTO> productImages = new();
+
+                    foreach (var productImage in product.ProductImageFiles)
+                    {
+                        ProductImageFileResponseDTO _productImage =
+                            new()
+                            {
+                                FileName = productImage.FileName,
+                                Showcase = productImage.Showcase,
+                                Path = productImage.Path,
+                                Id = productImage.Id.ToString(),
+                            };
+                        productImages.Add(_productImage);
+                    }
+
                     ProductResponseAdminDTO productDTO =
                         new()
                         {
@@ -183,14 +198,14 @@ public class ProductService : IProductService
                             Name = product.Name,
                             Stock = product.Stock,
                             Price = product.Price,
-                            ProductImageFiles = product.ProductImageFiles,
                             Url = product.Url,
                             CreatedDate = product.CreatedDate,
                             UpdatedDate = product.UpdatedDate,
                             Description = product.Description,
                             IsActive = product.isActive,
                             TotalBasketAdded = product.TotalBasketAdded,
-                            TotalOrderNumber = product.TotalOrderNumber
+                            TotalOrderNumber = product.TotalOrderNumber,
+                            ProductImageFiles = productImages
                         };
 
                     productsDTO.Products.Add(productDTO);
@@ -210,10 +225,27 @@ public class ProductService : IProductService
     public async Task<GetProductByIdDTO> GetProductByUrlId(string urlId)
     {
         Product? product = await _productReadRepository.Table
+            .Include(p => p.ProductImageFiles)
             .Where(p => p.Url == urlId)
             .FirstOrDefaultAsync();
 
         if (product != null)
+        {
+            List<ProductImageFileResponseDTO> productImages = new();
+
+            foreach (var productImage in product.ProductImageFiles)
+            {
+                ProductImageFileResponseDTO _productImage =
+                    new()
+                    {
+                        FileName = productImage.FileName,
+                        Showcase = productImage.Showcase,
+                        Path = productImage.Path,
+                        Id = productImage.Id.ToString(),
+                    };
+                productImages.Add(_productImage);
+            }
+
             return new()
             {
                 Id = product.Id.ToString(),
@@ -221,9 +253,10 @@ public class ProductService : IProductService
                 Price = product.Price,
                 Stock = product.Stock,
                 Description = product.Description,
-                ProductImageFiles = product.ProductImageFiles,
-                Url = product.Url
+                Url = product.Url,
+                ProductImageFiles = productImages
             };
+        }
         else
             throw new Exception("Product Not Found");
     }

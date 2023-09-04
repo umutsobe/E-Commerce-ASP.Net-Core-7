@@ -9,7 +9,7 @@ public class ProductResponseAdminDTO
     public string Url { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime UpdatedDate { get; set; }
-    public object ProductImageFiles { get; set; }
+    public List<ProductImageFileResponseDTO> ProductImageFiles { get; set; }
 
     //admin
     public bool IsActive { get; set; }
