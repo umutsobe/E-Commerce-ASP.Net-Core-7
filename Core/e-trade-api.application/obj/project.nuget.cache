@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "93tr084XEBoMLlOSGwIwAjKZRAwXkUfo7YHePjGp0pTtXmGfGmKzW6jx7K5kcHvJ/MiVdoqCqVColsBroWuwZA==",
+  "dgSpecHash": "w5MYi060QCYDPxpbs8bP943bechyp8vIxLZmaR77FstX6dHLfgchhInwEJ+w3IUhPtoKL+UNtYT9hthLzfGM+g==",
   "success": true,
-  "projectFilePath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj",
+  "projectFilePath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation\\11.7.1\\fluentvalidation.11.7.1.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
