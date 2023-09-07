@@ -66,11 +66,6 @@ public static class MyConfigurationManager
     }
 }
 
-// GetAzureStorageConnectionString
-// GetBaseAzureStorageUrl
-// GetMailModel
-// GetTokenModel
-
 public class MailConfiguraiton
 {
     public string Username { get; set; }

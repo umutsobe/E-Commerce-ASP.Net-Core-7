@@ -1,33 +1,35 @@
 {
   "format": 1,
   "restore": {
-    "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj": {}
+    "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj": {}
   },
   "projects": {
-    "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj": {
+    "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj",
+        "projectUniqueName": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj",
         "projectName": "e-trade-api.application",
-        "projectPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj",
+        "projectPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj",
         "packagesPath": "C:\\Users\\umutt\\.nuget\\packages\\",
-        "outputPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\obj\\",
+        "outputPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\umutt\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\umutt\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0"
+          "net7.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0": {
-            "targetAlias": "net6.0",
+          "net7.0": {
+            "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj": {
-                "projectPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj"
+              "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj": {
+                "projectPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj"
               }
             }
           }
@@ -39,8 +41,8 @@
         }
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net7.0": {
+          "targetAlias": "net7.0",
           "dependencies": {
             "FluentValidation": {
               "target": "Package",
@@ -54,17 +56,13 @@
               "target": "Package",
               "version": "[11.7.1, )"
             },
-            "Google.Apis.Auth": {
-              "target": "Package",
-              "version": "[1.61.0, )"
-            },
             "MediatR": {
               "target": "Package",
-              "version": "[10.0.1, )"
+              "version": "[11.1.0, )"
             },
             "MediatR.Extensions.Microsoft.DependencyInjection": {
               "target": "Package",
-              "version": "[10.0.1, )"
+              "version": "[11.1.0, )"
             },
             "Microsoft.AspNetCore.Http": {
               "target": "Package",
@@ -72,7 +70,7 @@
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[6.0.21, )"
+              "version": "[7.0.10, )"
             }
           },
           "imports": [
@@ -91,31 +89,33 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.412\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj": {
+    "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj",
+        "projectUniqueName": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj",
         "projectName": "e-trade-api.domain",
-        "projectPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj",
+        "projectPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj",
         "packagesPath": "C:\\Users\\umutt\\.nuget\\packages\\",
-        "outputPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\obj\\",
+        "outputPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\umutt\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\umutt\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0"
+          "net7.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0": {
-            "targetAlias": "net6.0",
+          "net7.0": {
+            "targetAlias": "net7.0",
             "projectReferences": {}
           }
         },
@@ -126,8 +126,8 @@
         }
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net7.0": {
+          "targetAlias": "net7.0",
           "dependencies": {
             "Microsoft.AspNetCore.Identity": {
               "target": "Package",
@@ -154,34 +154,36 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.412\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj": {
+    "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj",
+        "projectUniqueName": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj",
         "projectName": "e-trade-api.Persistence",
-        "projectPath": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj",
+        "projectPath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj",
         "packagesPath": "C:\\Users\\umutt\\.nuget\\packages\\",
-        "outputPath": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\obj\\",
+        "outputPath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\umutt\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\umutt\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0"
+          "net7.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0": {
-            "targetAlias": "net6.0",
+          "net7.0": {
+            "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj": {
-                "projectPath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj"
+              "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj": {
+                "projectPath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj"
               }
             }
           }
@@ -193,52 +195,60 @@
         }
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net7.0": {
+          "targetAlias": "net7.0",
           "dependencies": {
+            "Google.Apis.Auth": {
+              "target": "Package",
+              "version": "[1.62.0, )"
+            },
+            "Microsoft.AspNetCore.AzureKeyVault.HostingStartup": {
+              "target": "Package",
+              "version": "[2.0.4, )"
+            },
             "Microsoft.AspNetCore.Identity": {
               "target": "Package",
               "version": "[2.2.0, )"
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[6.0.21, )"
+              "version": "[7.0.10, )"
             },
             "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
               "target": "Package",
-              "version": "[6.0.21, )"
+              "version": "[7.0.10, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[6.0.21, )"
+              "version": "[7.0.10, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[6.0.21, )"
+              "version": "[7.0.10, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[6.0.21, )"
+              "version": "[7.0.10, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[6.0.21, )"
+              "version": "[7.0.10, )"
             },
             "Microsoft.Extensions.Configuration": {
               "target": "Package",
-              "version": "[6.0.1, )"
+              "version": "[7.0.0, )"
             },
             "Microsoft.Extensions.Configuration.Json": {
               "target": "Package",
-              "version": "[6.0.0, )"
+              "version": "[7.0.0, )"
             },
             "Microsoft.Extensions.DependencyInjection.Abstractions": {
               "target": "Package",
-              "version": "[6.0.0, )"
+              "version": "[7.0.0, )"
             }
           },
           "imports": [
@@ -257,7 +267,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.412\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -1,5 +1,4 @@
 using e_trade_api.domain;
-using Google.Apis.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 

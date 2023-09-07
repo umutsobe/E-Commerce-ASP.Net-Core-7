@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "v6p1ccgequtOswbyvYhTh8MlGXlsyIDLOdTtGi4lVsYtxXY0Riak+C6NULPq+udMNNLGUITZbBvL89hjGSLnoQ==",
+  "dgSpecHash": "1GyGEnkZiYSwPR/Gess4ntvpeuGZMLel745a0S42OxKHw0KMMYfq1zWdhk1+XiqkDh5FAT1bMePkBbvcvawmdA==",
   "success": true,
-  "projectFilePath": "C:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj",
+  "projectFilePath": "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.domain\\e-trade-api.domain.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\umutt\\.nuget\\packages\\microsoft.aspnetcore.authentication\\2.2.0\\microsoft.aspnetcore.authentication.2.2.0.nupkg.sha512",
     "C:\\Users\\umutt\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",

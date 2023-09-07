@@ -1,0 +1,15 @@
+c:\E-Trade\e-trade-api\Core\e-trade-api.application\obj\Debug\net7.0\e-trade-api.application.csproj.AssemblyReference.cache
+c:\E-Trade\e-trade-api\Core\e-trade-api.application\obj\Debug\net7.0\e-trade-api.application.GeneratedMSBuildEditorConfig.editorconfig
+c:\E-Trade\e-trade-api\Core\e-trade-api.application\obj\Debug\net7.0\e-trade-api.application.AssemblyInfoInputs.cache
+c:\E-Trade\e-trade-api\Core\e-trade-api.application\obj\Debug\net7.0\e-trade-api.application.AssemblyInfo.cs
+c:\E-Trade\e-trade-api\Core\e-trade-api.application\obj\Debug\net7.0\e-trade-api.application.csproj.CoreCompileInputs.cache
+c:\E-Trade\e-trade-api\Core\e-trade-api.application\bin\Debug\net7.0\e-trade-api.application.deps.json
+c:\E-Trade\e-trade-api\Core\e-trade-api.application\bin\Debug\net7.0\e-trade-api.application.dll
+c:\E-Trade\e-trade-api\Core\e-trade-api.application\bin\Debug\net7.0\e-trade-api.application.pdb
+c:\E-Trade\e-trade-api\Core\e-trade-api.application\bin\Debug\net7.0\e-trade-api.domain.dll
+c:\E-Trade\e-trade-api\Core\e-trade-api.application\bin\Debug\net7.0\e-trade-api.domain.pdb
+c:\E-Trade\e-trade-api\Core\e-trade-api.application\obj\Debug\net7.0\e-trade-api.application.csproj.CopyComplete
+c:\E-Trade\e-trade-api\Core\e-trade-api.application\obj\Debug\net7.0\e-trade-api.application.dll
+c:\E-Trade\e-trade-api\Core\e-trade-api.application\obj\Debug\net7.0\refint\e-trade-api.application.dll
+c:\E-Trade\e-trade-api\Core\e-trade-api.application\obj\Debug\net7.0\e-trade-api.application.pdb
+c:\E-Trade\e-trade-api\Core\e-trade-api.application\obj\Debug\net7.0\ref\e-trade-api.application.dll

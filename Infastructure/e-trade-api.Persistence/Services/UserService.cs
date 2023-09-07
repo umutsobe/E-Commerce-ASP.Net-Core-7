@@ -34,7 +34,7 @@ public class UserService : IUserService
 
     public async Task UpdatePasswordAsync(string userId, string resetToken, string newPassword)
     {
-        AppUser user = await _userManager.FindByIdAsync(userId);
+        AppUser? user = await _userManager.FindByIdAsync(userId);
 
         if (user != null)
         {
@@ -73,7 +73,7 @@ public class UserService : IUserService
 
     public async Task AssignRoleToUserAsnyc(string userId, string[] roles)
     {
-        AppUser user = await _userManager.FindByIdAsync(userId);
+        AppUser? user = await _userManager.FindByIdAsync(userId);
         if (user != null)
         {
             var userRoles = await _userManager.GetRolesAsync(user);
@@ -85,7 +85,7 @@ public class UserService : IUserService
 
     public async Task<string[]> GetRolesToUserAsync(string userIdOrName)
     {
-        AppUser user = await _userManager.FindByIdAsync(userIdOrName);
+        AppUser? user = await _userManager.FindByIdAsync(userIdOrName);
         if (user == null)
             user = await _userManager.FindByNameAsync(userIdOrName);
 
@@ -111,7 +111,6 @@ public class UserService : IUserService
         if (endpoint == null)
             return false;
 
-        var hasRole = false;
         var endpointRoles = endpoint.Roles.Select(r => r.Name);
 
         foreach (var userRole in userRoles)
