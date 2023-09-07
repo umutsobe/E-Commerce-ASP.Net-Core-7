@@ -18,6 +18,9 @@ public interface IProductService
     Task<List<string>> GetCategoriesByProduct(string productId);
     Task AddProductsToCategory(AddProductsToCategoryRequestDTO model);
     Task<GetAllProductsResponseDTO> GetProductsByFilter(GetProductsByFilterDTO model);
+    Task AddStock(AddStockRequestDTO model);
+    Task DeactivateProduct(string productId);
+    Task ActivateProduct(string productId);
 
     //develeopment
 

@@ -7,7 +7,7 @@ public interface IBasketService
     public Task<bool> CreateBasket(string userId);
     public Task<Basket> GetBasket(string basketId);
     public Task<string> GetBasketId(string userId);
-    public Task<List<BasketItem>> GetBasketItemsAsync(string basketId);
+    public Task<List<BasketItemDTO>> GetBasketItemsAsync(string basketId);
     public Task AddItemToBasketAsync(CreateBasketItemRequestDTO basketItem, string basketId);
     public Task UpdateQuantityAsync(UpdateBasketItemRequestDTO basketItem);
     public Task RemoveBasketItemAsync(string basketItemId);

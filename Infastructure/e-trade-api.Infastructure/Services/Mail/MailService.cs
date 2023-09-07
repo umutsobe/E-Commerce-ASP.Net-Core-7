@@ -68,7 +68,7 @@ public class MailService : IMailService
     {
         string mail =
             $"Sayın {userName} Merhaba<br>"
-            + $"{orderDate} tarihinde vermiş olduğunuz {orderCode} kodlu siparişiniz tamamlanmış ve kargo firmasına verilmiştir.<br>Bizi tercih ettiğiniz için teşekkür ederiz";
+            + $"{orderDate} tarihinde vermiş olduğunuz {orderCode} kodlu siparişiniz oluşturulmuştur. Yakın zamanda kargoya verilecektir. <br>Bizi tercih ettiğiniz için teşekkür ederiz";
 
         await SendMailAsync(to, $"{orderCode} Sipariş Numaralı Siparişiniz Tamamlandı", mail);
     }

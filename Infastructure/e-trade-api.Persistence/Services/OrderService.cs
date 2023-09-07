@@ -1,3 +1,4 @@
+using System.Drawing.Printing;
 using System.Text;
 using e_trade_api.application;
 using e_trade_api.domain;
@@ -92,8 +93,12 @@ public class OrderService : IOrderService
                 OrderCode = orderCode
             }
         );
-
         await _orderWriteRepository.SaveAsync();
+
+        if (createOrder.OrderItems.Count < 1)
+            throw new Exception("Sipariş ürünleri boş olamaz");
+
+        Dictionary<Product, int> productOriginalStock = new(); //tüm ürünlerin orijinal stok miktarını tutuyor, eğer stok hatası alırsak stok eski haline dönecek
 
         foreach (var orderItem in createOrder.OrderItems)
         {
@@ -101,20 +106,52 @@ public class OrderService : IOrderService
                 p => p.Id == Guid.Parse(orderItem.ProductId)
             );
 
-            product.TotalOrderNumber += orderItem.Quantity;
+            if (product != null)
+            {
+                productOriginalStock.Add(product, product.Stock);
 
-            await _orderItemWriteRepository.AddAsync(
-                new()
+                product.TotalOrderNumber += orderItem.Quantity;
+
+                if (orderItem.Quantity <= product.Stock)
                 {
-                    Id = Guid.NewGuid(),
-                    OrderId = orderId,
-                    ProductId = Guid.Parse(orderItem.ProductId),
-                    Price = orderItem.Price,
-                    Quantity = orderItem.Quantity
+                    bool result = await _orderItemWriteRepository.AddAsync(
+                        new()
+                        {
+                            Id = Guid.NewGuid(),
+                            OrderId = orderId,
+                            ProductId = Guid.Parse(orderItem.ProductId),
+                            Price = orderItem.Price,
+                            Quantity = orderItem.Quantity
+                        }
+                    );
+                    if (result)
+                    {
+                        product.Stock -= orderItem.Quantity;
+                    }
                 }
-            );
+                else //sipariş verirken herhangi bir ürün stok miktarında hata alırsak. her şeyi eski haline getir.
+                {
+                    foreach (var _product in productOriginalStock) //ürünlerin stoklarını eski haline getir
+                    {
+                        Product updateProduct = _product.Key;
+                        updateProduct.Stock = _product.Value;
+                    }
+
+                    await _orderWriteRepository.RemoveAsync(orderId.ToString());
+                    await _orderWriteRepository.SaveAsync();
+                    throw new Exception(
+                        "Siparişinizdeki ürünlerden bazılarının stoğu tükendi. Sepetinizi tekrar gözden geçirin."
+                    );
+                }
+            }
+            else
+            {
+                // Ürün bulunamadı, hata işleme yapılabilir
+                throw new Exception("Ürün bulunamadı.");
+            }
         }
 
+        //siparişte hata alırsak buraya gelmeyeceğiz zaten
         Basket? basket = await _basketReadRepository.Table.FirstOrDefaultAsync(
             b => b.UserId == createOrder.UserId
         );

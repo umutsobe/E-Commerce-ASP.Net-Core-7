@@ -213,4 +213,25 @@ public class ProductControllers : ControllerBase
         );
         return Ok(response);
     }
+
+    [HttpPut("[action]")]
+    public async Task<IActionResult> AddStock(AddStockRequestDTO model)
+    {
+        await _productService.AddStock(model);
+        return Ok();
+    }
+
+    [HttpPut("[action]/{productId}")]
+    public async Task<IActionResult> DeactivateProduct(string productId)
+    {
+        await _productService.DeactivateProduct(productId);
+        return Ok();
+    }
+
+    [HttpPut("[action]/{productId}")]
+    public async Task<IActionResult> ActivateProduct(string productId)
+    {
+        await _productService.ActivateProduct(productId);
+        return Ok();
+    }
 }

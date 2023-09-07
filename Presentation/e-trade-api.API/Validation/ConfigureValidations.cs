@@ -21,6 +21,3 @@ public static class ConfigureValidations
         services.AddValidatorsFromAssemblyContaining<CreateOrderValidator>();
     }
 }
-
-//bu dosyayı ben yaptım. fluent validation güncellendiği için eski şekilde yapamıyorduk.
-// oku https://github.com/FluentValidation/FluentValidation/issues/1963

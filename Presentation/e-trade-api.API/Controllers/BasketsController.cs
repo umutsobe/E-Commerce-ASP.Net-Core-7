@@ -11,25 +11,23 @@ namespace e_trade_api.API.Controllers;
 public class BasketsController : ControllerBase
 {
     readonly IMediator _mediator;
+    readonly IBasketService _basketService;
 
-    public BasketsController(IMediator mediator)
+    public BasketsController(IMediator mediator, IBasketService basketService)
     {
         _mediator = mediator;
+        _basketService = basketService;
     }
 
-    [HttpGet("{BasketId}")]
+    [HttpGet("{basketId}")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Baskets,
         ActionType = ActionType.Reading,
         Definition = "Get Basket Items"
     )]
-    public async Task<IActionResult> GetBasketItems(
-        [FromRoute] GetBasketItemsQueryRequest getBasketItemsQueryRequest
-    )
+    public async Task<IActionResult> GetBasketItems([FromRoute] string basketId)
     {
-        List<GetBasketItemsQueryResponse> response = await _mediator.Send(
-            getBasketItemsQueryRequest
-        );
+        List<BasketItemDTO> response = await _basketService.GetBasketItemsAsync(basketId);
         return Ok(response);
     }
 

@@ -137,12 +137,17 @@ public class ProductService : IProductService
 
         int totalProductCount = await query.CountAsync(); //skip take yapmadan önce count yaptık
 
-        if (model.Sort == "desc")
-            query = query.OrderByDescending(p => p.Price);
-        else if (model.Sort == "asc")
-            query = query.OrderBy(p => p.Price);
-        else if (model.Sort == "sales")
-            query = query.OrderByDescending(p => p.TotalOrderNumber);
+        if (!string.IsNullOrEmpty(model.Sort))
+        {
+            if (model.Sort == "desc")
+                query = query.OrderByDescending(p => p.Price);
+            else if (model.Sort == "asc")
+                query = query.OrderBy(p => p.Price);
+            else if (model.Sort == "sales")
+                query = query.OrderByDescending(p => p.TotalOrderNumber);
+        }
+        else
+            query = query.OrderBy(p => p.CreatedDate);
 
         query = query.Skip(model.Page * model.Size).Take(model.Size);
 
@@ -355,12 +360,17 @@ public class ProductService : IProductService
 
         int totalProductCount = await query.CountAsync(); //skip take yapmadan önce count yaptık
 
-        if (model.Sort == "desc")
-            query = query.OrderByDescending(p => p.Price);
-        else if (model.Sort == "asc")
-            query = query.OrderBy(p => p.Price);
-        else if (model.Sort == "sales")
-            query = query.OrderByDescending(p => p.TotalOrderNumber);
+        if (!string.IsNullOrEmpty(model.Sort))
+        {
+            if (model.Sort == "desc")
+                query = query.OrderByDescending(p => p.Price);
+            else if (model.Sort == "asc")
+                query = query.OrderBy(p => p.Price);
+            else if (model.Sort == "sales")
+                query = query.OrderByDescending(p => p.TotalOrderNumber);
+        }
+        else
+            query = query.OrderBy(p => p.CreatedDate);
 
         query = query.Skip(model.Page * model.Size).Take(model.Size);
 
@@ -450,5 +460,28 @@ public class ProductService : IProductService
 
         await _productWriteRepository.SaveAsync();
     }
+
+    public async Task AddStock(AddStockRequestDTO model)
+    {
+        Product product = await _productReadRepository.GetByIdAsync(model.ProductId);
+        product.Stock += model.StockToBeAdded;
+
+        await _productWriteRepository.SaveAsync();
+    }
+
+    public async Task DeactivateProduct(string productId)
+    {
+        Product product = await _productReadRepository.GetByIdAsync(productId);
+        product.isActive = false;
+
+        await _productWriteRepository.SaveAsync();
+    }
+
+    public async Task ActivateProduct(string productId)
+    {
+        Product product = await _productReadRepository.GetByIdAsync(productId);
+        product.isActive = true;
+
+        await _productWriteRepository.SaveAsync();
+    }
 }
-// .Name.Equals(model.CategoryName, StringComparison.OrdinalIgnoreCase)
