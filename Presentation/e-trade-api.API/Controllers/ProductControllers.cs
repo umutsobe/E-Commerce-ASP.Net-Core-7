@@ -19,7 +19,7 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpPost("[action]")]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    // [Authorize(AuthenticationSchemes = "Admin")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Products,
         ActionType = ActionType.Writing,

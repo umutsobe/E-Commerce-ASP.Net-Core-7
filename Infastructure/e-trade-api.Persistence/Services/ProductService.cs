@@ -344,7 +344,7 @@ public class ProductService : IProductService
     {
         var query = _productReadRepository.Table.Include(p => p.Categories).AsQueryable();
 
-        query = query.Where(p => p.isActive); //sadece aktifler gelecek
+        query = query.Where(p => p.isActive && p.Stock > 0); //sadece aktifler ve stoğu olanlar gelecek
 
         if (!string.IsNullOrEmpty(model.Keyword))
             query = query.Where(p => EF.Functions.Like(p.Name, $"%{model.Keyword}%"));

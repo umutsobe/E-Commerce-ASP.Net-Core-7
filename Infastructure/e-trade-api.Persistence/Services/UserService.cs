@@ -126,47 +126,54 @@ public class UserService : IUserService
     //old
     public async Task<CreateUserResponseDTO> CreateUser(CreateUserRequestDTO model)
     {
-        AppUser user = new AppUser
+        AppUser? appuser = await _userManager.FindByEmailAsync(model.Email);
+        if (appuser != null)
         {
-            Id = Guid.NewGuid().ToString(),
-            Name = model.Name,
-            Email = model.Email,
-            UserName = model.UserName,
-        };
+            return new()
+            {
+                Succeeded = false,
+                Message =
+                    "Bu e-posta adresiyle zaten bir hesap oluşturulmuş. Lütfen farklı bir e-posta adresiyle kaydolmayı deneyin veya mevcut hesabınızla giriş yapın."
+            };
+        }
+
+        appuser = await _userManager.FindByNameAsync(model.UserName);
+
+        if (appuser != null)
+        {
+            return new()
+            {
+                Succeeded = false,
+                Message =
+                    "Bu kullanıcı adıyla zaten bir hesap oluşturulmuş. Lütfen farklı bir kullanıcı adıyla kaydolmayı deneyin veya mevcut hesabınızla giriş yapın."
+            };
+        }
+
+        AppUser user =
+            new()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = model.Name,
+                Email = model.Email,
+                UserName = model.UserName,
+            };
 
         IdentityResult userResult = await _userManager.CreateAsync(user, model.Password);
 
-        bool basketResult = await _basketService.CreateBasket(user.Id.ToString());
+        CreateUserCommandResponse response = new();
 
-        IdentityResult roleResult = new();
-
-        if (user.UserName == "umutsobe")
+        if (userResult.Succeeded)
         {
-            await _roleManager.CreateAsync(
-                new() { Id = Guid.NewGuid().ToString(), Name = "admin" }
-            );
+            await _userManager.AddToRoleAsync(user, "normalUser");
+            await _basketService.CreateBasket(user.Id.ToString());
 
-            await _roleManager.CreateAsync(
-                new() { Id = Guid.NewGuid().ToString(), Name = "normalUser" }
-            );
-
-            await _userManager.AddToRoleAsync(user, "admin");
-        }
-        else
-            roleResult = await _userManager.AddToRoleAsync(user, "normalUser");
-
-        CreateUserCommandResponse response = new CreateUserCommandResponse();
-
-        if (userResult.Succeeded && basketResult && roleResult.Succeeded)
-        {
             response.Succeeded = true;
             response.Message = "Kullanıcı Başarıyla Oluşturulmuştur";
         }
         else
         {
             response.Succeeded = false;
-            foreach (var e in userResult.Errors)
-                response.Message += $"{e.Code} - {e.Description}\n";
+            response.Message = "Kullanıcı oluşturulurken bir hatayla karşılaşıldı.";
         }
 
         return new() { Message = response.Message, Succeeded = response.Succeeded };
@@ -239,14 +246,14 @@ public class UserService : IUserService
 
     public async Task<LoginUserCommandResponse> LoginUser(LoginUserRequestDTO model)
     {
-        AppUser user = await _userManager.FindByNameAsync(model.EmailOrUserName); // username veya email olan string ifadeyi ilk username üzerinden kontrol ettik
+        AppUser? user = await _userManager.FindByNameAsync(model.EmailOrUserName); // username veya email olan string ifadeyi ilk username üzerinden kontrol ettik
         if (user == null)
         { // eğer böyle bir username yoksa email olarak kontrol ettik
             user = await _userManager.FindByEmailAsync(model.EmailOrUserName);
         }
 
         if (user == null) // böyle bir email de yoksa böyle bir kullanıcı yoktur. hata fırlattık
-            throw new Exception("Kullanıcı veya Şifre Hatalı");
+            return new LoginUserErrorCommandResponse() { Message = "Hesap bulunamadı" };
 
         SignInResult signInResult = await _signInManager.CheckPasswordSignInAsync(
             user,
@@ -262,6 +269,6 @@ public class UserService : IUserService
             return new LoginUserSuccessCommandResponse() { Token = token };
         }
 
-        return new LoginUserErrorCommandResponse() { Message = "Kullanıcı adı veya Şifre Hatalı" };
+        return new LoginUserErrorCommandResponse() { Message = "Şifre Hatalı" };
     }
 }

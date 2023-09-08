@@ -96,7 +96,7 @@ public class OrderService : IOrderService
         await _orderWriteRepository.SaveAsync();
 
         if (createOrder.OrderItems.Count < 1)
-            throw new Exception("Sipariş ürünleri boş olamaz");
+            throw new CustomException("Sipariş ürünleri boş olamaz");
 
         Dictionary<Product, int> productOriginalStock = new(); //tüm ürünlerin orijinal stok miktarını tutuyor, eğer stok hatası alırsak stok eski haline dönecek
 
@@ -139,7 +139,7 @@ public class OrderService : IOrderService
 
                     await _orderWriteRepository.RemoveAsync(orderId.ToString());
                     await _orderWriteRepository.SaveAsync();
-                    throw new Exception(
+                    throw new CustomException(
                         "Siparişinizdeki ürünlerden bazılarının stoğu tükendi. Sepetinizi tekrar gözden geçirin."
                     );
                 }
@@ -147,7 +147,7 @@ public class OrderService : IOrderService
             else
             {
                 // Ürün bulunamadı, hata işleme yapılabilir
-                throw new Exception("Ürün bulunamadı.");
+                throw new CustomException("Ürün bulunamadı.");
             }
         }
 

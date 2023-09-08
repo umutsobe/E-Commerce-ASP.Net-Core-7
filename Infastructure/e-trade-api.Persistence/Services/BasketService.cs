@@ -1,3 +1,4 @@
+using System.Net.Http;
 using e_trade_api.application;
 using e_trade_api.domain;
 using e_trade_api.domain.Entities;
@@ -91,8 +92,12 @@ public class BasketService : IBasketService
 
             await _basketItemWriteRepository.SaveAsync();
         }
-        else
-            throw new Exception("Ürünün sepetteki adedi stok adedinden fazla olamaz.");
+        else //quantity bunu karşılamıyorsa
+        {
+            throw new CustomException(
+                "Ürünün stok sayısı bunu karşılamıyor. Daha sonra tekrar deneyiniz. Sepetinizi kontrol ediniz."
+            );
+        }
     }
 
     public async Task<List<BasketItemDTO>> GetBasketItemsAsync(string basketId)
@@ -126,10 +131,18 @@ public class BasketService : IBasketService
                 };
                 basketItemDTOs.Add(basketItemDTO);
             }
-            else //hatayı handle et
+            else //sepetteki ürün adedi product stoğundan fazla
             {
-                await _basketItemWriteRepository.RemoveAsync(basketItem.Id.ToString());
-                await _basketItemWriteRepository.SaveAsync();
+                if (basketItem.Product.Stock > 0) //product stoğu 0dan büyük ise basket adedi product adedine eşit olsun
+                {
+                    basketItem.Quantity = basketItem.Product.Stock;
+                    await _basketItemWriteRepository.SaveAsync();
+                }
+                else //product stoğu 0 ise de o basketItem'ı kaldır
+                {
+                    await _basketItemWriteRepository.RemoveAsync(basketItem.Id.ToString());
+                    await _basketItemWriteRepository.SaveAsync();
+                }
             }
         }
 
@@ -157,7 +170,7 @@ public class BasketService : IBasketService
         );
 
         if (product == null || databaseBasketItem == null)
-            throw new Exception("Ürün bulunamadı");
+            throw new CustomException("Ürün bulunamadı");
 
         if (databaseBasketItem != null)
         {
@@ -173,7 +186,7 @@ public class BasketService : IBasketService
                 await _basketItemWriteRepository.SaveAsync();
             }
             else
-                throw new Exception(
+                throw new CustomException(
                     "Ürünün stok sayısı bunu karşılamıyor. Daha sonra tekrar deneyiniz."
                 );
         }
