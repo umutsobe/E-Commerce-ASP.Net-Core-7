@@ -80,6 +80,17 @@ namespace e_trade_api.Persistence
             services.AddScoped<IProductRatingWriteRepository, ProductRatingWriteRepository>();
 
             services.AddScoped<IProductRatingService, ProductRatingService>();
+
+            services.AddScoped<
+                ITwoFactorAuthenticationReadRepository,
+                TwoFactorAuthenticationReadRepository
+            >();
+            services.AddScoped<
+                ITwoFactorAuthenticationWriteRepository,
+                TwoFactorAuthenticationWriteRepository
+            >();
+
+            services.AddScoped<ITwoFactorAuthenticationService, TwoFactorAuthenticationService>();
         }
     }
 }

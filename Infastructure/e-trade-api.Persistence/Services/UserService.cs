@@ -1,3 +1,4 @@
+using System.Security;
 using e_trade_api.application;
 using e_trade_api.domain;
 using Google.Apis.Auth;
@@ -11,25 +12,25 @@ public class UserService : IUserService
     readonly UserManager<AppUser> _userManager;
     readonly IEndpointReadRepository _endpointReadRepository;
     readonly IBasketService _basketService;
-    readonly RoleManager<AppRole> _roleManager;
     readonly ITokenHandler _tokenHandler;
     readonly SignInManager<AppUser> _signInManager;
+    readonly ITwoFactorAuthenticationService _twoFactorAuthenticationService;
 
     public UserService(
         UserManager<AppUser> userManager,
         IEndpointReadRepository endpointReadRepository,
-        RoleManager<AppRole> roleManager,
         IBasketService basketService,
         ITokenHandler tokenHandler,
-        SignInManager<AppUser> signInManager
+        SignInManager<AppUser> signInManager,
+        ITwoFactorAuthenticationService twoFactorAuthenticationService
     )
     {
         _userManager = userManager;
         _endpointReadRepository = endpointReadRepository;
-        _roleManager = roleManager;
         _basketService = basketService;
         _tokenHandler = tokenHandler;
         _signInManager = signInManager;
+        _twoFactorAuthenticationService = twoFactorAuthenticationService;
     }
 
     public async Task UpdatePasswordAsync(string userId, string resetToken, string newPassword)
@@ -167,16 +168,27 @@ public class UserService : IUserService
             await _userManager.AddToRoleAsync(user, "normalUser");
             await _basketService.CreateBasket(user.Id.ToString());
 
+            //two factor email gönderme
+
+            //code veritabanına kaydetme
+
             response.Succeeded = true;
-            response.Message = "Kullanıcı Başarıyla Oluşturulmuştur";
+            response.Message = "Kullanıcı Başarıyla Oluşturulmuştur. Email'inizi doğrulayın";
+            response.UserId = user.Id;
         }
         else
         {
             response.Succeeded = false;
             response.Message = "Kullanıcı oluşturulurken bir hatayla karşılaşıldı.";
+            response.UserId = null;
         }
 
-        return new() { Message = response.Message, Succeeded = response.Succeeded };
+        return new()
+        {
+            Message = response.Message,
+            Succeeded = response.Succeeded,
+            UserId = response.UserId
+        };
     }
 
     public async Task<Token> GoogleLogin(GoogleLoginRequestDTO model)
@@ -207,7 +219,8 @@ public class UserService : IUserService
                         Id = Guid.NewGuid().ToString(),
                         Email = payload.Email,
                         UserName = payload.Email,
-                        Name = payload.Name
+                        Name = payload.Name,
+                        EmailConfirmed = true
                     };
 
                     userId = user.Id;
@@ -263,10 +276,22 @@ public class UserService : IUserService
 
         if (signInResult.Succeeded)
         {
-            //yetki belirleme
-            Token token = await _tokenHandler.CreateAccessToken(180, user.Id);
+            if (await _twoFactorAuthenticationService.IsUserEmailConfirmed(user.Id))
+            {
+                //yetki belirleme
+                Token token = await _tokenHandler.CreateAccessToken(180, user.Id);
 
-            return new LoginUserSuccessCommandResponse() { Token = token };
+                return new LoginUserSuccessCommandResponse() { Token = token };
+            }
+            else
+            {
+                return new LoginUserSuccessButEmailNotConfirmed()
+                {
+                    UserId = user.Id,
+                    AuthMessage =
+                        "Girdiğiniz bilgiler doğru. Siteye girmek için lütfen Mail'inizi doğrulayın"
+                };
+            }
         }
 
         return new LoginUserErrorCommandResponse() { Message = "Şifre Hatalı" };

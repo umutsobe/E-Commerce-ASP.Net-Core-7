@@ -7,7 +7,14 @@ public class AppUser : IdentityUser<string>
 {
     public string Name { get; set; }
     public Basket Basket { get; set; }
+
+    //two factor auth
+    public int CodeAttemptCount { get; set; } // Kod deneme sayısı
+    public DateTime? LastCodeAttemptTime { get; set; } // Son deneme tarihi
+
+    //
     public ICollection<Order> Orders { get; set; }
     public ICollection<Adress> Adresses { get; set; }
     public ICollection<ProductRating> ProductRatings { get; set; }
+    public ICollection<TwoFactorAuthentication> TwoFactorAuthentications { get; set; }
 }

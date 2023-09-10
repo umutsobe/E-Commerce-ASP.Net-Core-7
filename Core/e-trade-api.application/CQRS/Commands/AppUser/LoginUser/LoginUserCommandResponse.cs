@@ -11,3 +11,9 @@ public class LoginUserErrorCommandResponse : LoginUserCommandResponse
 {
     public string Message { get; set; }
 }
+
+public class LoginUserSuccessButEmailNotConfirmed : LoginUserCommandResponse
+{
+    public string AuthMessage { get; set; }
+    public string UserId { get; set; }
+}

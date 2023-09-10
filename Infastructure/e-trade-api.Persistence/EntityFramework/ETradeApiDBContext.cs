@@ -27,6 +27,7 @@ namespace e_trade_api.Persistence.Contexts
         public DbSet<Adress> Adresses { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<ProductRating> ProductRatings { get; set; }
+        public DbSet<TwoFactorAuthentication> TwoFactorAuthentications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) //migrationda bir şeyi değiştirmedi
         {
@@ -63,11 +64,11 @@ namespace e_trade_api.Persistence.Contexts
             {
                 if (data.State == EntityState.Added)
                 {
-                    data.Entity.CreatedDate = DateTime.Now;
+                    data.Entity.CreatedDate = DateTime.UtcNow;
                 }
                 if (data.State == EntityState.Modified)
                 {
-                    data.Entity.UpdatedDate = DateTime.Now;
+                    data.Entity.UpdatedDate = DateTime.UtcNow;
                 }
             }
             return await base.SaveChangesAsync(cancellationToken);

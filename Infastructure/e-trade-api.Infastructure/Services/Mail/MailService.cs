@@ -2,7 +2,6 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using e_trade_api.application;
-using Microsoft.Extensions.Configuration;
 
 namespace e_trade_api.Infastructure;
 
@@ -71,5 +70,12 @@ public class MailService : IMailService
             + $"{orderDate} tarihinde vermiş olduğunuz {orderCode} kodlu siparişiniz oluşturulmuştur. Yakın zamanda kargoya verilecektir. <br>Bizi tercih ettiğiniz için teşekkür ederiz";
 
         await SendMailAsync(to, $"{orderCode} Sipariş Numaralı Siparişiniz Tamamlandı", mail);
+    }
+
+    public async Task SendEmailVerificationCode(string to, string code)
+    {
+        string mail = $"Doğrulama kodu: {code}";
+
+        await SendMailAsync(to, "Email Doğrulama", mail);
     }
 }

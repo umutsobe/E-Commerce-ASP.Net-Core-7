@@ -27,6 +27,12 @@ public class CreateUserCommandHandle
                 UserName = request.UserName,
             }
         );
-        return new() { Message = responseDTO.Message, Succeeded = responseDTO.Succeeded, };
+
+        return new()
+        {
+            Message = responseDTO.Message,
+            Succeeded = responseDTO.Succeeded,
+            UserId = responseDTO.UserId
+        };
     }
 }

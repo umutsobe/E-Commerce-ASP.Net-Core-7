@@ -78,7 +78,7 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> UpdateUserPassword([FromBody] UserPasswordUpdate model)
     {
         Token token = await _accountService.UpdateUserPassword(model);
-        token.Expiration = DateTime.Now;
+        token.Expiration = DateTime.UtcNow;
         return Ok(token);
     }
 

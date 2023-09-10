@@ -2079,11 +2079,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.SignalR\\e-trade-api.SignalR.csproj",
+      "projectUniqueName": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.SignalR\\e-trade-api.SignalR.csproj",
       "projectName": "e-trade-api.SignalR",
-      "projectPath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.SignalR\\e-trade-api.SignalR.csproj",
+      "projectPath": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.SignalR\\e-trade-api.SignalR.csproj",
       "packagesPath": "C:\\Users\\umutt\\.nuget\\packages\\",
-      "outputPath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.SignalR\\obj\\",
+      "outputPath": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.SignalR\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\umutt\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -47,7 +47,10 @@ public class AccountService : IAccountService
 
     public async Task<bool> UpdateEmail(string userId, string email)
     {
-        AppUser appUser = await _userManager.FindByIdAsync(userId);
+        AppUser? appUser = await _userManager.FindByIdAsync(userId);
+        if (appUser == null)
+            return false;
+
         IdentityResult result = await _userManager.SetEmailAsync(appUser, email);
 
         return result.Succeeded;

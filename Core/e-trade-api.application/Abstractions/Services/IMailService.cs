@@ -11,4 +11,5 @@ public interface IMailService
         DateTime orderDate,
         string userName
     );
+    Task SendEmailVerificationCode(string to, string code);
 }

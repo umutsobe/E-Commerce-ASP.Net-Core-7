@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj": {}
+    "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj": {}
   },
   "projects": {
     "c:\\E-Trade\\e-trade-api\\Core\\e-trade-api.application\\e-trade-api.application.csproj": {
@@ -158,14 +158,14 @@
         }
       }
     },
-    "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj": {
+    "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj",
+        "projectUniqueName": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj",
         "projectName": "e-trade-api.Persistence",
-        "projectPath": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj",
+        "projectPath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\e-trade-api.Persistence.csproj",
         "packagesPath": "C:\\Users\\umutt\\.nuget\\packages\\",
-        "outputPath": "C:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\obj\\",
+        "outputPath": "c:\\E-Trade\\e-trade-api\\Infastructure\\e-trade-api.Persistence\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\umutt\\AppData\\Roaming\\NuGet\\NuGet.Config",
