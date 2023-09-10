@@ -67,14 +67,15 @@ public class MailService : IMailService
     {
         string mail =
             $"Sayın {userName} Merhaba<br>"
-            + $"{orderDate} tarihinde vermiş olduğunuz {orderCode} kodlu siparişiniz oluşturulmuştur. Yakın zamanda kargoya verilecektir. <br>Bizi tercih ettiğiniz için teşekkür ederiz";
+            + $"{orderDate} tarihinde vermiş olduğunuz {orderCode} kodlu siparişiniz onaylanmıştır. Yakın zamanda kargoya verilecektir. <br>Bizi tercih ettiğiniz için teşekkür ederiz";
 
         await SendMailAsync(to, $"{orderCode} Sipariş Numaralı Siparişiniz Tamamlandı", mail);
     }
 
     public async Task SendEmailVerificationCode(string to, string code)
     {
-        string mail = $"Doğrulama kodu: {code}";
+        string mail =
+            $"Doğrulama kodu: {code} <br><br>Eğer bu mail isteğiniz dışında ise dikkate almayınız.";
 
         await SendMailAsync(to, "Email Doğrulama", mail);
     }

@@ -1,6 +1,7 @@
 using e_trade_api.application;
 using e_trade_api.domain;
 using e_trade_api.domain.Entities;
+using e_trade_api.Persistence.Migrations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,8 +14,11 @@ public class AccountService : IAccountService
     readonly ITokenHandler _tokenHandler;
     readonly IAddressWriteRepository _addressWriteRepository;
     readonly IAddressReadRepository _addressReadRepository;
-
     readonly IOrderReadRepository _orderReadRepository;
+    readonly IMailService _mailService;
+    readonly ITwoFactorAuthenticationWriteRepository _twoFactorAuthenticationWriteRepository;
+    readonly ITwoFactorAuthenticationReadRepository _twoFactorAuthenticationReadRepository;
+    readonly ITwoFactorAuthenticationService _twoFactorAuthenticationService;
 
     public AccountService(
         UserManager<AppUser> userManager,
@@ -22,7 +26,11 @@ public class AccountService : IAccountService
         SignInManager<AppUser> signInManager,
         ITokenHandler tokenHandler,
         IAddressWriteRepository addressWriteRepository,
-        IAddressReadRepository addressReadRepository
+        IAddressReadRepository addressReadRepository,
+        IMailService mailService,
+        ITwoFactorAuthenticationWriteRepository twoFactorAuthenticationWriteRepository,
+        ITwoFactorAuthenticationReadRepository twoFactorAuthenticationReadRepository,
+        ITwoFactorAuthenticationService twoFactorAuthenticationService
     )
     {
         _userManager = userManager;
@@ -31,6 +39,10 @@ public class AccountService : IAccountService
         _tokenHandler = tokenHandler;
         _addressWriteRepository = addressWriteRepository;
         _addressReadRepository = addressReadRepository;
+        _mailService = mailService;
+        _twoFactorAuthenticationWriteRepository = twoFactorAuthenticationWriteRepository;
+        _twoFactorAuthenticationReadRepository = twoFactorAuthenticationReadRepository;
+        _twoFactorAuthenticationService = twoFactorAuthenticationService;
     }
 
     public async Task<ListUserDetailsDTO> GetUserDetails(string userId)
@@ -43,17 +55,6 @@ public class AccountService : IAccountService
         }
 
         throw new Exception("Kullanıcı Bulunamadı");
-    }
-
-    public async Task<bool> UpdateEmail(string userId, string email)
-    {
-        AppUser? appUser = await _userManager.FindByIdAsync(userId);
-        if (appUser == null)
-            return false;
-
-        IdentityResult result = await _userManager.SetEmailAsync(appUser, email);
-
-        return result.Succeeded;
     }
 
     public async Task<bool> UpdateName(string userId, string name)
@@ -199,5 +200,109 @@ public class AccountService : IAccountService
 
             await _addressWriteRepository.SaveAsync();
         }
+    }
+
+    public async Task<CreateCodeAndSendEmailResponse> UpdateEmailStep1(
+        UpdateUserEmailRequestDTO model
+    )
+    {
+        AppUser? appUser = await _userManager.FindByEmailAsync(model.NewEmail);
+        if (appUser != null)
+            return new()
+            {
+                Message = "This email address is already in use. Please try another email address.",
+                Succeeded = false
+            };
+
+        appUser = await _userManager.FindByIdAsync(model.UserId);
+        if (appUser == null)
+            return new() { Message = "Error", Succeeded = false };
+
+        bool isPasswordValid = await _userManager.CheckPasswordAsync(appUser, model.Password);
+
+        if (isPasswordValid == false)
+            return new() { Message = "Wrong Password", Succeeded = false };
+
+        if (!await _twoFactorAuthenticationService.CheckCodeAttempts(model.UserId))
+            return new()
+            {
+                Message = "Çok fazla denemede bulundunuz. 24 saat sonra tekrar deneyin.",
+                Succeeded = false
+            };
+
+        //her şey doğru
+
+        string code = CreateVerificationCode.CreateCode();
+
+        await _twoFactorAuthenticationWriteRepository.AddAsync(
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Code = code,
+                ExpirationDate = DateTime.UtcNow.AddMinutes(3),
+                IsUsed = false,
+                UserId = appUser.Id,
+                User = appUser
+            }
+        );
+        await _twoFactorAuthenticationWriteRepository.SaveAsync();
+
+        appUser.NewEmailControl = model.NewEmail;
+        await _userManager.UpdateAsync(appUser);
+
+        await _mailService.SendEmailVerificationCode(model.NewEmail, code);
+
+        return new()
+        {
+            Message =
+                "Yeni e-posta adresinize gönderilen doğrulama kodunu kullanarak işlemi tamamlayabilirsiniz.",
+            Succeeded = true
+        };
+    }
+
+    public async Task<CreateCodeAndSendEmailResponse> UpdateEmailStep2(UpdateEmailStep2 model)
+    {
+        AppUser? appUser = await _userManager.FindByIdAsync(model.UserId);
+
+        if (appUser == null)
+            return new() { Message = "Kullanıcı bulunamadı", Succeeded = false };
+
+        if (!await _twoFactorAuthenticationService.CheckCodeAttempts(model.UserId))
+            return new()
+            {
+                Message = "Çok fazla denemede bulundunuz. 24 saat sonra tekrar deneyin.",
+                Succeeded = false
+            };
+
+        TwoFactorAuthentication? twoFactor = await _twoFactorAuthenticationReadRepository.Table
+            .Where(
+                t =>
+                    t.UserId == model.UserId
+                    && t.Code == model.Code
+                    && t.IsUsed == false
+                    && t.ExpirationDate > DateTime.UtcNow //exp saat 12.05, datenow 12.04 ise true
+            )
+            .FirstOrDefaultAsync(); //bulunması doğru
+
+        if (twoFactor == null)
+            return new() { Message = "Girdiğiniz kod hatalı. Tekrar deneyiniz", Succeeded = false };
+
+        //valid
+
+        await _userManager.SetEmailAsync(appUser, appUser.NewEmailControl);
+        appUser.EmailConfirmed = true;
+
+        //kodları kaldırma
+        List<TwoFactorAuthentication> twoFactorAuthentications =
+            await _twoFactorAuthenticationReadRepository.Table
+                .Where(t => t.UserId == model.UserId)
+                .ToListAsync();
+
+        _twoFactorAuthenticationWriteRepository.RemoveRange(twoFactorAuthentications);
+
+        await _twoFactorAuthenticationWriteRepository.SaveAsync();
+        await _userManager.UpdateAsync(appUser);
+
+        return new() { Message = "Yeni mailiniz başarıyla onaylandı.", Succeeded = true };
     }
 }

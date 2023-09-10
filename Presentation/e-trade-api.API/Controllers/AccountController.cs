@@ -33,19 +33,6 @@ public class AccountController : ControllerBase
     [AuthorizeDefinition(
         Menu = "Account",
         ActionType = ActionType.Updating,
-        Definition = "Update User Email"
-    )]
-    [HttpPost("[action]")]
-    public async Task<IActionResult> UpdateUserEmail([FromBody] UseEmailUpdateDTO model)
-    {
-        bool response = await _accountService.UpdateEmail(model.UserId, model.Email);
-        return Ok(response);
-    }
-
-    [Authorize(AuthenticationSchemes = "Admin")]
-    [AuthorizeDefinition(
-        Menu = "Account",
-        ActionType = ActionType.Updating,
         Definition = "Update User Name"
     )]
     [HttpPost("[action]")]
@@ -122,5 +109,31 @@ public class AccountController : ControllerBase
         await _accountService.DeleteUserAdsress(addressId);
 
         return Ok();
+    }
+
+    // [Authorize(AuthenticationSchemes = "Admin")]
+    [AuthorizeDefinition(
+        Menu = "Account",
+        ActionType = ActionType.Updating,
+        Definition = "Update User Email Step 1"
+    )]
+    [HttpPost("[action]")]
+    public async Task<IActionResult> UpdateEmailStep1([FromBody] UpdateUserEmailRequestDTO model)
+    {
+        CreateCodeAndSendEmailResponse response = await _accountService.UpdateEmailStep1(model);
+        return Ok(response);
+    }
+
+    // [Authorize(AuthenticationSchemes = "Admin")]
+    [AuthorizeDefinition(
+        Menu = "Account",
+        ActionType = ActionType.Updating,
+        Definition = "Update User Email Step 2"
+    )]
+    [HttpPost("[action]")]
+    public async Task<IActionResult> UpdateEmailStep2([FromBody] UpdateEmailStep2 model)
+    {
+        CreateCodeAndSendEmailResponse response = await _accountService.UpdateEmailStep2(model);
+        return Ok(response);
     }
 }

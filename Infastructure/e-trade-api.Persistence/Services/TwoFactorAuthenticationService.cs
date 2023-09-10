@@ -1,8 +1,6 @@
-using System.Text;
 using e_trade_api.application;
 using e_trade_api.domain;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace e_trade_api.Persistence;
@@ -37,12 +35,12 @@ public class TwoFactorAuthenticationService : ITwoFactorAuthenticationService
         if (appUser.EmailConfirmed)
             return new() { Message = "Emailiniz zaten onaylandı. Giriş yapın", Succeeded = false };
 
-        TwoFactorAuthentication? isValid = //son 5 dakikada bu user'a ait kod üretildi mi?
+        TwoFactorAuthentication? twoFactor = //son 5 dakikada bu user'a ait kod üretildi mi?
         await _twoFactorAuthenticationReadRepository.Table
             .Where(t => t.UserId == userId && t.ExpirationDate > DateTime.UtcNow) //exp saat 12.05, datenow 12.04 ise true
             .FirstOrDefaultAsync();
 
-        if (isValid != null) //son 5 dakikada kod oluşturmuş
+        if (twoFactor != null) //son 5 dakikada kod oluşturmuş
         {
             return new() { Message = "Son 3 dakikada zaten kod oluşturuldu", Succeeded = false };
         }
@@ -54,9 +52,9 @@ public class TwoFactorAuthenticationService : ITwoFactorAuthenticationService
                 Succeeded = false
             };
 
-        if (isValid == null)
+        if (twoFactor == null)
         {
-            string code = CreateCode();
+            string code = CreateVerificationCode.CreateCode();
 
             await _mailService.SendEmailVerificationCode(appUser.Email, code.ToString());
 
@@ -131,7 +129,7 @@ public class TwoFactorAuthenticationService : ITwoFactorAuthenticationService
         return new() { Message = "Girdiğiniz kod hatalı. Tekrar deneyiniz", Succeeded = false };
     }
 
-    private async Task<bool> CheckCodeAttempts(string userId)
+    public async Task<bool> CheckCodeAttempts(string userId)
     {
         // Kullanıcıya ait kod deneme sayacını ve son deneme tarihini veritabanından alın
         var user = await _userManager.FindByIdAsync(userId);
@@ -184,20 +182,5 @@ public class TwoFactorAuthenticationService : ITwoFactorAuthenticationService
             return true;
 
         return false;
-    }
-
-    private string CreateCode()
-    {
-        int length = 6;
-        Random random = new();
-        const string characters = "ABCDEFGHJKLMNPRSTUWYZ123456789";
-        StringBuilder code = new(length);
-
-        for (int i = 0; i < length; i++)
-        {
-            int index = random.Next(characters.Length);
-            code.Append(characters[index]);
-        }
-        return code.ToString();
     }
 }

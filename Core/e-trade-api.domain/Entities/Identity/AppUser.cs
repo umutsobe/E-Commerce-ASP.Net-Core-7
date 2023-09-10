@@ -11,6 +11,7 @@ public class AppUser : IdentityUser<string>
     //two factor auth
     public int CodeAttemptCount { get; set; } // Kod deneme sayısı
     public DateTime? LastCodeAttemptTime { get; set; } // Son deneme tarihi
+    public string NewEmailControl { get; set; } //yeni mail adresini depolamak için. bu olmazsa kod doğrulanırken ilk adımdakiyle aynı email mi olacağını bilemeyiz
 
     //
     public ICollection<Order> Orders { get; set; }

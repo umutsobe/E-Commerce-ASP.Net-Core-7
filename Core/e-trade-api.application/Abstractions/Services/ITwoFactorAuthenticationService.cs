@@ -5,4 +5,5 @@ public interface ITwoFactorAuthenticationService
     Task<CreateCodeAndSendEmailResponse> CreateCodeAndSendEmail(string userId);
     Task<IsCodeValidResponseMessage> IsCodeValid(IsCodeValidRequest model);
     Task<bool> IsUserEmailConfirmed(string userId);
+    Task<bool> CheckCodeAttempts(string userId);
 }
