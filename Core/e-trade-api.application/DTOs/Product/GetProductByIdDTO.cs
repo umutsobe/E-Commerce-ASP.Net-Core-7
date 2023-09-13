@@ -9,4 +9,8 @@ public class GetProductByIdDTO
     public string Url { get; set; }
     public string Description { get; set; }
     public List<ProductImageFileResponseDTO> ProductImageFiles { get; set; }
+
+    //rating
+    public double AverageStar { get; set; }
+    public int TotalRatingNumber { get; set; }
 }

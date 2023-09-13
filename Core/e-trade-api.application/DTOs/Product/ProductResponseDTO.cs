@@ -8,11 +8,8 @@ public class ProductResponseDTO
     public float Price { get; set; }
     public string Url { get; set; }
     public string ProductImageShowCasePath { get; set; }
+
+    //rating
+    public double AverageStar { get; set; }
+    public int TotalRatingNumber { get; set; }
 }
-// p.Id,
-// p.Name,
-// p.Stock,
-// p.Price,
-// p.CreatedDate,
-// p.UpdatedDate,
-// p.ProductImageFiles

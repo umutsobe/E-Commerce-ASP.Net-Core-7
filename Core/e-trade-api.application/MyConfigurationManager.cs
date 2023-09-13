@@ -15,7 +15,7 @@ public static class MyConfigurationManager
             configurationManager.SetBasePath(
                 Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/e-trade-api.API")
             );
-            configurationManager.AddJsonFile("appsettings.json");
+            configurationManager.AddJsonFile("appsettings.Development.json");
             return configurationManager;
         }
         else if (projectStatus == ProjectStatus.UpdateServerOnLocal)

@@ -5,6 +5,7 @@
 
 Presentation/e-trade-api.API/appsettings.Production.json
 Presentation/e-trade-api.API/appsettings.Development.json
+Presentation/e-trade-api.API/appsettings.json
 
 # User-specific files
 *.rsuser

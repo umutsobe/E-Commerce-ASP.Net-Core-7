@@ -15,6 +15,7 @@ public class ProductService : IProductService
     readonly IProductHubServices _productHubServices;
     readonly ICategoryReadRepository _categoryReadRepository;
     readonly IProductImageService _productImageService;
+    readonly IProductRatingService _productRatingService;
 
     public ProductService(
         IProductImageFileWriteRepository productImageFileWriteRepository,
@@ -23,7 +24,8 @@ public class ProductService : IProductService
         IProductHubServices productHubServices,
         ICategoryReadRepository categoryReadRepository,
         IProductImageService productImageService,
-        IProductImageFileReadRepository productImageFileReadRepository
+        IProductImageFileReadRepository productImageFileReadRepository,
+        IProductRatingService productRatingService
     )
     {
         _productImageFileWriteRepository = productImageFileWriteRepository;
@@ -33,6 +35,7 @@ public class ProductService : IProductService
         _categoryReadRepository = categoryReadRepository;
         _productImageService = productImageService;
         _productImageFileReadRepository = productImageFileReadRepository;
+        _productRatingService = productRatingService;
     }
 
     //commands
@@ -196,6 +199,9 @@ public class ProductService : IProductService
                         productImages.Add(_productImage);
                     }
 
+                    GetProductRatingScores ratingScores =
+                        await _productRatingService.GetProductRatingScores(product.Id.ToString());
+
                     ProductResponseAdminDTO productDTO =
                         new()
                         {
@@ -210,7 +216,9 @@ public class ProductService : IProductService
                             IsActive = product.isActive,
                             TotalBasketAdded = product.TotalBasketAdded,
                             TotalOrderNumber = product.TotalOrderNumber,
-                            ProductImageFiles = productImages
+                            ProductImageFiles = productImages,
+                            AverageStar = ratingScores.AverageStar,
+                            TotalRatingNumber = ratingScores.TotalRatingNumber
                         };
 
                     productsDTO.Products.Add(productDTO);
@@ -251,6 +259,9 @@ public class ProductService : IProductService
                 productImages.Add(_productImage);
             }
 
+            GetProductRatingScores ratingScores =
+                await _productRatingService.GetProductRatingScores(product.Id.ToString());
+
             return new()
             {
                 Id = product.Id.ToString(),
@@ -259,7 +270,9 @@ public class ProductService : IProductService
                 Stock = product.Stock,
                 Description = product.Description,
                 Url = product.Url,
-                ProductImageFiles = productImages
+                ProductImageFiles = productImages,
+                AverageStar = ratingScores.AverageStar,
+                TotalRatingNumber = ratingScores.TotalRatingNumber
             };
         }
         else
@@ -402,6 +415,9 @@ public class ProductService : IProductService
                     GetProductShowcaseImageResponse response =
                         await _productImageService.GetProductShowcaseImage(product.Id.ToString());
 
+                    GetProductRatingScores ratingScores =
+                        await _productRatingService.GetProductRatingScores(product.Id.ToString());
+
                     ProductResponseDTO productDTO =
                         new()
                         {
@@ -410,7 +426,9 @@ public class ProductService : IProductService
                             Stock = product.Stock,
                             Price = product.Price,
                             ProductImageShowCasePath = response.Path,
-                            Url = product.Url
+                            Url = product.Url,
+                            AverageStar = ratingScores.AverageStar,
+                            TotalRatingNumber = ratingScores.TotalRatingNumber
                         };
 
                     productsDTO.Products.Add(productDTO);

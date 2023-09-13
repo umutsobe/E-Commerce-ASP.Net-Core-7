@@ -16,4 +16,8 @@ public class ProductResponseAdminDTO
     public string Description { get; set; }
     public int TotalBasketAdded { get; set; }
     public int TotalOrderNumber { get; set; }
+
+    //rating
+    public double AverageStar { get; set; }
+    public int TotalRatingNumber { get; set; }
 }

@@ -10,4 +10,5 @@ public interface IProductRatingService
     Task<IsProductReviewPendingResponseDTO> IsProductReviewPending(
         IsProductReviewPendingRequestDTO model
     );
+    Task<GetProductRatingScores> GetProductRatingScores(string productId);
 }

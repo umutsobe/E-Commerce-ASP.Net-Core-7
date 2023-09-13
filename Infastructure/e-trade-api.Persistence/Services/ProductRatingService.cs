@@ -240,4 +240,25 @@ public class ProductRatingService : IProductRatingService
 
         return new() { State = IsProductReviewPendingStatus.NotBuyed.ToString() }; //kullanıcı ürünü almamış
     }
+
+    public async Task<GetProductRatingScores> GetProductRatingScores(string productId)
+    {
+        List<ProductRating>? productRatings = await _productRatingReadRepository.Table
+            .Where(pr => pr.ProductId == Guid.Parse(productId))
+            .ToListAsync();
+
+        if (productRatings.Count > 0)
+        {
+            int totalRating = productRatings.Count;
+            int totalStars = productRatings.Sum(pr => pr.Star);
+
+            double averageRating = (double)totalStars / totalRating;
+
+            return new() { AverageStar = averageRating, TotalRatingNumber = totalRating };
+        }
+        else
+        {
+            return new() { AverageStar = 0, TotalRatingNumber = 0 };
+        }
+    }
 }
