@@ -7,6 +7,11 @@ Presentation/e-trade-api.API/appsettings.Production.json
 Presentation/e-trade-api.API/appsettings.Development.json
 Presentation/e-trade-api.API/appsettings.json
 
+## tüm projelerdeki
+**/bin/
+**/obj/
+**/Properties/
+**/.config/
 # User-specific files
 *.rsuser
 *.suo
