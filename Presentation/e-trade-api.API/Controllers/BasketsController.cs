@@ -37,13 +37,9 @@ public class BasketsController : ControllerBase
         ActionType = ActionType.Writing,
         Definition = "Add Item To Basket"
     )]
-    public async Task<IActionResult> AddItemToBasket(
-        AddItemToBasketCommandRequest addItemToBasketCommandRequest
-    )
+    public async Task<IActionResult> AddItemToBasket(CreateBasketItemRequestDTO request)
     {
-        AddItemToBasketCommandResponse response = await _mediator.Send(
-            addItemToBasketCommandRequest
-        );
+        ErrorDTO response = await _basketService.AddItemToBasketAsync(request);
         return Ok(response);
     }
 
@@ -53,13 +49,9 @@ public class BasketsController : ControllerBase
         ActionType = ActionType.Updating,
         Definition = "Update Quantity"
     )]
-    public async Task<IActionResult> UpdateQuantity(
-        UpdateBasketItemQuantityCommandRequest updateQuantityCommandRequest
-    )
+    public async Task<IActionResult> UpdateQuantity(UpdateBasketItemRequestDTO request)
     {
-        UpdateBasketItemQuantityCommandResponse response = await _mediator.Send(
-            updateQuantityCommandRequest
-        );
+        ErrorDTO response = await _basketService.UpdateQuantityAsync(request);
         return Ok(response);
     }
 

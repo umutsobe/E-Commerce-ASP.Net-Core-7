@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace e_trade_api.application;
 
-public class AddItemToBasketValidator : AbstractValidator<AddItemToBasketCommandRequest>
+public class AddItemToBasketValidator : AbstractValidator<CreateBasketItemRequestDTO>
 {
     public AddItemToBasketValidator()
     {

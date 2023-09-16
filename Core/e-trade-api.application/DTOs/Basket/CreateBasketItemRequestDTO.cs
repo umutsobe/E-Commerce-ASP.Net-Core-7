@@ -4,4 +4,5 @@ public class CreateBasketItemRequestDTO
 {
     public string ProductId { get; set; }
     public int Quantity { get; set; }
+    public string BasketId { get; set; }
 }

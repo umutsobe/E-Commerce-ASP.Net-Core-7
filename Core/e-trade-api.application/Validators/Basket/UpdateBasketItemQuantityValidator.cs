@@ -3,8 +3,7 @@ using FluentValidation;
 
 namespace e_trade_api.application;
 
-public class UpdateBasketItemQuantityValidator
-    : AbstractValidator<UpdateBasketItemQuantityCommandRequest>
+public class UpdateBasketItemQuantityValidator : AbstractValidator<UpdateBasketItemRequestDTO>
 {
     public UpdateBasketItemQuantityValidator()
     {

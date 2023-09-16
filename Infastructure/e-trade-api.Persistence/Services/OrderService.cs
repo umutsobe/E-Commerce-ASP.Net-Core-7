@@ -96,7 +96,7 @@ public class OrderService : IOrderService
         await _orderWriteRepository.SaveAsync();
 
         if (createOrder.OrderItems.Count < 1)
-            throw new CustomException("Sipariş ürünleri boş olamaz");
+            return new() { Succeeded = false, Message = "Unable to process an empty order" };
 
         Dictionary<Product, int> productOriginalStock = new(); //tüm ürünlerin orijinal stok miktarını tutuyor, eğer stok hatası alırsak stok eski haline dönecek
 
@@ -139,15 +139,18 @@ public class OrderService : IOrderService
 
                     await _orderWriteRepository.RemoveAsync(orderId.ToString());
                     await _orderWriteRepository.SaveAsync();
-                    throw new CustomException(
-                        "Siparişinizdeki ürünlerden bazılarının stoğu tükendi. Sepetinizi tekrar gözden geçirin."
-                    );
+                    return new()
+                    {
+                        Succeeded = false,
+                        Message =
+                            "Some items in your order are out of stock. Please review your cart again."
+                    };
                 }
             }
             else
             {
                 // Ürün bulunamadı, hata işleme yapılabilir
-                throw new CustomException("Ürün bulunamadı.");
+                return new() { Succeeded = false, Message = "Product not found" };
             }
         }
 
@@ -166,7 +169,12 @@ public class OrderService : IOrderService
         }
 
         await _orderItemWriteRepository.SaveAsync();
-        return new() { OrderCode = orderCode, OrderId = orderId.ToString() };
+        return new()
+        {
+            Succeeded = true,
+            OrderCode = orderCode,
+            OrderId = orderId.ToString()
+        };
     }
 
     public async Task<ListOrder> GetAllOrdersAsync(int page, int size)

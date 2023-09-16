@@ -31,6 +31,12 @@ public class CreateOrderCommandHandle
 
         await _orderHubService.OrderAddedMessageAsync("Yeni bir sipariş geldi");
 
-        return new() { OrderCode = response.OrderCode, OrderId = response.OrderId };
+        return new()
+        {
+            Succeeded = response.Succeeded,
+            Message = response.Message,
+            OrderCode = response.OrderCode,
+            OrderId = response.OrderId
+        };
     }
 }

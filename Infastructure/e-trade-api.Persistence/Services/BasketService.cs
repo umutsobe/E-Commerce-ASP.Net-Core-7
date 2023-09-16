@@ -52,30 +52,30 @@ public class BasketService : IBasketService
         return basket.Id.ToString();
     }
 
-    public async Task AddItemToBasketAsync(CreateBasketItemRequestDTO basketItem, string basketId)
+    public async Task<ErrorDTO> AddItemToBasketAsync(CreateBasketItemRequestDTO model)
     {
-        Basket basket = await GetBasket(basketId);
+        Basket basket = await GetBasket(model.BasketId);
 
         BasketItem? _basketItem = await _basketItemReadRepository.GetSingleAsync( //burada basketItem daha önce var mı onu kontrol ediyoruz
-            bi => bi.BasketId == basket.Id && bi.ProductId == Guid.Parse(basketItem.ProductId)
+            bi => bi.BasketId == basket.Id && bi.ProductId == Guid.Parse(model.ProductId)
         );
         Product? product = await _productReadRepository.Table.FirstOrDefaultAsync(
-            p => p.Id == Guid.Parse(basketItem.ProductId)
+            p => p.Id == Guid.Parse(model.ProductId)
         );
 
         if (product == null)
-            throw new Exception("Product Not Found");
+            return new() { Succeeded = false, Message = "Product not found" };
 
         if (
-            (_basketItem == null ? basketItem.Quantity : _basketItem.Quantity + basketItem.Quantity)
+            (_basketItem == null ? model.Quantity : _basketItem.Quantity + model.Quantity)
             <= product.Stock
         //basketitem daha önce eklenmemişse direkt requestten gelen item quantity sayısını kullan. daha önce eklenmişse de veritabanı + gelen istek sayısı toplayıp ona göre kontrol et
         )
         {
             if (_basketItem != null)
             {
-                _basketItem.Quantity += basketItem.Quantity;
-                product.TotalBasketAdded += basketItem.Quantity;
+                _basketItem.Quantity += model.Quantity;
+                product.TotalBasketAdded += model.Quantity;
             }
             else // basketItem daha önce eklenmemişse
             {
@@ -83,20 +83,24 @@ public class BasketService : IBasketService
                     new()
                     {
                         BasketId = basket.Id,
-                        ProductId = Guid.Parse(basketItem.ProductId),
-                        Quantity = basketItem.Quantity,
+                        ProductId = Guid.Parse(model.ProductId),
+                        Quantity = model.Quantity,
                     }
                 );
-                product.TotalBasketAdded += basketItem.Quantity;
+                product.TotalBasketAdded += model.Quantity;
             }
 
             await _basketItemWriteRepository.SaveAsync();
+            return new() { Succeeded = true };
         }
         else //quantity bunu karşılamıyorsa
         {
-            throw new CustomException(
-                "Ürünün stok sayısı bunu karşılamıyor. Daha sonra tekrar deneyiniz. Sepetinizi kontrol ediniz."
-            );
+            return new()
+            {
+                Succeeded = false,
+                Message =
+                    "The product's stock quantity doesn't cover this. Please try again later. Check your cart."
+            };
         }
     }
 
@@ -159,7 +163,7 @@ public class BasketService : IBasketService
         }
     }
 
-    public async Task UpdateQuantityAsync(UpdateBasketItemRequestDTO basketItemDTO)
+    public async Task<ErrorDTO> UpdateQuantityAsync(UpdateBasketItemRequestDTO basketItemDTO)
     {
         BasketItem? databaseBasketItem = await _basketItemReadRepository.GetByIdAsync(
             basketItemDTO.BasketItemId
@@ -170,7 +174,7 @@ public class BasketService : IBasketService
         );
 
         if (product == null || databaseBasketItem == null)
-            throw new CustomException("Ürün bulunamadı");
+            return new() { Succeeded = false, Message = "Product not found" };
 
         if (databaseBasketItem != null)
         {
@@ -184,11 +188,14 @@ public class BasketService : IBasketService
 
                 databaseBasketItem.Quantity = basketItemDTO.Quantity;
                 await _basketItemWriteRepository.SaveAsync();
+                return new() { Succeeded = true };
             }
-            else
-                throw new CustomException(
-                    "Ürünün stok sayısı bunu karşılamıyor. Daha sonra tekrar deneyiniz."
-                );
         }
+
+        return new()
+        {
+            Succeeded = false,
+            Message = "The product's stock quantity doesn't cover this. Please try again later."
+        };
     }
 }
