@@ -48,7 +48,9 @@ public class UserService : IUserService
             if (result.Succeeded)
                 await _userManager.UpdateSecurityStampAsync(user); // şifre değişti şimdi securitystamp şifresini ezmemiz gerekiyor. burada update ediyoruz. reset token bir daha kullanılmayacak
             else
-                throw new Exception("Şifre Değiştirilirken bir hata meydana geldi");
+                throw new Exception(
+                    "An error occurred while changing the password. Please try again later."
+                );
         }
     }
 
@@ -134,7 +136,7 @@ public class UserService : IUserService
             {
                 Succeeded = false,
                 Message =
-                    "Bu e-posta adresiyle zaten bir hesap oluşturulmuş. Lütfen farklı bir e-posta adresiyle kaydolmayı deneyin veya mevcut hesabınızla giriş yapın."
+                    "An account has already been created with this email address. Please try signing up with a different email address or log in with your existing account."
             };
         }
 
@@ -146,7 +148,7 @@ public class UserService : IUserService
             {
                 Succeeded = false,
                 Message =
-                    "Bu kullanıcı adıyla zaten bir hesap oluşturulmuş. Lütfen farklı bir kullanıcı adıyla kaydolmayı deneyin veya mevcut hesabınızla giriş yapın."
+                    "This username already has an associated account. Please try registering with a different username or log in with your existing account"
             };
         }
 
@@ -173,13 +175,13 @@ public class UserService : IUserService
             //code veritabanına kaydetme
 
             response.Succeeded = true;
-            response.Message = "Kullanıcı Başarıyla Oluşturulmuştur. Email'inizi doğrulayın";
+            response.Message = "User successfully created. Please verify your email.";
             response.UserId = user.Id;
         }
         else
         {
             response.Succeeded = false;
-            response.Message = "Kullanıcı oluşturulurken bir hatayla karşılaşıldı.";
+            response.Message = "An error occurred during user registration.";
             response.UserId = null;
         }
 
@@ -263,7 +265,7 @@ public class UserService : IUserService
         }
 
         if (user == null) // böyle bir email de yoksa böyle bir kullanıcı yoktur. hata fırlattık
-            return new LoginUserErrorCommandResponse() { Message = "Hesap bulunamadı" };
+            return new LoginUserErrorCommandResponse() { Message = "Account not found" };
 
         SignInResult signInResult = await _signInManager.CheckPasswordSignInAsync(
             user,
@@ -286,11 +288,11 @@ public class UserService : IUserService
                 {
                     UserId = user.Id,
                     AuthMessage =
-                        "Girdiğiniz bilgiler doğru. Siteye girmek için lütfen Mail'inizi doğrulayın"
+                        "The information you entered is correct. Please verify your email to access the site"
                 };
             }
         }
 
-        return new LoginUserErrorCommandResponse() { Message = "Şifre Hatalı" };
+        return new LoginUserErrorCommandResponse() { Message = "Password is incorrect" };
     }
 }

@@ -36,18 +36,7 @@ public class CreateProductValidator : AbstractValidator<CreateProductCommandRequ
                 "Ürün ayrıntı alanı 1500 karakterden az olmalıdır. Lütfen daha kısa ayrıntı giriniz"
             );
 
-        // RuleFor(p => p.CategoryNames)
-        //     .NotEmpty()
-        //     .NotNull()
-        //     .WithMessage("Kategori isimleri boş olamaz")
-        //     .ForEach(p =>
-        //     {
-        //         p.Length(1, 100)
-        //             .WithMessage("Her kategori ismi 1 ila 100 karakter arasında olmalıdır.");
-        //     });
-
-        RuleFor(p => p.isActive)
-            .NotEmpty()
+        RuleFor(p => p.isActive) //NotEmpty sorun çıkardı
             .NotNull()
             .WithMessage("Aktiflik bilgisi boş olamaz")
             .Must(p => p == true || p == false);

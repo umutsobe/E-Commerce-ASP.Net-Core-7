@@ -1,4 +1,3 @@
-using System.Linq;
 using e_trade_api.application;
 using e_trade_api.domain;
 using e_trade_api.domain.Entities;
@@ -88,7 +87,7 @@ public class ProductService : IProductService
         await _productWriteRepository.SaveAsync();
 
         await _productHubServices.ProductAddedMessageAsync(
-            $"{model.Name} isminde bir ürün eklenmiştir!!"
+            $"A product named {model.Name} has been added"
         );
     }
 

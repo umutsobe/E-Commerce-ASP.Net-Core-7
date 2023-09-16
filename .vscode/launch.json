@@ -13,7 +13,7 @@
       "request": "launch",
       "preLaunchTask": "build",
       // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/Presentation/e-trade-api.API/bin/Debug/net6.0/e-trade-api.API.dll",
+      "program": "${workspaceFolder}/Presentation/e-trade-api.API/bin/Debug/net7.0/e-trade-api.API.dll",
       "args": [],
       "cwd": "${workspaceFolder}/Presentation/e-trade-api.API",
       "stopAtEntry": false,
