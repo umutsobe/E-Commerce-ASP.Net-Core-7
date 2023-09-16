@@ -64,6 +64,11 @@ public static class MyConfigurationManager
     {
         return ConfigurationManager().GetSection("Token").Get<TokenConfiguration>();
     }
+
+    public static string GetGoogleCredential() //ok
+    {
+        return ConfigurationManager().GetSection("GoogleCredential").Get<string>();
+    }
 }
 
 public class MailConfiguraiton

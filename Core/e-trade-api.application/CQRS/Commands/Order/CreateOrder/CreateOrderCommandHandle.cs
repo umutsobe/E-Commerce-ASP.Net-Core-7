@@ -19,7 +19,7 @@ public class CreateOrderCommandHandle
         CancellationToken cancellationToken
     )
     {
-        await _orderService.CreateOrderAsync(
+        CreateOrderResponseDTO response = await _orderService.CreateOrderAsync(
             new()
             {
                 UserId = request.UserId,
@@ -31,6 +31,6 @@ public class CreateOrderCommandHandle
 
         await _orderHubService.OrderAddedMessageAsync("Yeni bir sipariş geldi");
 
-        return new();
+        return new() { OrderCode = response.OrderCode, OrderId = response.OrderId };
     }
 }

@@ -77,7 +77,7 @@ public class OrderService : IOrderService
         return (false, null);
     }
 
-    public async Task CreateOrderAsync(CreateOrder createOrder)
+    public async Task<CreateOrderResponseDTO> CreateOrderAsync(CreateOrder createOrder)
     {
         var orderId = Guid.NewGuid();
 
@@ -166,6 +166,7 @@ public class OrderService : IOrderService
         }
 
         await _orderItemWriteRepository.SaveAsync();
+        return new() { OrderCode = orderCode, OrderId = orderId.ToString() };
     }
 
     public async Task<ListOrder> GetAllOrdersAsync(int page, int size)
@@ -239,6 +240,18 @@ public class OrderService : IOrderService
             Description = data.Description,
             OrderCode = data.OrderCode,
         };
+    }
+
+    public async Task<bool> IsOrderValid(string orderCode)
+    {
+        Order? order = await _orderReadRepository.Table.FirstOrDefaultAsync(
+            o => o.OrderCode == orderCode
+        );
+
+        if (order == null)
+            return false;
+
+        return true;
     }
 
     private async Task<string> GenerateUniqueOrderCodeAsync()

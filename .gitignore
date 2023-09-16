@@ -9,7 +9,6 @@ Presentation/e-trade-api.API/appsettings.Development.json
 ## tüm projelerdeki
 **/bin/
 **/obj/
-**/Properties/
 **/.config/
 # User-specific files
 *.rsuser
@@ -404,3 +403,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+Core/e-trade-api.application/obj/Debug/net7.0/e-trade-api.application.csproj.AssemblyReference.cache
+Infastructure/e-trade-api.Infastructure/obj/Debug/net7.0/e-trade-api.Infastructure.csproj.AssemblyReference.cache
+Infastructure/e-trade-api.Persistence/obj/Debug/net7.0/e-trade-api.Persistence.csproj.AssemblyReference.cache
+Infastructure/e-trade-api.SignalR/obj/Debug/net7.0/e-trade-api.SignalR.csproj.AssemblyReference.cache

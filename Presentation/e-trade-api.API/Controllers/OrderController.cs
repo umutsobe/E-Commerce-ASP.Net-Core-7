@@ -8,17 +8,19 @@ namespace e_trade_api.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = "Admin")]
+// [Authorize(AuthenticationSchemes = "Admin")]
 public class OrderController : ControllerBase
 {
     readonly IMediator _mediator;
+    readonly IOrderService _orderService;
 
-    public OrderController(IMediator mediator)
+    public OrderController(IMediator mediator, IOrderService orderService)
     {
         _mediator = mediator;
+        _orderService = orderService;
     }
 
-    [HttpPost]
+    [HttpPost("[action]")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Orders,
         ActionType = ActionType.Writing,
@@ -70,6 +72,21 @@ public class OrderController : ControllerBase
     public async Task<IActionResult> CompleteOrder([FromRoute] CompleteOrderCommandRequest request)
     {
         CompleteOrderCommandResponse response = await _mediator.Send(request);
+        return Ok(response);
+    }
+
+    [HttpGet("[action]/{orderCode}")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Orders,
+        ActionType = ActionType.Reading,
+        Definition = "Complete Order"
+    )]
+    public async Task<IActionResult> IsOrderValid([FromRoute] string orderCode)
+    {
+        bool isValid = await _orderService.IsOrderValid(orderCode);
+
+        var response = new { isValid = isValid };
+
         return Ok(response);
     }
 }

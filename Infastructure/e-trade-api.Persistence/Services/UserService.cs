@@ -197,10 +197,7 @@ public class UserService : IUserService
         {
             var settings = new GoogleJsonWebSignature.ValidationSettings()
             {
-                Audience = new List<string>
-                {
-                    "719960856381-8eaoopcgmmkjn2nv91bklf4utlqkc62s.apps.googleusercontent.com"
-                }
+                Audience = new List<string> { MyConfigurationManager.GetGoogleCredential() }
             };
 
             var payload = await GoogleJsonWebSignature.ValidateAsync(model.IdToken, settings);
