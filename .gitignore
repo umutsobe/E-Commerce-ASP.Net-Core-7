@@ -407,3 +407,8 @@ Core/e-trade-api.application/obj/Debug/net7.0/e-trade-api.application.csproj.Ass
 Infastructure/e-trade-api.Infastructure/obj/Debug/net7.0/e-trade-api.Infastructure.csproj.AssemblyReference.cache
 Infastructure/e-trade-api.Persistence/obj/Debug/net7.0/e-trade-api.Persistence.csproj.AssemblyReference.cache
 Infastructure/e-trade-api.SignalR/obj/Debug/net7.0/e-trade-api.SignalR.csproj.AssemblyReference.cache
+.idea/.idea.e-trade-api/.idea/encodings.xml
+.idea/.idea.e-trade-api/.idea/indexLayout.xml
+.idea/.idea.e-trade-api/.idea/projectSettingsUpdater.xml
+.idea/.idea.e-trade-api/.idea/vcs.xml
+.idea/.idea.e-trade-api/.idea/workspace.xml
