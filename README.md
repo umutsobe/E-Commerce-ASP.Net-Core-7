@@ -6,6 +6,8 @@
 
 [Database Entity–Relationship Diagram](https://github.com/umutsobe/mini-e-trade-backend---asp.net-core-6/assets/120561448/b3bde43c-d2b0-46fe-9f38-f6f92bc393d6)
 
+[All Images](https://imgur.com/a/Xh4jWX5)
+
 ## About the Project
 
 This project is an ASP.NET API that provides E-Commerce functionality. The API is developed using two fundamental architectural principles: **Onion Architecture** and **CQRS Pattern**.
