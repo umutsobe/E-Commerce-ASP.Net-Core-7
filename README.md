@@ -1,6 +1,6 @@
 # ASP.NET Mini-E-Commerce App
 
-**Before You Begin:** To try out the application, you can visit the following link: [E-Commerce App](https://mini-e-trade-2023-08.web.app/search?page=0). Please note that the initial API request may take 10-15 seconds to respond because I use Azure student subscription, but next requests will be much faster.
+**Before You Begin:** To try out the application, you can visit the following link: [E-Commerce App](https://e-commerce-ssr-prerender-umutsobe.vercel.app/search?page=0). Please note that the initial API request may take 10-15 seconds to respond because I use Azure student subscription, but next requests will be much faster.
 
 [Swagger All (67) HTTP Methods Image](https://github.com/umutsobe/mini-e-trade-backend---asp.net-core-6/assets/120561448/cb24ae39-9b4e-4164-aeba-0d00e24c3112)
 
