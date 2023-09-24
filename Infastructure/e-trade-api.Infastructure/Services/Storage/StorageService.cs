@@ -1,5 +1,4 @@
 using e_trade_api.application;
-using Microsoft.AspNetCore.Http;
 
 namespace e_trade_api.Infastructure;
 
@@ -32,8 +31,13 @@ public class StorageService : IStorageService
         return await _storageService.HasFile(ContainerName, fileName);
     }
 
-    public async Task<List<StorageFile>> UploadAsync(UploadProductImageRequest model)
+    public async Task<List<StorageFile>> UploadImageAsync(ImageFileRequest model)
     {
-        return await _storageService.UploadAsync(model);
+        return await _storageService.UploadImageAsync(model);
+    }
+
+    public async Task<List<StorageFile>> UploadProductImageAsync(UploadProductImageRequest model)
+    {
+        return await _storageService.UploadProductImageAsync(model);
     }
 }

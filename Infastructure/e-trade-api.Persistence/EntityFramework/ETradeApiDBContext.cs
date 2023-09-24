@@ -28,6 +28,7 @@ namespace e_trade_api.Persistence.Contexts
         public DbSet<Category> Categories { get; set; }
         public DbSet<ProductRating> ProductRatings { get; set; }
         public DbSet<TwoFactorAuthentication> TwoFactorAuthentications { get; set; }
+        public DbSet<ImageFile> ImageFiles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) //migrationda bir şeyi değiştirmedi
         {

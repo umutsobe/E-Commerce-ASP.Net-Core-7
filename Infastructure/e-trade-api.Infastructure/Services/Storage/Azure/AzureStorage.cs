@@ -44,7 +44,7 @@ public class AzureStorage : IAzureStorage
         return false;
     }
 
-    public async Task<List<StorageFile>> UploadAsync(UploadProductImageRequest model)
+    public async Task<List<StorageFile>> UploadProductImageAsync(UploadProductImageRequest model)
     {
         _blobContainerClient = _blobServiceClient.GetBlobContainerClient(model.ContainerName); // hesaptan container alınır. servis sadece burada kullanıldı. gerisi containerclient'ın işi.
 
@@ -71,6 +71,38 @@ public class AzureStorage : IAzureStorage
                 }
             ); //veritabanına atmak için
         }
+        return datas;
+    }
+
+    public async Task<List<StorageFile>> UploadImageAsync(ImageFileRequest model)
+    {
+        _blobContainerClient = _blobServiceClient.GetBlobContainerClient(model.ContainerName);
+
+        await _blobContainerClient.CreateIfNotExistsAsync();
+        await _blobContainerClient.SetAccessPolicyAsync(PublicAccessType.BlobContainer);
+
+        List<StorageFile> datas = new();
+
+        foreach (IFormFile file in model.Files)
+        {
+            string extension = Path.GetExtension(file.Name);
+            string productFileName =
+                $"{model.Definition}-{Guid.NewGuid().ToString().Substring(0, 8)}{extension}";
+
+            BlobClient blobClient = _blobContainerClient.GetBlobClient(productFileName);
+
+            await blobClient.UploadAsync(file.OpenReadStream());
+
+            datas.Add(
+                new()
+                {
+                    Definition = model.Definition,
+                    FileName = productFileName,
+                    Path = $"{model.ContainerName}/{productFileName}"
+                }
+            );
+        }
+
         return datas;
     }
 }

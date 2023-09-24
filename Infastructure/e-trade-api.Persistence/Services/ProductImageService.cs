@@ -43,11 +43,11 @@ public class ProductImageService : IProductImageService
         await _storageService.DeleteAsync("product-image", imageName); // fotoğrafı azuredan da sildik
     }
 
-    public async Task UploadProductImage(UploadProductImageRequestDTO model)
+    public async Task UploadProductImage(UploadImageRequestDTO model)
     {
         Product product = await _productReadRepository.GetByIdAsync(model.Id);
 
-        List<StorageFile> datas = await _storageService.UploadAsync(
+        List<StorageFile> datas = await _storageService.UploadProductImageAsync(
             new()
             {
                 ContainerName = "product-image",
