@@ -1,5 +1,7 @@
+using System.Text;
 using e_trade_api.application;
 using e_trade_api.domain;
+using e_trade_api.domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,13 +19,15 @@ public class EndpointController : ControllerBase
     readonly IMenuWriteRepository _menuWriteRepository;
     readonly IEndpointReadRepository _endpointReadRepository;
     readonly IEndpointWriteRepository _endpointWriteRepository;
+    readonly IProductReadRepository _productReadRepository;
 
     public EndpointController(
         IApplicationService applicationService,
         IMenuReadRepository menuReadRepository,
         IMenuWriteRepository menuWriteRepository,
         IEndpointReadRepository endpointReadRepository,
-        IEndpointWriteRepository endpointWriteRepository
+        IEndpointWriteRepository endpointWriteRepository,
+        IProductReadRepository productReadRepository
     )
     {
         _applicationService = applicationService;
@@ -31,6 +35,7 @@ public class EndpointController : ControllerBase
         _menuWriteRepository = menuWriteRepository;
         _endpointReadRepository = endpointReadRepository;
         _endpointWriteRepository = endpointWriteRepository;
+        _productReadRepository = productReadRepository;
     }
 
     [HttpGet("[action]")]
@@ -94,5 +99,19 @@ public class EndpointController : ControllerBase
         await _endpointWriteRepository.SaveAsync();
 
         return Ok();
+    }
+
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetProductRoutes()
+    {
+        List<Product> products = await _productReadRepository.GetAll().ToListAsync();
+        StringBuilder urls = new();
+
+        foreach (var product in products)
+        {
+            string url = "/product/" + product.Url;
+            urls.AppendLine(url);
+        }
+        return Ok(urls.ToString());
     }
 }
