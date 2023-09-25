@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using e_trade_api.application;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace e_trade_api.API.Controllers;
@@ -31,6 +32,12 @@ public class AuthorizationEndpointsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(AuthenticationSchemes = "Auth")]
+    [AuthorizeDefinition(
+        Menu = "AuthorizationEndpoints",
+        ActionType = ActionType.Writing,
+        Definition = "Assign Role Endpoint"
+    )]
     public async Task<IActionResult> AssignRoleEndpoint(
         AssignRoleEndpointCommandRequest assignRoleEndpointCommandRequest
     )

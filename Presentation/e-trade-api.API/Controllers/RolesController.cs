@@ -7,7 +7,6 @@ namespace e_trade_api.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(AuthenticationSchemes = "Admin")]
 public class RolesController : ControllerBase
 {
     readonly IMediator _mediator;
@@ -18,7 +17,7 @@ public class RolesController : ControllerBase
     }
 
     [HttpGet]
-    [AuthorizeDefinition(ActionType = ActionType.Reading, Definition = "Get Roles", Menu = "Roles")]
+    // [AuthorizeDefinition(ActionType = ActionType.Reading, Definition = "Get Roles", Menu = "Roles")]
     public async Task<IActionResult> GetRoles([FromQuery] GetRolesQueryRequest getRolesQueryRequest)
     {
         GetRolesQueryResponse response = await _mediator.Send(getRolesQueryRequest);
@@ -26,11 +25,11 @@ public class RolesController : ControllerBase
     }
 
     [HttpGet("{Id}")]
-    [AuthorizeDefinition(
-        ActionType = ActionType.Reading,
-        Definition = "Get Role By Id",
-        Menu = "Roles"
-    )]
+    // [AuthorizeDefinition(
+    //     ActionType = ActionType.Reading,
+    //     Definition = "Get Role By Id",
+    //     Menu = "Roles"
+    // )]
     public async Task<IActionResult> GetRoles(
         [FromRoute] GetRoleByIdQueryRequest getRoleByIdQueryRequest
     )
@@ -39,7 +38,8 @@ public class RolesController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPost()]
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         ActionType = ActionType.Writing,
         Definition = "Create Role",
@@ -54,6 +54,7 @@ public class RolesController : ControllerBase
     }
 
     [HttpPut("{Id}")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         ActionType = ActionType.Updating,
         Definition = "Update Role",
@@ -68,6 +69,7 @@ public class RolesController : ControllerBase
     }
 
     [HttpDelete("{Id}")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         ActionType = ActionType.Deleting,
         Definition = "Delete Role",

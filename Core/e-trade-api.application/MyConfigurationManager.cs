@@ -8,7 +8,7 @@ public static class MyConfigurationManager
     {
         ConfigurationManager configurationManager = new();
 
-        ProjectStatus projectStatus = ProjectStatus.Development;
+        ProjectStatus projectStatus = ProjectStatus.UpdateServerOnLocal;
 
         if (projectStatus == ProjectStatus.Development)
         {

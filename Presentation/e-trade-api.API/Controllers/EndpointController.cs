@@ -39,7 +39,7 @@ public class EndpointController : ControllerBase
     }
 
     [HttpGet("[action]")]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = "Endpoint",
         ActionType = ActionType.Updating,
@@ -102,6 +102,7 @@ public class EndpointController : ControllerBase
     }
 
     [HttpGet("[action]")]
+    //for prerender
     public async Task<IActionResult> GetProductRoutes()
     {
         List<Product> products = await _productReadRepository.GetAll().ToListAsync();

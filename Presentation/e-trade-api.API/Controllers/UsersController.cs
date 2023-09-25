@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace e_trade_api.API.Controllers;
 
 [Route("api/[controller]")]
-// [Authorize]
 [ApiController]
 public class UsersController : ControllerBase
 {
@@ -42,19 +41,8 @@ public class UsersController : ControllerBase
         return Ok(response);
     }
 
-    // [HttpGet]
-    // public async Task<IActionResult> ExampleMailTest()
-    // {
-    //     await _mailService.SendMailAsync(
-    //         "umuttsobeksk@gmail.com",
-    //         "Örnek Mail",
-    //         "<strong>Bu bir örnek maildir.</strong>"
-    //     );
-    //     return Ok();
-    // }
-
     [HttpPost("password-reset")]
-    public async Task<IActionResult> PasswordReset(
+    public async Task<IActionResult> PasswordReset( //email girip emaile kod gitmesi (unuttum kısmı)
         [FromBody] PasswordResetCommandRequest passwordResetCommandRequest
     )
     {
@@ -63,7 +51,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("verify-reset-token")]
-    public async Task<IActionResult> VerifyResetToken(
+    public async Task<IActionResult> VerifyResetToken( //passwork update sayfasına giriş kontrolü
         [FromBody] VerifyResetTokenCommandRequest verifyResetTokenCommandRequest
     )
     {
@@ -74,7 +62,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("update-password")]
-    public async Task<IActionResult> UpdatePassword(
+    public async Task<IActionResult> UpdatePassword( //şifre değiştirme (unuttum kısmı)
         [FromBody] UpdatePasswordCommandRequest updatePasswordCommandRequest
     )
     {
@@ -83,7 +71,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         ActionType = ActionType.Reading,
         Definition = "Get All Users",
@@ -98,7 +86,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("get-roles-to-user/{UserId}")]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         ActionType = ActionType.Reading,
         Definition = "Get Roles To Users",
@@ -113,7 +101,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("assign-role-to-user")]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         ActionType = ActionType.Reading,
         Definition = "Assign Role To User",

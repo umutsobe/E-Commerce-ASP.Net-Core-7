@@ -6,7 +6,6 @@ namespace e_trade_api.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = "Admin")]
 public class ApplicationServicesController : ControllerBase
 {
     readonly IApplicationService _applicationService;
@@ -22,11 +21,12 @@ public class ApplicationServicesController : ControllerBase
     }
 
     [HttpGet]
-    [AuthorizeDefinition(
-        ActionType = ActionType.Reading,
-        Definition = "Get Authorize Definition Endpoints",
-        Menu = "Application Services"
-    )]
+    // [Authorize(AuthenticationSchemes = "Auth")]
+    // [AuthorizeDefinition(
+    //     ActionType = ActionType.Reading,
+    //     Definition = "Get Authorize Definition Endpoints",
+    //     Menu = "Application Services"
+    // )]
     public async Task<IActionResult> GetAuthorizeDefinitionEndpoints()
     {
         List<MenuDTO> datas = _applicationService.GetAuthorizeDefinitionEndpoints(typeof(Program));

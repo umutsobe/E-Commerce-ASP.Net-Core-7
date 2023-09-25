@@ -1,4 +1,5 @@
 using e_trade_api.application;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace e_trade_api.API.Controllers;
@@ -25,6 +26,12 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost("[action]")]
+    [Authorize(AuthenticationSchemes = "Auth")]
+    [AuthorizeDefinition(
+        Menu = "Category",
+        ActionType = ActionType.Writing,
+        Definition = "Create Category"
+    )]
     public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequestDTO model)
     {
         await _categoryService.CreateCategory(model.Name);
@@ -33,6 +40,12 @@ public class CategoryController : ControllerBase
     }
 
     [HttpDelete("[action]/{Id}")]
+    [Authorize(AuthenticationSchemes = "Auth")]
+    [AuthorizeDefinition(
+        Menu = "Category",
+        ActionType = ActionType.Writing,
+        Definition = "Delete Category"
+    )]
     public async Task<IActionResult> DeleteCategory([FromRoute] string Id)
     {
         await _categoryService.DeleteCategory(Id);
@@ -41,6 +54,12 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPut("[action]")]
+    [Authorize(AuthenticationSchemes = "Auth")]
+    [AuthorizeDefinition(
+        Menu = "Category",
+        ActionType = ActionType.Writing,
+        Definition = "Update Category"
+    )]
     public async Task<IActionResult> UpdateCategoryName([FromBody] UpdateCategoryNameDTO model)
     {
         await _categoryService.UpdateCategoryName(model);

@@ -8,7 +8,7 @@ namespace e_trade_api.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-// [Authorize(AuthenticationSchemes = "Admin")]
+// [Authorize(AuthenticationSchemes = "Auth")]
 public class OrderController : ControllerBase
 {
     readonly IMediator _mediator;
@@ -21,6 +21,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpPost("[action]")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Orders,
         ActionType = ActionType.Writing,
@@ -36,11 +37,11 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet]
-    [AuthorizeDefinition(
-        Menu = AuthorizeDefinitionConstants.Orders,
-        ActionType = ActionType.Reading,
-        Definition = "Get All Orders"
-    )]
+    // [AuthorizeDefinition(
+    //     Menu = AuthorizeDefinitionConstants.Orders,
+    //     ActionType = ActionType.Reading,
+    //     Definition = "Get All Orders"
+    // )]
     public async Task<IActionResult> GetAllOrders(
         [FromQuery] GetAllOrdersQueryRequest getAllOrdersQueryRequest
     )
@@ -50,11 +51,11 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("{Id}")]
-    [AuthorizeDefinition(
-        Menu = AuthorizeDefinitionConstants.Orders,
-        ActionType = ActionType.Reading,
-        Definition = "Get Order By Id"
-    )]
+    // [AuthorizeDefinition(
+    //     Menu = AuthorizeDefinitionConstants.Orders,
+    //     ActionType = ActionType.Reading,
+    //     Definition = "Get Order By Id"
+    // )]
     public async Task<ActionResult> GetOrderById(
         [FromRoute] GetOrderByIdQueryRequest getOrderByIdQueryRequest
     )
@@ -64,6 +65,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("complete-order/{Id}")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Orders,
         ActionType = ActionType.Updating,
@@ -79,7 +81,7 @@ public class OrderController : ControllerBase
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Orders,
         ActionType = ActionType.Reading,
-        Definition = "Complete Order"
+        Definition = "Is Order Valid for Success Page"
     )]
     public async Task<IActionResult> IsOrderValid([FromRoute] string orderCode)
     {

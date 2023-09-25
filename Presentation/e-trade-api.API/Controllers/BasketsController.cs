@@ -7,7 +7,7 @@ namespace e_trade_api.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = "Admin")]
+[Authorize(AuthenticationSchemes = "Auth")]
 public class BasketsController : ControllerBase
 {
     readonly IMediator _mediator;

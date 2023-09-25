@@ -88,4 +88,20 @@ public class ImageFileService : IImageFileService
         await _imageFileWriteRepository.AddRangeAsync(imageFiles);
         await _imageFileWriteRepository.SaveAsync();
     }
+
+    public async Task UpdateOrderDefinitionImages(UpdateOrderDefinitionImagesRequestDTO model)
+    {
+        List<ImageFile> imageFiles = await _imageFileReadRepository.Table
+            .Where(i => i.Definition == model.Definition)
+            .ToListAsync();
+
+        foreach (var image in model.Images)
+        {
+            var imageToUpdate = imageFiles.FirstOrDefault(i => i.Id.ToString() == image.ImageId);
+            if (imageToUpdate != null)
+                imageToUpdate.Order = image.Order;
+        }
+
+        await _imageFileWriteRepository.SaveAsync();
+    }
 }

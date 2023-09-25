@@ -39,7 +39,7 @@ builder.Services.AddValidationsServices();
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(
-        "Admin",
+        "Auth",
         options =>
         {
             options.TokenValidationParameters = new()

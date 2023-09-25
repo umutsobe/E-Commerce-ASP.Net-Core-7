@@ -16,6 +16,12 @@ public class ProductRatingController : ControllerBase
     }
 
     [HttpDelete("[action]/{ratingId}")]
+    [Authorize(AuthenticationSchemes = "Auth")]
+    [AuthorizeDefinition(
+        Menu = "Ratings",
+        ActionType = ActionType.Deleting,
+        Definition = "Delete Rating"
+    )]
     public async Task<ActionResult> DeleteRating([FromRoute] string ratingId)
     {
         await _productRatingService.DeleteRating(ratingId);
@@ -23,6 +29,12 @@ public class ProductRatingController : ControllerBase
     }
 
     [HttpPost("[action]")]
+    [Authorize(AuthenticationSchemes = "Auth")]
+    [AuthorizeDefinition(
+        Menu = "Ratings",
+        ActionType = ActionType.Writing,
+        Definition = "Create Rating"
+    )]
     public async Task<ActionResult> CreateRating([FromBody] ProductRateRequestDTO model)
     {
         await _productRatingService.CreateRating(model);
@@ -39,6 +51,12 @@ public class ProductRatingController : ControllerBase
     }
 
     [HttpGet("[action]")]
+    [Authorize(AuthenticationSchemes = "Auth")]
+    [AuthorizeDefinition(
+        Menu = "Ratings",
+        ActionType = ActionType.Reading,
+        Definition = "Get User Ratings"
+    )]
     public async Task<ActionResult> GetUserRatings([FromQuery] GetUserRatingsRequestDTO model)
     {
         GetUserRatingsResponseDTO response = await _productRatingService.GetUserRatings(model);
@@ -46,6 +64,12 @@ public class ProductRatingController : ControllerBase
     }
 
     [HttpPut("[action]")]
+    [Authorize(AuthenticationSchemes = "Auth")]
+    [AuthorizeDefinition(
+        Menu = "Ratings",
+        ActionType = ActionType.Updating,
+        Definition = "Update Rate"
+    )]
     public async Task<ActionResult> UpdateRate([FromBody] UpdateRateRequestDTO model)
     {
         await _productRatingService.UpdateRate(model);

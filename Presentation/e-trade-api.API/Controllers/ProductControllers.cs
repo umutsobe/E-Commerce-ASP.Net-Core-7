@@ -19,7 +19,7 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpPost("[action]")]
-    // [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Products,
         ActionType = ActionType.Writing,
@@ -36,7 +36,7 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpPut("[action]")]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Products,
         ActionType = ActionType.Updating,
@@ -52,7 +52,7 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpDelete("[action]/{Id}")]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Products,
         ActionType = ActionType.Deleting,
@@ -70,7 +70,7 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpDelete("[action]/{ProductId}")] //alttaki isimle buradaki isim aynı olmak zorunda. buradaki productId, pareametredeki productId
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Products,
         ActionType = ActionType.Deleting,
@@ -89,13 +89,13 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpPost("[action]")]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Products,
         ActionType = ActionType.Writing,
         Definition = "Assign Category To Product"
     )]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     public async Task<IActionResult> AssignCategoryToProduct(
         AssignCategoryToProductRequestDTO model
     )
@@ -105,12 +105,12 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpGet("[action]/{productId}")]
-    [AuthorizeDefinition(
-        Menu = AuthorizeDefinitionConstants.Products,
-        ActionType = ActionType.Reading,
-        Definition = "Get Categories By Product"
-    )]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    // [AuthorizeDefinition(
+    //     Menu = AuthorizeDefinitionConstants.Products,
+    //     ActionType = ActionType.Reading,
+    //     Definition = "Get Categories By Product"
+    // )]
+    // [Authorize(AuthenticationSchemes = "Auth")]
     public async Task<IActionResult> GetCategoriesByProduct([FromRoute] string productId)
     {
         List<string> response = await _productService.GetCategoriesByProduct(productId);
@@ -124,7 +124,7 @@ public class ProductControllers : ControllerBase
         ActionType = ActionType.Writing,
         Definition = "Add Products To Category"
     )]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     public async Task<IActionResult> AddProductsToCategory(
         [FromBody] AddProductsToCategoryRequestDTO model
     )
@@ -144,6 +144,7 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpGet("[action]")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     public async Task<IActionResult> QuickCreateProduct()
     {
         await _productService.QuickCreateProduct();
@@ -168,7 +169,7 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpGet("[action]")]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Products,
         ActionType = ActionType.Updating,
@@ -183,7 +184,7 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpPost("[action]")]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = AuthorizeDefinitionConstants.Products,
         ActionType = ActionType.Writing,
@@ -199,11 +200,6 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpGet("[action]/{Id}")]
-    [AuthorizeDefinition(
-        Menu = AuthorizeDefinitionConstants.Products,
-        ActionType = ActionType.Reading,
-        Definition = "Get Products Images"
-    )]
     public async Task<IActionResult> GetProductImages(
         [FromRoute] GetProductImageQueryRequest getProductImageQueryRequest
     )
@@ -215,6 +211,12 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpPut("[action]")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Products,
+        ActionType = ActionType.Updating,
+        Definition = "Add Stock"
+    )]
+    [Authorize(AuthenticationSchemes = "Auth")]
     public async Task<IActionResult> AddStock(AddStockRequestDTO model)
     {
         await _productService.AddStock(model);
@@ -222,6 +224,12 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpPut("[action]/{productId}")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Products,
+        ActionType = ActionType.Updating,
+        Definition = "Deactivate Product"
+    )]
+    [Authorize(AuthenticationSchemes = "Auth")]
     public async Task<IActionResult> DeactivateProduct(string productId)
     {
         await _productService.DeactivateProduct(productId);
@@ -229,6 +237,12 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpPut("[action]/{productId}")]
+    [Authorize(AuthenticationSchemes = "Auth")]
+    [AuthorizeDefinition(
+        Menu = AuthorizeDefinitionConstants.Products,
+        ActionType = ActionType.Updating,
+        Definition = "Activate Product"
+    )]
     public async Task<IActionResult> ActivateProduct(string productId)
     {
         await _productService.ActivateProduct(productId);

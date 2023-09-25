@@ -15,7 +15,7 @@ public class AccountController : ControllerBase
         _accountService = accountService;
     }
 
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = "Account",
         ActionType = ActionType.Reading,
@@ -29,7 +29,7 @@ public class AccountController : ControllerBase
         return Ok(listUser);
     }
 
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = "Account",
         ActionType = ActionType.Updating,
@@ -42,7 +42,7 @@ public class AccountController : ControllerBase
         return Ok(response);
     }
 
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = "Account",
         ActionType = ActionType.Updating,
@@ -55,7 +55,7 @@ public class AccountController : ControllerBase
         return Ok(orders);
     }
 
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = "Account",
         ActionType = ActionType.Updating,
@@ -69,7 +69,7 @@ public class AccountController : ControllerBase
         return Ok(token);
     }
 
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = "Account",
         ActionType = ActionType.Writing,
@@ -83,7 +83,7 @@ public class AccountController : ControllerBase
         return Ok();
     }
 
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = "Account",
         ActionType = ActionType.Reading,
@@ -97,7 +97,7 @@ public class AccountController : ControllerBase
         return Ok(response);
     }
 
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = "Account",
         ActionType = ActionType.Deleting,
@@ -111,7 +111,7 @@ public class AccountController : ControllerBase
         return Ok();
     }
 
-    // [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = "Account",
         ActionType = ActionType.Updating,
@@ -124,7 +124,7 @@ public class AccountController : ControllerBase
         return Ok(response);
     }
 
-    // [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = "Auth")]
     [AuthorizeDefinition(
         Menu = "Account",
         ActionType = ActionType.Updating,

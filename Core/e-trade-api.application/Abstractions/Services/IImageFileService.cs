@@ -6,4 +6,5 @@ public interface IImageFileService
     Task UploadImage(UploadImageRequestDTO model);
     Task<GetImageByIdResponse> GetImageById(string id);
     Task<List<GetImageByIdResponse>> GetImagesByDefinition(string definition);
+    Task UpdateOrderDefinitionImages(UpdateOrderDefinitionImagesRequestDTO model);
 }
