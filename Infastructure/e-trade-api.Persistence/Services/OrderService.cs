@@ -177,49 +177,65 @@ public class OrderService : IOrderService
         };
     }
 
-    public async Task<ListOrder> GetAllOrdersAsync(int page, int size)
+    public async Task<GetAllOrdersByFilterResponseDTO> GetAllOrdersByFilterAsync(
+        GetAllOrdersByFilterRequestDTO model
+    )
     {
         var query = _orderReadRepository.Table
-            .Include(o => o.User)
             .Include(o => o.OrderItems)
-            .ThenInclude(oi => oi.Product);
+            .Include(o => o.User)
+            .Include(o => o.CompletedOrder)
+            .AsQueryable();
 
-        var data = query.Skip(page * size).Take(size);
+        if (!string.IsNullOrEmpty(model.UsernameKeyword))
+            query = query.Where(
+                o => EF.Functions.Like(o.User.UserName, $"%{model.UsernameKeyword}%")
+            );
+        if (!string.IsNullOrEmpty(model.OrderCodeKeyword))
+            query = query.Where(o => EF.Functions.Like(o.OrderCode, $"%{model.OrderCodeKeyword}%"));
 
-        var data2 =
-            from order in data
-            join completedOrder in _completedOrderReadRepository.Table
-                on order.Id equals completedOrder.OrderId
-                into co
-            from _co in co.DefaultIfEmpty()
-            select new
-            {
-                Id = order.Id,
-                CreatedDate = order.CreatedDate,
-                OrderCode = order.OrderCode,
-                OrderItems = order.OrderItems,
-                UserName = order.User.UserName,
-                Completed = _co != null ? true : false
-            };
-
-        return new()
+        if (model.IsConfirmed.HasValue)
         {
-            TotalOrderCount = await query.CountAsync(),
-            Orders = await data2
-                .Select(
-                    o =>
-                        new
-                        {
-                            Id = o.Id,
-                            CreatedDate = o.CreatedDate,
-                            OrderCode = o.OrderCode,
-                            TotalPrice = o.OrderItems.Sum(bi => bi.Product.Price * bi.Quantity),
-                            UserName = o.UserName,
-                            Completed = o.Completed
-                        }
-                )
-                .ToListAsync()
-        };
+            if (model.IsConfirmed == true)
+                query = query.Where(o => o.CompletedOrder != null);
+            else
+                query = query.Where(o => o.CompletedOrder == null);
+        }
+
+        var totalOrderCount = await query.CountAsync();
+
+        if (!string.IsNullOrEmpty(model.Sort))
+        {
+            if (model.Sort == "new")
+                query = query.OrderByDescending(o => o.CreatedDate);
+            else if (model.Sort == "old")
+                query = query.OrderBy(o => o.CreatedDate);
+            else if (model.Sort == "priceDesc")
+                query = query.OrderByDescending(o => o.OrderItems.Sum(item => item.Price));
+            else if (model.Sort == "priceAsc")
+                query = query.OrderBy(o => o.OrderItems.Sum(item => item.Price));
+        }
+        else
+            query = query.OrderByDescending(p => p.CreatedDate);
+
+        query = query.Skip(model.Page * model.Size).Take(model.Size);
+
+        List<GetOrderByFilter> filteredOrders = await query
+            .Select(
+                o =>
+                    new GetOrderByFilter
+                    {
+                        Id = o.Id.ToString(),
+                        Completed = o.CompletedOrder != null,
+                        CreatedDate = o.CreatedDate,
+                        OrderCode = o.OrderCode,
+                        TotalPrice = o.OrderItems.Sum(item => item.Price),
+                        Username = o.User.UserName
+                    }
+            )
+            .ToListAsync();
+
+        return new() { Orders = filteredOrders, TotalOrderCount = totalOrderCount };
     }
 
     public async Task<SingleOrder> GetOrderByIdAsync(string id)

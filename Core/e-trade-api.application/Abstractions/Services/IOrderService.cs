@@ -3,7 +3,9 @@ namespace e_trade_api.application;
 public interface IOrderService
 {
     Task<CreateOrderResponseDTO> CreateOrderAsync(CreateOrder createOrder);
-    Task<ListOrder> GetAllOrdersAsync(int page, int size);
+    Task<GetAllOrdersByFilterResponseDTO> GetAllOrdersByFilterAsync(
+        GetAllOrdersByFilterRequestDTO model
+    );
     Task<SingleOrder> GetOrderByIdAsync(string id);
     Task<(bool, CompletedOrderDTO)> CompleteOrderAsync(string id);
     Task<bool> IsOrderValid(string orderId);

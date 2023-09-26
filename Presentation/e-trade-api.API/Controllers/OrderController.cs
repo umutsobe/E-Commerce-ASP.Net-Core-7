@@ -36,17 +36,19 @@ public class OrderController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet]
+    [HttpGet("[action]")]
     // [AuthorizeDefinition(
     //     Menu = AuthorizeDefinitionConstants.Orders,
     //     ActionType = ActionType.Reading,
     //     Definition = "Get All Orders"
     // )]
-    public async Task<IActionResult> GetAllOrders(
-        [FromQuery] GetAllOrdersQueryRequest getAllOrdersQueryRequest
+    public async Task<IActionResult> GetAllOrdersByFilter(
+        [FromQuery] GetAllOrdersByFilterRequestDTO model
     )
     {
-        GetAllOrdersQueryResponse response = await _mediator.Send(getAllOrdersQueryRequest);
+        GetAllOrdersByFilterResponseDTO response = await _orderService.GetAllOrdersByFilterAsync(
+            model
+        );
         return Ok(response);
     }
 
