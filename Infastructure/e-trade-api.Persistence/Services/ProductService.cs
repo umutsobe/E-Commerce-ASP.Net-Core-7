@@ -13,8 +13,6 @@ public class ProductService : IProductService
     readonly IProductWriteRepository _productWriteRepository;
     readonly IProductHubServices _productHubServices;
     readonly ICategoryReadRepository _categoryReadRepository;
-    readonly IProductImageService _productImageService;
-    readonly IProductRatingService _productRatingService;
 
     public ProductService(
         IProductImageFileWriteRepository productImageFileWriteRepository,
@@ -22,9 +20,7 @@ public class ProductService : IProductService
         IProductWriteRepository productWriteRepository,
         IProductHubServices productHubServices,
         ICategoryReadRepository categoryReadRepository,
-        IProductImageService productImageService,
-        IProductImageFileReadRepository productImageFileReadRepository,
-        IProductRatingService productRatingService
+        IProductImageFileReadRepository productImageFileReadRepository
     )
     {
         _productImageFileWriteRepository = productImageFileWriteRepository;
@@ -32,13 +28,8 @@ public class ProductService : IProductService
         _productWriteRepository = productWriteRepository;
         _productHubServices = productHubServices;
         _categoryReadRepository = categoryReadRepository;
-        _productImageService = productImageService;
         _productImageFileReadRepository = productImageFileReadRepository;
-        _productRatingService = productRatingService;
     }
-
-    //commands
-
 
     public async Task ChangeShowcaseImage(ChangeShowCaseImageRequestDTO model)
     {
@@ -156,122 +147,74 @@ public class ProductService : IProductService
         var filteredProducts = await query
             .Select(
                 p =>
-                    new
+                    new ProductResponseAdminDTO
                     {
-                        p.Id,
-                        p.Name,
-                        p.Stock,
-                        p.Price,
-                        p.Url,
-                        p.CreatedDate,
-                        p.UpdatedDate,
-                        p.ProductImageFiles,
-                        p.isActive,
-                        p.Description,
-                        p.TotalBasketAdded,
-                        p.TotalOrderNumber
+                        Id = p.Id.ToString(),
+                        Name = p.Name,
+                        Stock = p.Stock,
+                        Price = p.Price,
+                        Url = p.Url,
+                        CreatedDate = p.CreatedDate,
+                        UpdatedDate = p.UpdatedDate,
+                        ProductImageFiles = p.ProductImageFiles
+                            .Select(
+                                pif =>
+                                    new ProductImageFileResponseDTO
+                                    {
+                                        FileName = pif.FileName,
+                                        Id = pif.Id.ToString(),
+                                        Path = pif.Path,
+                                        Showcase = pif.Showcase
+                                    }
+                            )
+                            .ToList(),
+                        IsActive = p.isActive,
+                        Description = p.Description,
+                        TotalBasketAdded = p.TotalBasketAdded,
+                        TotalOrderNumber = p.TotalOrderNumber
                     }
             )
             .ToListAsync();
 
-        GetAllProductsResponseAdminDTO productsDTO = new();
-        productsDTO.Products = new();
-
-        if (filteredProducts != null)
-        {
-            foreach (var product in filteredProducts)
-            {
-                if (product != null)
-                {
-                    List<ProductImageFileResponseDTO> productImages = new();
-
-                    foreach (var productImage in product.ProductImageFiles)
-                    {
-                        ProductImageFileResponseDTO _productImage =
-                            new()
-                            {
-                                FileName = productImage.FileName,
-                                Showcase = productImage.Showcase,
-                                Path = productImage.Path,
-                                Id = productImage.Id.ToString(),
-                            };
-                        productImages.Add(_productImage);
-                    }
-
-                    GetProductRatingScores ratingScores =
-                        await _productRatingService.GetProductRatingScores(product.Id.ToString());
-
-                    ProductResponseAdminDTO productDTO =
-                        new()
-                        {
-                            Id = product.Id.ToString(),
-                            Name = product.Name,
-                            Stock = product.Stock,
-                            Price = product.Price,
-                            Url = product.Url,
-                            CreatedDate = product.CreatedDate,
-                            UpdatedDate = product.UpdatedDate,
-                            Description = product.Description,
-                            IsActive = product.isActive,
-                            TotalBasketAdded = product.TotalBasketAdded,
-                            TotalOrderNumber = product.TotalOrderNumber,
-                            ProductImageFiles = productImages,
-                            AverageStar = ratingScores.AverageStar,
-                            TotalRatingNumber = ratingScores.TotalRatingNumber
-                        };
-
-                    productsDTO.Products.Add(productDTO);
-                }
-            }
-
-            productsDTO = new()
-            {
-                TotalProductCount = totalProductCount,
-                Products = productsDTO.Products
-            };
-        }
-
-        return productsDTO;
+        return new() { Products = filteredProducts, TotalProductCount = totalProductCount };
     }
 
     public async Task<GetProductByIdDTO> GetProductByUrlId(string urlId)
     {
         Product? product = await _productReadRepository.Table
             .Include(p => p.ProductImageFiles)
+            .Include(p => p.ProductRatings)
             .Where(p => p.Url == urlId)
             .FirstOrDefaultAsync();
 
         if (product != null)
         {
-            List<ProductImageFileResponseDTO> productImages = new();
-
-            foreach (var productImage in product.ProductImageFiles)
-            {
-                ProductImageFileResponseDTO _productImage =
-                    new()
-                    {
-                        FileName = productImage.FileName,
-                        Showcase = productImage.Showcase,
-                        Path = productImage.Path,
-                        Id = productImage.Id.ToString(),
-                    };
-                productImages.Add(_productImage);
-            }
-
-            GetProductRatingScores ratingScores =
-                await _productRatingService.GetProductRatingScores(product.Id.ToString());
-
             return new()
             {
                 Id = product.Id.ToString(),
                 Name = product.Name,
+                Description = product.Description,
                 Price = product.Price,
                 Stock = product.Stock,
-                Description = product.Description,
                 Url = product.Url,
-                ProductImageFiles = productImages,
-                AverageStar = ratingScores.AverageStar,
-                TotalRatingNumber = ratingScores.TotalRatingNumber
+                ProductImageFiles = product.ProductImageFiles
+                    .Select(
+                        pif =>
+                            new ProductImageFileResponseDTO
+                            {
+                                Id = pif.Id.ToString(),
+                                FileName = pif.FileName,
+                                Showcase = pif.Showcase,
+                                Path = pif.Path
+                            }
+                    )
+                    .ToList(),
+                TotalRatingNumber = product.ProductRatings.Count,
+                AverageStar =
+                    product.ProductRatings.Count == 0
+                        ? 0
+                        : (double)product.ProductRatings.Sum(pr => pr.Star)
+                            / product.ProductRatings.Count
             };
         }
         else
@@ -362,7 +305,9 @@ public class ProductService : IProductService
             query = query.Where(p => EF.Functions.Like(p.Name, $"%{model.Keyword}%"));
 
         if (!string.IsNullOrEmpty(model.CategoryName))
-            query = query.Where(p => p.Categories.Any(c => c.Name == model.CategoryName));
+            query = query.Where(
+                p => p.Categories.Any(c => c.Name.ToLower() == model.CategoryName.ToLower())
+            );
 
         if (model.MinPrice.HasValue)
             query = query.Where(p => p.Price >= model.MinPrice);
@@ -386,67 +331,41 @@ public class ProductService : IProductService
 
         query = query.Skip(model.Page * model.Size).Take(model.Size);
 
-        var filteredProducts = await query
-            .Select(
-                p =>
-                    new
-                    {
-                        p.Id,
-                        p.Name,
-                        p.Stock,
-                        p.Price,
-                        p.Url,
-                        p.CreatedDate,
-                        p.UpdatedDate,
-                    }
-            )
-            .ToListAsync();
-
-        GetAllProductsResponseDTO productsDTO = new();
-        productsDTO.Products = new();
-
-        if (filteredProducts != null)
+        return new()
         {
-            foreach (var product in filteredProducts)
-            {
-                if (product != null)
-                {
-                    GetProductShowcaseImageResponse response =
-                        await _productImageService.GetProductShowcaseImage(product.Id.ToString());
-
-                    GetProductRatingScores ratingScores =
-                        await _productRatingService.GetProductRatingScores(product.Id.ToString());
-
-                    ProductResponseDTO productDTO =
-                        new()
+            Products = await query
+                .Select(
+                    p =>
+                        new ProductResponseDTO
                         {
-                            Id = product.Id.ToString(),
-                            Name = product.Name,
-                            Stock = product.Stock,
-                            Price = product.Price,
-                            ProductImageShowCasePath = response.Path,
-                            Url = product.Url,
-                            AverageStar = ratingScores.AverageStar,
-                            TotalRatingNumber = ratingScores.TotalRatingNumber
-                        };
-
-                    productsDTO.Products.Add(productDTO);
-                }
-            }
-
-            productsDTO = new()
-            {
-                TotalProductCount = totalProductCount,
-                Products = productsDTO.Products
-            };
-        }
-
-        return productsDTO;
+                            Id = p.Id.ToString(),
+                            Name = p.Name,
+                            Stock = p.Stock,
+                            Price = p.Price,
+                            Url = p.Url,
+                            ProductImageShowCasePath = p.ProductImageFiles
+                                .FirstOrDefault(
+                                    pif => pif.ProductId == p.Id && pif.Showcase == true
+                                )
+                                .Path,
+                            TotalRatingNumber = p.ProductRatings.Count,
+                            AverageStar =
+                                p.ProductRatings.Count == 0
+                                    ? 0
+                                    : (double)p.ProductRatings.Sum(pr => pr.Star)
+                                        / p.ProductRatings.Count
+                        }
+                )
+                .ToListAsync(),
+            TotalProductCount = totalProductCount
+        };
     }
 
     public async Task QuickCreateProduct()
     {
         Random random = new();
+        List<Product> products = new();
+
         for (int i = 0; i < 120; i++)
         {
             Guid productId = Guid.NewGuid();
@@ -459,8 +378,8 @@ public class ProductService : IProductService
 
             string productUrl = UrlBuilder.ProductUrlBuilder(name).ToLower();
 
-            await _productWriteRepository.AddAsync(
-                new Product()
+            products.Add(
+                new()
                 {
                     Id = productId,
                     Name = name.Trim(),
@@ -475,6 +394,7 @@ public class ProductService : IProductService
             );
         }
 
+        await _productWriteRepository.AddRangeAsync(products);
         await _productWriteRepository.SaveAsync();
     }
 
