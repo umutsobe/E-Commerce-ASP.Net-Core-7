@@ -21,10 +21,10 @@ public class AccountController : ControllerBase
         ActionType = ActionType.Reading,
         Definition = "Get User Details"
     )]
-    [HttpGet("[action]/{userId}")]
-    public async Task<IActionResult> GetUserDetails(string userId)
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetUserDetails()
     {
-        ListUserDetailsDTO listUser = await _accountService.GetUserDetails(userId);
+        ListUserDetailsDTO listUser = await _accountService.GetUserDetails();
 
         return Ok(listUser);
     }
@@ -38,7 +38,7 @@ public class AccountController : ControllerBase
     [HttpPost("[action]")]
     public async Task<IActionResult> UpdateUserName([FromBody] UserNameUpdateDTO model)
     {
-        bool response = await _accountService.UpdateName(model.UserId, model.Name);
+        bool response = await _accountService.UpdateName(model.Name);
         return Ok(response);
     }
 
@@ -48,10 +48,10 @@ public class AccountController : ControllerBase
         ActionType = ActionType.Updating,
         Definition = "Get User Orders"
     )]
-    [HttpGet("[action]/{userId}")]
-    public async Task<IActionResult> ListUserOrders(string userId)
+    [HttpGet("[action]")]
+    public async Task<IActionResult> ListUserOrders()
     {
-        var orders = await _accountService.ListUserOrders(userId);
+        var orders = await _accountService.ListUserOrders();
         return Ok(orders);
     }
 
@@ -89,10 +89,10 @@ public class AccountController : ControllerBase
         ActionType = ActionType.Reading,
         Definition = "Get User Addresess"
     )]
-    [HttpGet("[action]/{userId}")]
-    public async Task<IActionResult> GetUserAddresses([FromRoute] string userId)
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetUserAddresses()
     {
-        List<GetUserAddress> response = await _accountService.GetUserAddresses(userId);
+        List<GetUserAddress> response = await _accountService.GetUserAddresses();
 
         return Ok(response);
     }

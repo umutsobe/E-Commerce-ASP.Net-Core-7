@@ -19,12 +19,5 @@ public class CreateUserAddressValidator : AbstractValidator<CreateUserAddress>
             .WithMessage("Adres boş olamaz")
             .Length(1, 200)
             .WithMessage("Definition uzunluğu maksimum 200 karakterli olmalıdır");
-
-        RuleFor(u => u.UserId)
-            .NotEmpty()
-            .NotNull()
-            .WithMessage("UserId boş olamaz")
-            .Length(1, 50)
-            .WithMessage("UserId uzunluğu maksimum 50 karakterli olmalıdır");
     }
 }

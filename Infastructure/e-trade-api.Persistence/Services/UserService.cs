@@ -1,9 +1,10 @@
-using System.Security;
 using e_trade_api.application;
 using e_trade_api.domain;
 using Google.Apis.Auth;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Endpoint = e_trade_api.domain.Endpoint; //üstteki using Microsoft.AspNetCore.Http'de de endpoint olduğu için böyle belirttik
 
 namespace e_trade_api.Persistence;
 
@@ -15,6 +16,7 @@ public class UserService : IUserService
     readonly ITokenHandler _tokenHandler;
     readonly SignInManager<AppUser> _signInManager;
     readonly ITwoFactorAuthenticationService _twoFactorAuthenticationService;
+    readonly IHttpContextAccessor _httpContextAccessor;
 
     public UserService(
         UserManager<AppUser> userManager,
@@ -22,7 +24,8 @@ public class UserService : IUserService
         IBasketService basketService,
         ITokenHandler tokenHandler,
         SignInManager<AppUser> signInManager,
-        ITwoFactorAuthenticationService twoFactorAuthenticationService
+        ITwoFactorAuthenticationService twoFactorAuthenticationService,
+        IHttpContextAccessor httpContextAccessor
     )
     {
         _userManager = userManager;
@@ -31,6 +34,7 @@ public class UserService : IUserService
         _tokenHandler = tokenHandler;
         _signInManager = signInManager;
         _twoFactorAuthenticationService = twoFactorAuthenticationService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task UpdatePasswordAsync(string userId, string resetToken, string newPassword)

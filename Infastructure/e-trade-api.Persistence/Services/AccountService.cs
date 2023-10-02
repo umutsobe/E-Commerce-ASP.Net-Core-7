@@ -1,7 +1,7 @@
 using e_trade_api.application;
 using e_trade_api.domain;
 using e_trade_api.domain.Entities;
-using e_trade_api.Persistence.Migrations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +19,7 @@ public class AccountService : IAccountService
     readonly ITwoFactorAuthenticationWriteRepository _twoFactorAuthenticationWriteRepository;
     readonly ITwoFactorAuthenticationReadRepository _twoFactorAuthenticationReadRepository;
     readonly ITwoFactorAuthenticationService _twoFactorAuthenticationService;
+    readonly IHttpContextAccessor _httpContextAccessor;
 
     public AccountService(
         UserManager<AppUser> userManager,
@@ -30,7 +31,8 @@ public class AccountService : IAccountService
         IMailService mailService,
         ITwoFactorAuthenticationWriteRepository twoFactorAuthenticationWriteRepository,
         ITwoFactorAuthenticationReadRepository twoFactorAuthenticationReadRepository,
-        ITwoFactorAuthenticationService twoFactorAuthenticationService
+        ITwoFactorAuthenticationService twoFactorAuthenticationService,
+        IHttpContextAccessor httpContextAccessor
     )
     {
         _userManager = userManager;
@@ -43,10 +45,15 @@ public class AccountService : IAccountService
         _twoFactorAuthenticationWriteRepository = twoFactorAuthenticationWriteRepository;
         _twoFactorAuthenticationReadRepository = twoFactorAuthenticationReadRepository;
         _twoFactorAuthenticationService = twoFactorAuthenticationService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<ListUserDetailsDTO> GetUserDetails(string userId)
+    public async Task<ListUserDetailsDTO> GetUserDetails()
     {
+        string? userId = _httpContextAccessor
+            ?.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "userId")
+            ?.Value;
+
         AppUser appUser = await _userManager.FindByIdAsync(userId);
 
         if (appUser != null)
@@ -57,8 +64,12 @@ public class AccountService : IAccountService
         throw new Exception("Kullanıcı Bulunamadı");
     }
 
-    public async Task<bool> UpdateName(string userId, string name)
+    public async Task<bool> UpdateName(string name)
     {
+        string? userId = _httpContextAccessor
+            ?.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "userId")
+            ?.Value;
+
         AppUser appuser = await _userManager.FindByIdAsync(userId);
 
         appuser.Name = name;
@@ -67,77 +78,92 @@ public class AccountService : IAccountService
         return result.Succeeded;
     }
 
-    public async Task<List<ListUserOrdersDTO>> ListUserOrders(string userId)
+    public async Task<List<ListUserOrdersDTO>> ListUserOrders()
     {
-        List<Order> orders = await _orderReadRepository.Table
-            .Where(o => o.UserId == userId)
-            .OrderByDescending(o => o.CreatedDate)
-            .Include(o => o.OrderItems)
-            .ThenInclude(oi => oi.Product)
-            .ToListAsync();
+        string? userId = _httpContextAccessor
+            ?.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "userId")
+            ?.Value;
 
-        List<ListUserOrdersDTO> orderDTOs = new List<ListUserOrdersDTO>();
-
-        if (orders != null)
+        if (userId != null)
         {
-            foreach (var order in orders)
-            {
-                ListUserOrdersDTO orderDTO =
-                    new()
-                    {
-                        Adress = order.Adress,
-                        CreatedDate = order.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss"),
-                        OrderCode = order.OrderCode,
-                        OrderItems = new List<ListUserOrderItemsDTO>(),
-                        TotalPrice = order.OrderItems.Sum(o => o.Price * o.Quantity)
-                    };
+            List<Order> orders = await _orderReadRepository.Table
+                .Where(o => o.UserId == userId)
+                .OrderByDescending(o => o.CreatedDate)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .ToListAsync();
 
-                foreach (OrderItem orderItem in order.OrderItems)
+            List<ListUserOrdersDTO> orderDTOs = new List<ListUserOrdersDTO>();
+
+            if (orders != null)
+            {
+                foreach (var order in orders)
                 {
-                    ListUserOrderItemsDTO orderItemDTO =
+                    ListUserOrdersDTO orderDTO =
                         new()
                         {
-                            Name = orderItem.Product.Name,
-                            Price = orderItem.Price,
-                            Quantity = orderItem.Quantity,
-                            ProductId = orderItem.ProductId.ToString(),
+                            Adress = order.Adress,
+                            CreatedDate = order.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                            OrderCode = order.OrderCode,
+                            OrderItems = new List<ListUserOrderItemsDTO>(),
+                            TotalPrice = order.OrderItems.Sum(o => o.Price * o.Quantity)
                         };
 
-                    orderDTO.OrderItems.Add(orderItemDTO);
+                    foreach (OrderItem orderItem in order.OrderItems)
+                    {
+                        ListUserOrderItemsDTO orderItemDTO =
+                            new()
+                            {
+                                Name = orderItem.Product.Name,
+                                Price = orderItem.Price,
+                                Quantity = orderItem.Quantity,
+                                ProductId = orderItem.ProductId.ToString(),
+                            };
+
+                        orderDTO.OrderItems.Add(orderItemDTO);
+                    }
+
+                    orderDTOs.Add(orderDTO);
                 }
 
-                orderDTOs.Add(orderDTO);
+                return orderDTOs;
             }
-
-            return orderDTOs;
         }
+
         return new();
     }
 
     public async Task<Token> UpdateUserPassword(UserPasswordUpdate model)
     {
-        AppUser appUser = await _userManager.FindByIdAsync(model.UserId);
+        string? userId = _httpContextAccessor
+            ?.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "userId")
+            ?.Value;
 
-        if (appUser != null)
+        if (userId != null)
         {
-            IdentityResult result = await _userManager.ChangePasswordAsync(
-                appUser,
-                model.OldPassword,
-                model.NewPassword
-            );
+            AppUser? appUser = await _userManager.FindByIdAsync(userId);
 
-            if (result.Succeeded)
-            { //kullanıcının giriş yapması için token üretme
-                await _userManager.UpdateSecurityStampAsync(appUser);
-                SignInResult signInResult = await _signInManager.CheckPasswordSignInAsync(
+            if (appUser != null)
+            {
+                IdentityResult result = await _userManager.ChangePasswordAsync(
                     appUser,
-                    model.NewPassword,
-                    false
+                    model.OldPassword,
+                    model.NewPassword
                 );
 
-                if (signInResult.Succeeded)
-                {
-                    return await _tokenHandler.CreateAccessToken(180, appUser.Id);
+                if (result.Succeeded)
+                { //kullanıcının giriş yapması için token üretme
+                    await _userManager.UpdateSecurityStampAsync(appUser);
+                    SignInResult signInResult = await _signInManager.CheckPasswordSignInAsync(
+                        appUser,
+                        model.NewPassword,
+                        false
+                    );
+
+                    if (signInResult.Succeeded)
+                    {
+                        return await _tokenHandler.CreateAccessToken(180, appUser.Id);
+                    }
                 }
             }
         }
@@ -147,47 +173,63 @@ public class AccountService : IAccountService
 
     public async Task AddUserAddress(CreateUserAddress model)
     {
-        AppUser appUser = await _userManager.FindByIdAsync(model.UserId);
+        string? userId = _httpContextAccessor
+            ?.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "userId")
+            ?.Value;
 
-        if (appUser != null)
+        if (userId != null)
         {
-            Adress adress =
-                new()
-                {
-                    Id = Guid.NewGuid(),
-                    UserId = appUser.Id,
-                    Definition = model.Definition,
-                    FullAdress = model.Address,
-                };
+            AppUser? appUser = await _userManager.FindByIdAsync(userId);
 
-            await _addressWriteRepository.AddAsync(adress);
+            if (appUser != null)
+            {
+                Adress adress =
+                    new()
+                    {
+                        Id = Guid.NewGuid(),
+                        UserId = appUser.Id,
+                        Definition = model.Definition,
+                        FullAdress = model.Address,
+                    };
 
-            await _addressWriteRepository.SaveAsync();
+                await _addressWriteRepository.AddAsync(adress);
+
+                await _addressWriteRepository.SaveAsync();
+            }
         }
     }
 
-    public async Task<List<GetUserAddress>> GetUserAddresses(string userId)
+    public async Task<List<GetUserAddress>> GetUserAddresses()
     {
-        List<Adress> databaseAdresses = await _addressReadRepository.Table
-            .Where(a => a.UserId == userId)
-            .ToListAsync();
+        string? userId = _httpContextAccessor
+            ?.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "userId")
+            ?.Value;
 
-        List<GetUserAddress> addressesDto = new();
-
-        foreach (var databaseAddress in databaseAdresses)
+        if (userId != null)
         {
-            GetUserAddress adressDto =
-                new()
-                {
-                    Id = databaseAddress.Id.ToString(),
-                    Address = databaseAddress.FullAdress,
-                    Definition = databaseAddress.Definition
-                };
+            List<Adress> databaseAdresses = await _addressReadRepository.Table
+                .Where(a => a.UserId == userId)
+                .ToListAsync();
 
-            addressesDto.Add(adressDto);
+            List<GetUserAddress> addressesDto = new();
+
+            foreach (var databaseAddress in databaseAdresses)
+            {
+                GetUserAddress adressDto =
+                    new()
+                    {
+                        Id = databaseAddress.Id.ToString(),
+                        Address = databaseAddress.FullAdress,
+                        Definition = databaseAddress.Definition
+                    };
+
+                addressesDto.Add(adressDto);
+            }
+
+            return addressesDto;
         }
 
-        return addressesDto;
+        return null;
     }
 
     public async Task DeleteUserAdsress(string addressId)
@@ -206,7 +248,15 @@ public class AccountService : IAccountService
         UpdateUserEmailRequestDTO model
     )
     {
+        string? userId = _httpContextAccessor
+            ?.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "userId")
+            ?.Value;
+
+        if (userId == null)
+            return new() { Message = "User not found.", Succeeded = false };
+
         AppUser? appUser = await _userManager.FindByEmailAsync(model.NewEmail);
+
         if (appUser != null)
             return new()
             {
@@ -214,7 +264,7 @@ public class AccountService : IAccountService
                 Succeeded = false
             };
 
-        appUser = await _userManager.FindByIdAsync(model.UserId);
+        appUser = await _userManager.FindByIdAsync(userId);
         if (appUser == null)
             return new() { Message = "Error", Succeeded = false };
 
@@ -223,7 +273,7 @@ public class AccountService : IAccountService
         if (isPasswordValid == false)
             return new() { Message = "Wrong Password", Succeeded = false };
 
-        if (!await _twoFactorAuthenticationService.CheckCodeAttempts(model.UserId))
+        if (!await _twoFactorAuthenticationService.CheckCodeAttempts(userId))
             return new()
             {
                 Message = "Çok fazla denemede bulundunuz. 24 saat sonra tekrar deneyin.",
@@ -262,12 +312,19 @@ public class AccountService : IAccountService
 
     public async Task<CreateCodeAndSendEmailResponse> UpdateEmailStep2(UpdateEmailStep2 model)
     {
-        AppUser? appUser = await _userManager.FindByIdAsync(model.UserId);
+        string? userId = _httpContextAccessor
+            ?.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "userId")
+            ?.Value;
+
+        if (userId == null)
+            return new() { Message = "User not found", Succeeded = false };
+
+        AppUser? appUser = await _userManager.FindByIdAsync(userId);
 
         if (appUser == null)
             return new() { Message = "Kullanıcı bulunamadı", Succeeded = false };
 
-        if (!await _twoFactorAuthenticationService.CheckCodeAttempts(model.UserId))
+        if (!await _twoFactorAuthenticationService.CheckCodeAttempts(appUser.Id))
             return new()
             {
                 Message = "Çok fazla denemede bulundunuz. 24 saat sonra tekrar deneyin.",
@@ -277,7 +334,7 @@ public class AccountService : IAccountService
         TwoFactorAuthentication? twoFactor = await _twoFactorAuthenticationReadRepository.Table
             .Where(
                 t =>
-                    t.UserId == model.UserId
+                    t.UserId == appUser.Id
                     && t.Code == model.Code
                     && t.IsUsed == false
                     && t.ExpirationDate > DateTime.UtcNow //exp saat 12.05, datenow 12.04 ise true
@@ -295,7 +352,7 @@ public class AccountService : IAccountService
         //kodları kaldırma
         List<TwoFactorAuthentication> twoFactorAuthentications =
             await _twoFactorAuthenticationReadRepository.Table
-                .Where(t => t.UserId == model.UserId)
+                .Where(t => t.UserId == appUser.Id)
                 .ToListAsync();
 
         _twoFactorAuthenticationWriteRepository.RemoveRange(twoFactorAuthentications);

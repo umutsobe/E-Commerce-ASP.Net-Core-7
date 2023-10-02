@@ -6,13 +6,6 @@ public class CreateOrderValidator : AbstractValidator<CreateOrderCommandRequest>
 {
     public CreateOrderValidator()
     {
-        RuleFor(o => o.UserId)
-            .NotEmpty()
-            .NotNull()
-            .WithMessage("UserId boş olamaz")
-            .Length(1, 50)
-            .WithMessage("UserId 50 karakterden fazla olamaz");
-
         RuleFor(u => u.Description)
             .NotEmpty()
             .NotNull()

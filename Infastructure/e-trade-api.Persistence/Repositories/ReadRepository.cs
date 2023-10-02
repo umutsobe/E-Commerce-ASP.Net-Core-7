@@ -1,4 +1,3 @@
-using System;
 using System.Linq.Expressions;
 using e_trade_api.application;
 using e_trade_api.domain.Entities.Common;
@@ -19,7 +18,7 @@ public class ReadRepository<T> : IReadRepository<T>
         _context = context;
     }
 
-    public DbSet<T> Table => _context.Set<T>();
+    public DbSet<T> Table => _context.Set<T>(); //DbSet, veritabanı tablosunu temsil eder ve o tablodaki varlıklarla (kayıtlar) etkileşim sağlar. DbSet, veritabanına sorgular göndermek, varlık eklemek, güncellemek, silmek veya sorgulamak gibi işlemleri gerçekleştirmek için kullanılır.
 
     public IQueryable<T> GetAll(bool tracking = true)
     {

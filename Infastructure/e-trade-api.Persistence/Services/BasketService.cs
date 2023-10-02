@@ -1,4 +1,3 @@
-using System.Net.Http;
 using e_trade_api.application;
 using e_trade_api.domain;
 using e_trade_api.domain.Entities;
@@ -29,13 +28,21 @@ public class BasketService : IBasketService
         _productReadRepository = productReadRepository;
     }
 
-    public async Task<bool> CreateBasket(string userId)
+    public async Task<bool> CreateBasket(string userId) //if register succeeded
     {
-        await _basketWriteRepository.AddAsync(
-            new Basket() { Id = Guid.NewGuid(), UserId = userId }
-        );
-        await _basketWriteRepository.SaveAsync();
-        return true;
+        Basket? basket = await _basketReadRepository.Table
+            .Where(b => b.UserId == userId)
+            .FirstOrDefaultAsync();
+
+        if (basket == null)
+        {
+            await _basketWriteRepository.AddAsync(
+                new Basket() { Id = Guid.NewGuid(), UserId = userId }
+            );
+            await _basketWriteRepository.SaveAsync();
+            return true;
+        }
+        return false;
     }
 
     public async Task<Basket> GetBasket(string basketId)

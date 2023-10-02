@@ -22,7 +22,6 @@ public class CreateOrderCommandHandle
         CreateOrderResponseDTO response = await _orderService.CreateOrderAsync(
             new()
             {
-                UserId = request.UserId,
                 Address = request.Address,
                 Description = request.Description,
                 OrderItems = request.OrderItems

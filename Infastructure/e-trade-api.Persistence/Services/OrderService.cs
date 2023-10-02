@@ -1,8 +1,8 @@
-using System.Drawing.Printing;
 using System.Text;
 using e_trade_api.application;
 using e_trade_api.domain;
 using e_trade_api.domain.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace e_trade_api.Persistence;
@@ -18,6 +18,7 @@ public class OrderService : IOrderService
     readonly IBasketItemReadRepository _basketItemReadRepository;
     readonly IBasketReadRepository _basketReadRepository;
     readonly IProductReadRepository _productReadRepository;
+    readonly IHttpContextAccessor _httpContextAccessor;
 
     public OrderService(
         IOrderWriteRepository orderWriteRepository,
@@ -28,7 +29,8 @@ public class OrderService : IOrderService
         IBasketItemWriteRepository basketItemWriteRepository,
         IBasketReadRepository basketReadRepository,
         IBasketItemReadRepository basketItemReadRepository,
-        IProductReadRepository productReadRepository
+        IProductReadRepository productReadRepository,
+        IHttpContextAccessor httpContextAccessor
     )
     {
         _orderWriteRepository = orderWriteRepository;
@@ -40,6 +42,7 @@ public class OrderService : IOrderService
         _basketReadRepository = basketReadRepository;
         _basketItemReadRepository = basketItemReadRepository;
         _productReadRepository = productReadRepository;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<(bool, CompletedOrderDTO)> CompleteOrderAsync(string id)
@@ -79,6 +82,13 @@ public class OrderService : IOrderService
 
     public async Task<CreateOrderResponseDTO> CreateOrderAsync(CreateOrder createOrder)
     {
+        string? userId = _httpContextAccessor
+            ?.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "userId")
+            ?.Value;
+
+        if (userId == null)
+            throw new Exception("User Not Found");
+
         var orderId = Guid.NewGuid();
 
         string orderCode = await GenerateUniqueOrderCodeAsync();
@@ -87,7 +97,7 @@ public class OrderService : IOrderService
             new()
             {
                 Id = orderId,
-                UserId = createOrder.UserId,
+                UserId = userId,
                 Description = createOrder.Description,
                 Adress = createOrder.Address,
                 OrderCode = orderCode
@@ -156,7 +166,7 @@ public class OrderService : IOrderService
 
         //siparişte hata alırsak buraya gelmeyeceğiz zaten
         Basket? basket = await _basketReadRepository.Table.FirstOrDefaultAsync(
-            b => b.UserId == createOrder.UserId
+            b => b.UserId == userId
         );
 
         if (basket != null)
