@@ -2,6 +2,7 @@ using e_trade_api.application;
 using e_trade_api.domain;
 using e_trade_api.domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace e_trade_api.Persistence;
 
@@ -13,6 +14,7 @@ public class ProductService : IProductService
     readonly IProductWriteRepository _productWriteRepository;
     readonly IProductHubServices _productHubServices;
     readonly ICategoryReadRepository _categoryReadRepository;
+    readonly IConfiguration _configuration;
 
     public ProductService(
         IProductImageFileWriteRepository productImageFileWriteRepository,
@@ -20,7 +22,8 @@ public class ProductService : IProductService
         IProductWriteRepository productWriteRepository,
         IProductHubServices productHubServices,
         ICategoryReadRepository categoryReadRepository,
-        IProductImageFileReadRepository productImageFileReadRepository
+        IProductImageFileReadRepository productImageFileReadRepository,
+        IConfiguration configuration
     )
     {
         _productImageFileWriteRepository = productImageFileWriteRepository;
@@ -29,6 +32,7 @@ public class ProductService : IProductService
         _productHubServices = productHubServices;
         _categoryReadRepository = categoryReadRepository;
         _productImageFileReadRepository = productImageFileReadRepository;
+        _configuration = configuration;
     }
 
     public async Task ChangeShowcaseImage(ChangeShowCaseImageRequestDTO model)
@@ -65,7 +69,7 @@ public class ProductService : IProductService
             new Product()
             {
                 Id = productId,
-                Name = model.Name.Trim(),
+                Name = model.Name.Trim() + _configuration.GetConnectionString("SQLServer"),
                 Price = model.Price,
                 Stock = model.Stock,
                 Description = model.Description.Trim(),
@@ -100,7 +104,7 @@ public class ProductService : IProductService
         product.Price = model.Price;
         product.Stock = model.Stock;
         product.Description = model.Description;
-        product.isActive = model.isActive;
+        product.isActive = model.IsActive;
         product.Categories = categories;
 
         await _productWriteRepository.SaveAsync();

@@ -2,6 +2,7 @@ using e_trade_api.application;
 using e_trade_api.domain;
 using e_trade_api.domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace e_trade_api.Persistence;
 
@@ -11,18 +12,21 @@ public class ProductImageService : IProductImageService
     IProductImageFileReadRepository _productImageFileReadRepository;
     IProductImageFileWriteRepository _productImageFileWriteRepository;
     IStorageService _storageService;
+    readonly IConfiguration _configuration;
 
     public ProductImageService(
         IStorageService storageService,
         IProductImageFileWriteRepository productImageFileWriteRepository,
         IProductReadRepository productReadRepository,
-        IProductImageFileReadRepository productImageFileReadRepository
+        IProductImageFileReadRepository productImageFileReadRepository,
+        IConfiguration configuration
     )
     {
         _storageService = storageService;
         _productImageFileWriteRepository = productImageFileWriteRepository;
         _productReadRepository = productReadRepository;
         _productImageFileReadRepository = productImageFileReadRepository;
+        _configuration = configuration;
     }
 
     public async Task DeleteProductImage(ProductImageDeleteRequestDTO model)
@@ -97,7 +101,7 @@ public class ProductImageService : IProductImageService
                     new GetProductImageQueryResponse
                     {
                         Id = p.Id.ToString(),
-                        Path = $"{MyConfigurationManager.GetBaseAzureStorageUrl()}/{p.Path}",
+                        Path = $"{_configuration.GetValue<string>("BaseStorageUrl")}/{p.Path}",
                         Showcase = p.Showcase
                     }
             )

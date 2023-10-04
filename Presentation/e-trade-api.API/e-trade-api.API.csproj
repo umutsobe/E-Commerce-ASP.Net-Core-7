@@ -1,10 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
+
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>e_trade_api.API</RootNamespace>
+    <UserSecretsId>cdc4cfa8-e8bd-4ffb-87d7-d0cd4294f54c</UserSecretsId>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
@@ -13,9 +16,11 @@
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\Infastructure\e-trade-api.Persistence\e-trade-api.Persistence.csproj" />
     <ProjectReference Include="..\..\Infastructure\e-trade-api.Infastructure\e-trade-api.Infastructure.csproj" />
     <ProjectReference Include="..\..\Infastructure\e-trade-api.SignalR\e-trade-api.SignalR.csproj" />
   </ItemGroup>
+
 </Project>

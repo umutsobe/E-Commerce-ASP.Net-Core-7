@@ -2,11 +2,19 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using e_trade_api.application;
+using Microsoft.Extensions.Configuration;
 
 namespace e_trade_api.Infastructure;
 
 public class MailService : IMailService
 {
+    private readonly IConfiguration _configuration;
+
+    public MailService(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
     public async Task SendMailAsync(string to, string subject, string body, bool isBodyHtml = true)
     {
         await SendMailAsync(new[] { to }, subject, body, isBodyHtml);
@@ -26,19 +34,19 @@ public class MailService : IMailService
         mail.Subject = subject;
         mail.Body = body;
         mail.From = new(
-            MyConfigurationManager.GetMailModel().Username,
-            MyConfigurationManager.GetMailModel().EmailHeader,
+            _configuration.GetValue<string>("Mail:Username"),
+            _configuration.GetValue<string>("Mail:EmailHeader"),
             System.Text.Encoding.UTF8
         );
 
         SmtpClient smtp = new();
         smtp.Credentials = new NetworkCredential(
-            MyConfigurationManager.GetMailModel().Username,
-            MyConfigurationManager.GetMailModel().Password
+            _configuration.GetValue<string>("Mail:Username"),
+            _configuration.GetValue<string>("Mail:Password")
         );
-        smtp.Port = MyConfigurationManager.GetMailModel().Port;
+        smtp.Port = _configuration.GetValue<int>("Mail:Port");
         smtp.EnableSsl = true;
-        smtp.Host = MyConfigurationManager.GetMailModel().Host;
+        smtp.Host = _configuration.GetValue<string>("Mail:Host");
         await smtp.SendMailAsync(mail);
     }
 
@@ -49,7 +57,7 @@ public class MailService : IMailService
             "Merhaba<br>Eğer yeni şifre talebinde bulunduysanız aşağıdaki linkten şifrenizi yenileyebilirsiniz.<br>"
         );
         mail.AppendLine(
-            $"<strong><a target=\"_blank\" href=\"{MyConfigurationManager.GetClientUrl()}/update-password/{userId}/{resetToken}\">Yeni şifre talebi için tıklayınız...</a></strong><br><br>"
+            $"<strong><a target=\"_blank\" href=\"{_configuration.GetValue<string>("AngularClientUrl")}/update-password/{userId}/{resetToken}\">Yeni şifre talebi için tıklayınız...</a></strong><br><br>"
         );
         mail.AppendLine(
             "<span style=\"font-size:12px;\">NOT: Eğer bu talep tarafınızca gerçekleştirilmemişse lütfen bu maili ciddiye almayınız.</span><br>Saygılarımızla...<br><br><br>Sobe E Ticaret"

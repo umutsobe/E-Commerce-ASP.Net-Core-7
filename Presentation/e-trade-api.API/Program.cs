@@ -5,14 +5,16 @@ using e_trade_api.API;
 using e_trade_api.application;
 using e_trade_api.Infastructure;
 using e_trade_api.Persistence;
+using e_trade_api.Persistence.Contexts;
 using e_trade_api.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpContextAccessor(); // clienttan gelen istekteki bilgilere erişmemizi sağlayan servis
-builder.Services.AddPersistenceServices();
+builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddInfrastructureService();
 builder.Services.AddApplicationServices();
 builder.Services.AddSignalRServices();
@@ -49,10 +51,12 @@ builder.Services
                 ValidateIssuer = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidAudience = MyConfigurationManager.GetTokenModel().Audience,
-                ValidIssuer = MyConfigurationManager.GetTokenModel().Issuer,
+                ValidAudience = builder.Configuration.GetValue<string>("Token:Audience"),
+                ValidIssuer = builder.Configuration.GetValue<string>("Token:Issuer"),
                 IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(MyConfigurationManager.GetTokenModel().SecurityKey)
+                    Encoding.UTF8.GetBytes(
+                        builder.Configuration.GetValue<string>("Token:SecurityKey")
+                    )
                 ),
                 //LifetimeValidator'ı neden oluşturduk. çünkü authorize olduktan sonra expiration date geçse dahi admin panelinde sayfayı yenilemeden route veya http istekleri yaptığımızda bu istekler karşılanıyordu. onun için expired olduktan sonra client artık backende erişemeyecek 401 authorize hatası alacak
                 LifetimeValidator = (notBefore, expires, securityToken, validationParameters) =>
@@ -67,7 +71,7 @@ builder.Services.AddCors(
         options.AddDefaultPolicy(
             policy =>
                 policy
-                    .WithOrigins(MyConfigurationManager.GetClientUrl())
+                    .WithOrigins(builder.Configuration.GetValue<string>("AngularClientUrl"))
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials()
@@ -75,6 +79,16 @@ builder.Services.AddCors(
 );
 
 var app = builder.Build();
+
+// Entity Framework Core bekleyen migrations varsa database update işlemi
+if (app.Environment.IsProduction())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<ETradeApiDBContext>();
+        dbContext.Database.Migrate();
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

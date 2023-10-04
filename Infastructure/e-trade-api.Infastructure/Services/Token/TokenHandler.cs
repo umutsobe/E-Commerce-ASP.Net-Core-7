@@ -13,11 +13,17 @@ public class TokenHandler : ITokenHandler
 {
     readonly IBasketService _basketService;
     readonly UserManager<AppUser> _userManager;
+    private readonly IConfiguration _configuration;
 
-    public TokenHandler(IBasketService basketService, UserManager<AppUser> userManager)
+    public TokenHandler(
+        IBasketService basketService,
+        UserManager<AppUser> userManager,
+        IConfiguration configuration
+    )
     {
         _basketService = basketService;
         _userManager = userManager;
+        _configuration = configuration;
     }
 
     public async Task<Token> CreateAccessToken(int minute, string userId)
@@ -26,7 +32,7 @@ public class TokenHandler : ITokenHandler
 
         //Security Key'in simetriğini alıyoruz.
         SymmetricSecurityKey securityKey =
-            new(Encoding.UTF8.GetBytes(MyConfigurationManager.GetTokenModel().SecurityKey));
+            new(Encoding.UTF8.GetBytes(_configuration.GetValue<string>("Token:SecurityKey")));
 
         //Şifrelenmiş kimliği oluşturuyoruz.
         SigningCredentials signingCredentials = new(securityKey, SecurityAlgorithms.HmacSha256);
@@ -50,8 +56,8 @@ public class TokenHandler : ITokenHandler
 
         JwtSecurityToken securityToken =
             new(
-                audience: MyConfigurationManager.GetTokenModel().Audience,
-                issuer: MyConfigurationManager.GetTokenModel().Issuer,
+                audience: _configuration.GetValue<string>("Token:Audience"),
+                issuer: _configuration.GetValue<string>("Token:Issuer"),
                 expires: token.Expiration,
                 notBefore: DateTime.UtcNow,
                 signingCredentials: signingCredentials,

@@ -1,6 +1,7 @@
 using e_trade_api.application;
 using e_trade_api.domain;
 using e_trade_api.domain.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,13 +14,15 @@ public class ProductRatingService : IProductRatingService
     readonly IProductReadRepository _productReadRepository;
     readonly UserManager<AppUser> _userManager;
     readonly IOrderItemReadRepository _orderItemReadRepository;
+    readonly IHttpContextAccessor _httpContextAccessor;
 
     public ProductRatingService(
         IProductRatingWriteRepository productRatingWriteRepository,
         IProductRatingReadRepository productRatingReadRepository,
         IProductReadRepository productReadRepository,
         UserManager<AppUser> userManager,
-        IOrderItemReadRepository orderItemReadRepository
+        IOrderItemReadRepository orderItemReadRepository,
+        IHttpContextAccessor httpContextAccessor
     )
     {
         _productRatingWriteRepository = productRatingWriteRepository;
@@ -27,6 +30,7 @@ public class ProductRatingService : IProductRatingService
         _productReadRepository = productReadRepository;
         _userManager = userManager;
         _orderItemReadRepository = orderItemReadRepository;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task DeleteRating(string ratingId)
@@ -109,12 +113,19 @@ public class ProductRatingService : IProductRatingService
 
     public async Task<GetUserRatingsResponseDTO> GetUserRatings(GetUserRatingsRequestDTO model)
     {
-        AppUser user = await _userManager.FindByIdAsync(model.UserId);
+        string? userId = _httpContextAccessor
+            ?.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "userId")
+            ?.Value;
+
+        if (userId == null)
+            throw new Exception("User not found");
+
+        AppUser? user = await _userManager.FindByIdAsync(userId);
 
         if (user != null)
         {
             var query = _productRatingReadRepository.Table
-                .Where(pr => pr.UserId == model.UserId)
+                .Where(pr => pr.UserId == userId)
                 .Include(pr => pr.Product)
                 .AsQueryable();
 
@@ -133,35 +144,17 @@ public class ProductRatingService : IProductRatingService
             var filteredRatings = await query
                 .Select(
                     pr =>
-                        new
+                        new GetUserRatingResponseDTO
                         {
-                            pr.Star,
-                            pr.Comment,
-                            pr.CreatedDate,
-                            pr.Product.Url
+                            Star = pr.Star,
+                            Comment = pr.Comment,
+                            CreatedDate = pr.CreatedDate,
+                            ProductUrlId = pr.Product.Url
                         }
                 )
                 .ToListAsync();
 
-            GetUserRatingsResponseDTO userRatingsDTO = new();
-            userRatingsDTO.Ratings = new();
-
-            userRatingsDTO.TotaluserRatingCount = totalUserRatingCount;
-
-            foreach (var productRating in filteredRatings)
-            {
-                GetUserRatingResponseDTO userRatingDTO =
-                    new()
-                    {
-                        Comment = productRating.Comment,
-                        CreatedDate = productRating.CreatedDate,
-                        Star = productRating.Star,
-                        ProductUrlId = productRating.Url
-                    };
-
-                userRatingsDTO.Ratings.Add(userRatingDTO);
-            }
-            return userRatingsDTO;
+            return new() { Ratings = filteredRatings, TotaluserRatingCount = totalUserRatingCount };
         }
 
         throw new Exception("User Not Found");

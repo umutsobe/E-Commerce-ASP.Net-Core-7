@@ -1,9 +1,9 @@
 using e_trade_api.application;
 using e_trade_api.domain;
 using Google.Apis.Auth;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Endpoint = e_trade_api.domain.Endpoint; //üstteki using Microsoft.AspNetCore.Http'de de endpoint olduğu için böyle belirttik
 
 namespace e_trade_api.Persistence;
@@ -16,7 +16,7 @@ public class UserService : IUserService
     readonly ITokenHandler _tokenHandler;
     readonly SignInManager<AppUser> _signInManager;
     readonly ITwoFactorAuthenticationService _twoFactorAuthenticationService;
-    readonly IHttpContextAccessor _httpContextAccessor;
+    readonly IConfiguration _configuration;
 
     public UserService(
         UserManager<AppUser> userManager,
@@ -25,7 +25,7 @@ public class UserService : IUserService
         ITokenHandler tokenHandler,
         SignInManager<AppUser> signInManager,
         ITwoFactorAuthenticationService twoFactorAuthenticationService,
-        IHttpContextAccessor httpContextAccessor
+        IConfiguration configuration
     )
     {
         _userManager = userManager;
@@ -34,7 +34,7 @@ public class UserService : IUserService
         _tokenHandler = tokenHandler;
         _signInManager = signInManager;
         _twoFactorAuthenticationService = twoFactorAuthenticationService;
-        _httpContextAccessor = httpContextAccessor;
+        _configuration = configuration;
     }
 
     public async Task UpdatePasswordAsync(string userId, string resetToken, string newPassword)
@@ -203,7 +203,7 @@ public class UserService : IUserService
         {
             var settings = new GoogleJsonWebSignature.ValidationSettings()
             {
-                Audience = new List<string> { MyConfigurationManager.GetGoogleCredential() }
+                Audience = new List<string> { _configuration.GetValue<string>("GoogleCredential") }
             };
 
             var payload = await GoogleJsonWebSignature.ValidateAsync(model.IdToken, settings);

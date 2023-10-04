@@ -1,4 +1,3 @@
-using e_trade_api.application;
 using Microsoft.AspNetCore.Mvc;
 
 namespace e_trade_api.API.Controllers
@@ -7,10 +6,17 @@ namespace e_trade_api.API.Controllers
     [Route("api/[controller]")]
     public class FilesController : ControllerBase
     {
+        readonly IConfiguration _configuration;
+
+        public FilesController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         [HttpGet("[action]")]
         public IActionResult GetBaseStorageUrl()
         {
-            return Ok(new { Url = MyConfigurationManager.GetBaseAzureStorageUrl() });
+            return Ok(new { Url = _configuration.GetValue<string>("BaseStorageUrl") });
         }
     }
 }

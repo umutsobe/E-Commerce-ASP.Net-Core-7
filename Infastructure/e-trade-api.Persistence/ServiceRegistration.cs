@@ -4,15 +4,19 @@ using Microsoft.EntityFrameworkCore;
 using e_trade_api.application;
 using e_trade_api.domain;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 namespace e_trade_api.Persistence
 {
     public static class ServiceRegistration
     {
-        public static void AddPersistenceServices(this IServiceCollection services)
+        public static void AddPersistenceServices(
+            this IServiceCollection services,
+            IConfiguration _configuration
+        )
         {
             services.AddDbContext<ETradeApiDBContext>(
-                options => options.UseSqlServer(MyConfigurationManager.GetConnectionString()),
+                options => options.UseSqlServer(_configuration.GetConnectionString("SQLServer")),
                 ServiceLifetime.Scoped
             );
             services
