@@ -16,7 +16,7 @@ public class GetRolesQueryHandler : IRequestHandler<GetRolesQueryRequest, GetRol
         CancellationToken cancellationToken
     )
     {
-        var (datas, count) = _roleService.GetAllRoles(request.Page, request.Size);
+        var (datas, count) = await _roleService.GetAllRoles(request.Page, request.Size);
         return new() { Datas = datas, TotalCount = count };
     }
 }

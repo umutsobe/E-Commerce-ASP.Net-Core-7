@@ -1,5 +1,6 @@
 using e_trade_api.application;
 using e_trade_api.domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace e_trade_api.Persistence;
 
@@ -41,7 +42,7 @@ public class CategoryService : ICategoryService
     {
         int totalCategoryCount = _categoryReadRepository.GetAll().Count();
 
-        var categories = _categoryReadRepository
+        var categories = await _categoryReadRepository
             .GetAll()
             .Skip(model.Page * model.Size)
             .Take(model.Size)
@@ -55,12 +56,10 @@ public class CategoryService : ICategoryService
                         c.UpdatedDate
                     }
             )
-            .ToList();
+            .ToListAsync();
 
-        GetAllCategoriesDTO categoriesDTO = new();
-        categoriesDTO.Categories = new();
-
-        categoriesDTO.totalCategoryCount = totalCategoryCount;
+        GetAllCategoriesDTO categoriesDTO =
+            new() { Categories = new(), totalCategoryCount = totalCategoryCount };
 
         foreach (var category in categories)
         {

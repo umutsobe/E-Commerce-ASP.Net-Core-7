@@ -1,6 +1,7 @@
 using e_trade_api.application;
 using e_trade_api.domain;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace e_trade_api.Persistence;
 
@@ -29,7 +30,7 @@ public class RoleService : IRoleService
         return result.Succeeded;
     }
 
-    public (object, int) GetAllRoles(int page, int size)
+    public async Task<(object, int)> GetAllRoles(int page, int size)
     {
         var query = _roleManager.Roles;
 
@@ -40,7 +41,8 @@ public class RoleService : IRoleService
         else
             rolesQuery = query;
 
-        return (rolesQuery.Select(r => new { r.Id, r.Name }), query.Count());
+        var datas = await rolesQuery.Select(r => new { r.Id, r.Name }).ToListAsync();
+        return (datas, query.Count());
     }
 
     public async Task<(string id, string name)> GetRoleById(string id)

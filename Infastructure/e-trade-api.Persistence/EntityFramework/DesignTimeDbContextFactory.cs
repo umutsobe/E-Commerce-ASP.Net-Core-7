@@ -1,5 +1,4 @@
-﻿using e_trade_api.application;
-using e_trade_api.Persistence.Contexts;
+﻿using e_trade_api.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;

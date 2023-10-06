@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using e_trade_api.application;
 using e_trade_api.domain;
 using e_trade_api.domain.Entities;
@@ -117,9 +118,6 @@ public class ProductRatingService : IProductRatingService
             ?.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "userId")
             ?.Value;
 
-        if (userId == null)
-            throw new Exception("User not found");
-
         AppUser? user = await _userManager.FindByIdAsync(userId);
 
         if (user != null)
@@ -149,15 +147,19 @@ public class ProductRatingService : IProductRatingService
                             Star = pr.Star,
                             Comment = pr.Comment,
                             CreatedDate = pr.CreatedDate,
-                            ProductUrlId = pr.Product.Url
+                            ProductUrlId = pr.Product.Url,
+                            ProductName = pr.Product.Name,
+                            ProductShowcaseImageUrl = pr.Product.ProductImageFiles
+                                .FirstOrDefault(pi => pi.Showcase == true)
+                                .Path
                         }
                 )
                 .ToListAsync();
 
             return new() { Ratings = filteredRatings, TotaluserRatingCount = totalUserRatingCount };
         }
-
-        throw new Exception("User Not Found");
+        else
+            throw new Exception("User Not Found");
     }
 
     public async Task CreateRating(ProductRateRequestDTO model)

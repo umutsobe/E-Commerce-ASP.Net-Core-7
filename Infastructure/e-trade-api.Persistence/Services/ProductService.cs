@@ -2,7 +2,6 @@ using e_trade_api.application;
 using e_trade_api.domain;
 using e_trade_api.domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace e_trade_api.Persistence;
 
@@ -14,7 +13,6 @@ public class ProductService : IProductService
     readonly IProductWriteRepository _productWriteRepository;
     readonly IProductHubServices _productHubServices;
     readonly ICategoryReadRepository _categoryReadRepository;
-    readonly IConfiguration _configuration;
 
     public ProductService(
         IProductImageFileWriteRepository productImageFileWriteRepository,
@@ -22,8 +20,7 @@ public class ProductService : IProductService
         IProductWriteRepository productWriteRepository,
         IProductHubServices productHubServices,
         ICategoryReadRepository categoryReadRepository,
-        IProductImageFileReadRepository productImageFileReadRepository,
-        IConfiguration configuration
+        IProductImageFileReadRepository productImageFileReadRepository
     )
     {
         _productImageFileWriteRepository = productImageFileWriteRepository;
@@ -32,7 +29,6 @@ public class ProductService : IProductService
         _productHubServices = productHubServices;
         _categoryReadRepository = categoryReadRepository;
         _productImageFileReadRepository = productImageFileReadRepository;
-        _configuration = configuration;
     }
 
     public async Task ChangeShowcaseImage(ChangeShowCaseImageRequestDTO model)
@@ -69,7 +65,7 @@ public class ProductService : IProductService
             new Product()
             {
                 Id = productId,
-                Name = model.Name.Trim() + _configuration.GetConnectionString("SQLServer"),
+                Name = model.Name.Trim(),
                 Price = model.Price,
                 Stock = model.Stock,
                 Description = model.Description.Trim(),
@@ -256,9 +252,9 @@ public class ProductService : IProductService
 
     public async Task<List<string>> GetCategoriesByProduct(string productId)
     {
-        var product = _productReadRepository.Table
+        var product = await _productReadRepository.Table
             .Include(p => p.Categories)
-            .FirstOrDefault(p => p.Id == Guid.Parse(productId));
+            .FirstOrDefaultAsync(p => p.Id == Guid.Parse(productId));
 
         if (product != null)
         {

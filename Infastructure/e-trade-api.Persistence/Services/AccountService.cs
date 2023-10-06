@@ -93,7 +93,7 @@ public class AccountService : IAccountService
                 .ThenInclude(oi => oi.Product)
                 .ToListAsync();
 
-            List<ListUserOrdersDTO> orderDTOs = new List<ListUserOrdersDTO>();
+            List<ListUserOrdersDTO> orderDTOs = new();
 
             if (orders != null)
             {
