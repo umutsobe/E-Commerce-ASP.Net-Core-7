@@ -5,3 +5,11 @@ services:
       dockerfile: Dockerfile
     ports:
       - 777:7041
+  db:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    ports:
+      - "1433:1433"
+
+    environment:
+      SA_PASSWORD: "123456"
+      ACCEPT_EULA: "Y"
