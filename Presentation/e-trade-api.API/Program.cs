@@ -13,6 +13,11 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(7041); // to listen for incoming http connection on port 1000
+});
+
 builder.Services.AddHttpContextAccessor(); // clienttan gelen istekteki bilgilere erişmemizi sağlayan servis
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddInfrastructureService();

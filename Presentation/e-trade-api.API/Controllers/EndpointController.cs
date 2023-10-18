@@ -20,6 +20,8 @@ public class EndpointController : ControllerBase
     readonly IEndpointReadRepository _endpointReadRepository;
     readonly IEndpointWriteRepository _endpointWriteRepository;
     readonly IProductReadRepository _productReadRepository;
+    readonly IHttpContextAccessor _httpContextAccessor;
+    readonly IConfiguration _configuration;
 
     public EndpointController(
         IApplicationService applicationService,
@@ -27,7 +29,9 @@ public class EndpointController : ControllerBase
         IMenuWriteRepository menuWriteRepository,
         IEndpointReadRepository endpointReadRepository,
         IEndpointWriteRepository endpointWriteRepository,
-        IProductReadRepository productReadRepository
+        IProductReadRepository productReadRepository,
+        IHttpContextAccessor httpContextAccessor,
+        IConfiguration configuration
     )
     {
         _applicationService = applicationService;
@@ -36,6 +40,8 @@ public class EndpointController : ControllerBase
         _endpointReadRepository = endpointReadRepository;
         _endpointWriteRepository = endpointWriteRepository;
         _productReadRepository = productReadRepository;
+        _httpContextAccessor = httpContextAccessor;
+        _configuration = configuration;
     }
 
     [HttpGet("[action]")]
@@ -114,5 +120,21 @@ public class EndpointController : ControllerBase
             urls.AppendLine(url);
         }
         return Ok(urls.ToString());
+    }
+
+    [HttpGet("[action]")]
+    //for prerender
+    public async Task<IActionResult> GetUsersIP()
+    {
+        var ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
+        return Ok(ip);
+    }
+
+    [HttpGet("[action]")]
+    //for prerender
+    public async Task<IActionResult> TestEnvironment()
+    {
+        var response = _configuration["Test"];
+        return Ok(response);
     }
 }

@@ -1,0 +1,7 @@
+services:
+  s_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 777:7041
