@@ -5,10 +5,8 @@ using e_trade_api.API;
 using e_trade_api.application;
 using e_trade_api.Infastructure;
 using e_trade_api.Persistence;
-using e_trade_api.Persistence.Contexts;
 using e_trade_api.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -84,16 +82,6 @@ builder.Services.AddCors(
 );
 
 var app = builder.Build();
-
-// Entity Framework Core bekleyen migrations varsa database update işlemi
-if (app.Environment.IsProduction())
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbContext = scope.ServiceProvider.GetRequiredService<ETradeApiDBContext>();
-        dbContext.Database.Migrate();
-    }
-}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
