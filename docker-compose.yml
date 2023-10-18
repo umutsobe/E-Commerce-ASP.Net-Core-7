@@ -4,4 +4,4 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 777:80
+      - 777:7041
