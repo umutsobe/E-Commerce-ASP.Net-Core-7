@@ -415,4 +415,3 @@ Infastructure/e-trade-api.SignalR/obj/Debug/net7.0/e-trade-api.SignalR.csproj.As
 .idea/.idea.e-trade-api/.idea/workspace.xml
 Presentation/appsettings.Development.json
 Presentation/appsettings.Production.json
-Presentation/e-trade-api.API/appsettings.json
