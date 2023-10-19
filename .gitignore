@@ -4,6 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 Presentation/e-trade-api.API/appsettings.Production.json
+Presentation/e-trade-api.API/appsettings.json
 Presentation/e-trade-api.API/appsettings.Development.json
 Presentation/e-trade-api.API/appsettings.Production.Deploy.json
 
