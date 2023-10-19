@@ -163,6 +163,7 @@ public class UserService : IUserService
                 Name = model.Name,
                 Email = model.Email,
                 UserName = model.UserName,
+                NewEmailControl = ""
             };
 
         IdentityResult userResult = await _userManager.CreateAsync(user, model.Password);

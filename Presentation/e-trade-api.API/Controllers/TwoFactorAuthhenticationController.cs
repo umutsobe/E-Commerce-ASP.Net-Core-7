@@ -18,12 +18,12 @@ namespace e_trade_api.API.Controllers
         }
 
         [HttpGet("[action]/{userId}")]
-        [Authorize(AuthenticationSchemes = "Auth")]
-        [AuthorizeDefinition(
-            Menu = "TwoFactorAuthentication",
-            ActionType = ActionType.Writing,
-            Definition = "Create Code And Send Email"
-        )]
+        // [Authorize(AuthenticationSchemes = "Auth")]
+        // [AuthorizeDefinition(
+        //     Menu = "TwoFactorAuthentication",
+        //     ActionType = ActionType.Writing,
+        //     Definition = "Create Code And Send Email"
+        // )]
         public async Task<IActionResult> CreateCodeAndSendEmail(string userId)
         {
             CreateCodeAndSendEmailResponse response =
@@ -33,12 +33,12 @@ namespace e_trade_api.API.Controllers
         }
 
         [HttpPost("[action]")]
-        [Authorize(AuthenticationSchemes = "Auth")]
-        [AuthorizeDefinition(
-            Menu = "TwoFactorAuthentication",
-            ActionType = ActionType.Reading,
-            Definition = "Is Code Valid"
-        )]
+        // [Authorize(AuthenticationSchemes = "Auth")]
+        // [AuthorizeDefinition(
+        //     Menu = "TwoFactorAuthentication",
+        //     ActionType = ActionType.Reading,
+        //     Definition = "Is Code Valid"
+        // )]
         public async Task<IActionResult> IsCodeValid(IsCodeValidRequest model)
         {
             IsCodeValidResponseMessage response = await _twoFactorAuthenticationService.IsCodeValid(

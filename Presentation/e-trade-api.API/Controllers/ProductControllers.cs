@@ -144,7 +144,7 @@ public class ProductControllers : ControllerBase
     }
 
     [HttpGet("[action]")]
-    [Authorize(AuthenticationSchemes = "Auth")]
+    // [Authorize(AuthenticationSchemes = "Auth")]
     public async Task<IActionResult> QuickCreateProduct()
     {
         await _productService.QuickCreateProduct();

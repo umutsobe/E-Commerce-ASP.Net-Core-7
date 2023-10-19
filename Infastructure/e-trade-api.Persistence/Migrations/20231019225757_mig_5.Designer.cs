@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using e_trade_api.Persistence.Contexts;
@@ -11,9 +12,11 @@ using e_trade_api.Persistence.Contexts;
 namespace e_trade_api.Persistence.Migrations
 {
     [DbContext(typeof(ETradeApiDBContext))]
-    partial class ETradeApiDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231019225757_mig_5")]
+    partial class mig_5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -251,6 +254,7 @@ namespace e_trade_api.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("NewEmailControl")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("NormalizedEmail")

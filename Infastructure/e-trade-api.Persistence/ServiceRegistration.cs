@@ -16,9 +16,10 @@ namespace e_trade_api.Persistence
         )
         {
             services.AddDbContext<ETradeApiDBContext>(
-                options => options.UseSqlServer(_configuration.GetConnectionString("SQLServer")),
+                options => options.UseNpgsql(_configuration["ConnectionStrings:SQLServer"]),
                 ServiceLifetime.Scoped
             );
+            services.AddScoped<DesignTimeDbContextFactory>();
             services
                 .AddIdentity<AppUser, AppRole>(options =>
                 {
