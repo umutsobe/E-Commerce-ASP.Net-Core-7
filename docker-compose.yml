@@ -5,11 +5,19 @@ services:
       dockerfile: Dockerfile
     ports:
       - 777:7041
-  db:
-    image: "mcr.microsoft.com/mssql/server:2022-latest"
-    ports:
-      - "1433:1433"
 
+  s_db:
+    container_name: c_postgresdb
+    image: postgres
+    ports:
+      - 5432:5432
     environment:
-      SA_PASSWORD: "123456"
-      ACCEPT_EULA: "Y"
+      - POSTGRES_PASSWORD=1122334455
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_USER=umutsobe
+      - POSTGRES_DB=e_commerce
+    volumes:
+      - postgre_db_e_commerce:/var/lib/postgresql/data/pgdata
+
+volumes:
+  postgre_db_e_commerce:
