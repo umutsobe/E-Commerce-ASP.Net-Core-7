@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - 777:7041
+    networks:
+      - e_commerce
 
   s_db:
     container_name: c_postgresdb
@@ -18,6 +20,11 @@ services:
       - POSTGRES_DB=e_commerce
     volumes:
       - postgre_db_e_commerce:/var/lib/postgresql/data/pgdata
+    networks:
+      - e_commerce
 
 volumes:
   postgre_db_e_commerce:
+
+networks:
+  e_commerce:
