@@ -1,10 +1,12 @@
+version: "3"
 services:
   s_api:
+    container_name: c_api
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 777:7041
+      - 7041:7041
     networks:
       - e_commerce
 
@@ -13,11 +15,6 @@ services:
     image: postgres
     ports:
       - 5432:5432
-    environment:
-      - POSTGRES_PASSWORD=1122334455
-      - PGDATA=/var/lib/postgresql/data/pgdata
-      - POSTGRES_USER=umutsobe
-      - POSTGRES_DB=e_commerce
     volumes:
       - postgre_db_e_commerce:/var/lib/postgresql/data/pgdata
     networks:
@@ -28,3 +25,4 @@ volumes:
 
 networks:
   e_commerce:
+    name: e_commerce

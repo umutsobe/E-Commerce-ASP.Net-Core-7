@@ -21,7 +21,7 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ETradeApiD
     public DesignTimeDbContextFactory() //hata almamam için bu parametresiz olmalı yoksa yukarıdaki hatayı alırım
     {
         var builder = new ConfigurationBuilder()
-            .AddUserSecrets("cdc4cfa8-e8bd-4ffb-87d7-d0cd4294f54c") //bu secret persistence projesinin user secretı
+            .AddUserSecrets("bf2b7aee-00be-4f9c-88da-4e9ca846504b")
             .AddEnvironmentVariables();
 
         _configuration = builder.Build();

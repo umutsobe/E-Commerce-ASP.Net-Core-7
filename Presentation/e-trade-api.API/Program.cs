@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(7041); // to listen for incoming http connection on port 1000
+    options.ListenAnyIP(7041); // bütün domainlerden 7041'i aç
 });
 
 builder.Services.AddHttpContextAccessor(); // clienttan gelen istekteki bilgilere erişmemizi sağlayan servis
@@ -76,7 +76,11 @@ builder.Services.AddCors(
         options.AddDefaultPolicy(
             policy =>
                 policy
-                    .WithOrigins(builder.Configuration.GetValue<string>("AngularClientUrl"))
+                    .WithOrigins(
+                        builder.Configuration.GetValue<string>("AngularClientUrl"),
+                        "http://localhost:4200"
+                    )
+                    // .AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials()
@@ -91,16 +95,12 @@ if (app.Environment.IsProduction())
     using (var scope = app.Services.CreateScope())
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<ETradeApiDBContext>();
-        dbContext.Database.Migrate();
+        dbContext.Database.Migrate(); //works
     }
 }
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors();
 

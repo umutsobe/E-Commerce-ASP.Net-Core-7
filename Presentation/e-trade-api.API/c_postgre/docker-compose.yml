@@ -1,0 +1,16 @@
+services:
+  db:
+    container_name: c_postgresdb
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=1122334455
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_USER=umutsobe
+      - POSTGRES_DB=e_commerce
+    volumes:
+      - postgre_db_e_commerce:/var/lib/postgresql/data/pgdata
+
+volumes:
+  postgre_db_e_commerce:
