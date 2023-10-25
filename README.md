@@ -1,5 +1,5 @@
 # ASP.NET Mini-E-Commerce App
-![fd1bddad-f599-4f99-9bbb-e8980e062b81](https://github.com/umutsobe/E-Commerce-ASP.Net-Core-7/assets/120561448/b17322e0-1ca1-41a9-b787-43a572e67c31)
+![WhatsApp Image 2023-10-25 at 03 04 58](https://github.com/umutsobe/E-Commerce-ASP.Net-Core-7/assets/120561448/bcc473ae-d5ce-4a8c-b209-c9e91b08f50b)
 
 **Before You Begin:** To try out the application, you can visit the following link: [E-Commerce App](https://e-commerce-ssr-bc738295e48f.herokuapp.com/). Please note that the initial API request may take 10-15 seconds to respond because I use Azure student subscription, but next requests will be much faster.
 
