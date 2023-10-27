@@ -9,6 +9,8 @@ services:
       - 7041:7041
     networks:
       - e_commerce
+    env_file:
+      - e_commerce_api.env
 
   s_db:
     container_name: c_postgresdb
@@ -19,6 +21,8 @@ services:
       - postgre_db_e_commerce:/var/lib/postgresql/data/pgdata
     networks:
       - e_commerce
+    env_file:
+      - e_commerce_db.env
 
 volumes:
   postgre_db_e_commerce:
