@@ -78,7 +78,8 @@ builder.Services.AddCors(
                 policy
                     .WithOrigins(
                         builder.Configuration.GetValue<string>("AngularClientUrl"),
-                        "http://localhost:4200"
+                        "http://localhost:4200",
+                        "http://ecommercesobe.online:4200"
                     )
                     // .AllowAnyOrigin()
                     .AllowAnyHeader()

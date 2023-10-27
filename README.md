@@ -2,7 +2,7 @@
 
 ![WhatsApp Image 2023-10-25 at 03 04 58](https://github.com/umutsobe/E-Commerce-ASP.Net-Core-7/assets/120561448/bcc473ae-d5ce-4a8c-b209-c9e91b08f50b)
 
-**Before You Begin:** To try out the application, you can visit the following link: [E-Commerce App](http://206.81.31.147). Please note that the initial API request may take 10-15 seconds to respond because I use Azure student subscription, but next requests will be much faster.
+**Before You Begin:** To try out the application, you can visit the following link: [E-Commerce App](http://206.81.31.147:4200). Please note that the initial API request may take 10-15 seconds to respond because I use Azure student subscription, but next requests will be much faster.
 
 ## Technologies
 

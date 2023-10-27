@@ -1,10 +1,15 @@
+using System.Net;
 using System.Text;
+using Azure.Core;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using e_trade_api.application;
 using e_trade_api.domain;
 using e_trade_api.domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Action = e_trade_api.application.Action;
 using Endpoint = e_trade_api.domain.Endpoint;
 
@@ -128,13 +133,5 @@ public class EndpointController : ControllerBase
     {
         var ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
         return Ok(ip);
-    }
-
-    [HttpGet("[action]")]
-    //for prerender
-    public async Task<IActionResult> TestEnvironment()
-    {
-        var response = _configuration["Test"];
-        return Ok(response);
     }
 }

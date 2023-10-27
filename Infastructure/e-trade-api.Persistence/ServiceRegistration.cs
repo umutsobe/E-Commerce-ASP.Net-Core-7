@@ -20,6 +20,7 @@ namespace e_trade_api.Persistence
                 ServiceLifetime.Scoped
             );
             services.AddScoped<DesignTimeDbContextFactory>();
+
             services
                 .AddIdentity<AppUser, AppRole>(options =>
                 {
@@ -28,6 +29,11 @@ namespace e_trade_api.Persistence
                     options.Password.RequireDigit = false;
                     options.Password.RequireLowercase = false;
                     options.Password.RequireUppercase = false;
+
+                    options.User.RequireUniqueEmail = true; //herkesin farklı maili olsun
+
+                    options.User.AllowedUserNameCharacters =
+                        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
                 })
                 .AddEntityFrameworkStores<ETradeApiDBContext>()
                 .AddDefaultTokenProviders();

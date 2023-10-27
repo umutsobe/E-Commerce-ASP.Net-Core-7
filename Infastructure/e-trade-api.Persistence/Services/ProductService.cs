@@ -117,7 +117,9 @@ public class ProductService : IProductService
             .AsQueryable();
 
         if (!string.IsNullOrEmpty(model.Keyword))
-            query = query.Where(p => EF.Functions.Like(p.Name, $"%{model.Keyword}%"));
+            query = query.Where(
+                p => EF.Functions.Like(p.Name.ToLower(), $"%{model.Keyword.ToLower()}%")
+            );
 
         if (!string.IsNullOrEmpty(model.CategoryName))
             query = query.Where(p => p.Categories.Any(c => c.Name == model.CategoryName));
@@ -302,7 +304,9 @@ public class ProductService : IProductService
         query = query.Where(p => p.isActive && p.Stock > 0); //sadece aktifler ve stoğu olanlar gelecek
 
         if (!string.IsNullOrEmpty(model.Keyword))
-            query = query.Where(p => EF.Functions.Like(p.Name, $"%{model.Keyword}%"));
+            query = query.Where(
+                p => EF.Functions.Like(p.Name.ToLower(), $"%{model.Keyword.ToLower()}%")
+            );
 
         if (!string.IsNullOrEmpty(model.CategoryName))
             query = query.Where(
