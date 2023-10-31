@@ -16,12 +16,17 @@ COPY ["Infastructure/e-trade-api.SignalR/e-trade-api.SignalR.csproj", "Infastruc
 RUN dotnet restore "Presentation/e-trade-api.API/e-trade-api.API.csproj"
 COPY . .
 WORKDIR "/src/Presentation/e-trade-api.API"
+
 RUN dotnet build "e-trade-api.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
 RUN dotnet publish "e-trade-api.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
+
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+COPY cloud.pfx /app/
+
 ENTRYPOINT ["dotnet", "e-trade-api.API.dll"]

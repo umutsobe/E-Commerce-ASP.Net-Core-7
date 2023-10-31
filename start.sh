@@ -1,1 +1,1 @@
-docker compose up --force-recreate --build -d
+docker compose --env-file ./e_commerce_env.env up --force-recreate --build -d

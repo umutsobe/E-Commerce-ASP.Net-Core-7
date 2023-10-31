@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json.Serialization;
 using e_trade_api.API;
@@ -13,9 +14,25 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseContentRoot(Directory.GetCurrentDirectory());
+
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(7041); // bütün domainlerden 7041'i aç
+    options.ListenAnyIP(
+        7041,
+        listenOptions =>
+        {
+            string password = builder.Configuration.GetValue<string>("Certificate");
+
+            System.Console.WriteLine(password);
+            X509Certificate2 cert = new X509Certificate2(
+                Path.Combine(Directory.GetCurrentDirectory(), "cloud.pfx"),
+                password
+            );
+
+            listenOptions.UseHttps(cert);
+        }
+    );
 });
 
 builder.Services.AddHttpContextAccessor(); // clienttan gelen istekteki bilgilere erişmemizi sağlayan servis
@@ -78,10 +95,8 @@ builder.Services.AddCors(
                 policy
                     .WithOrigins(
                         builder.Configuration.GetValue<string>("AngularClientUrl"),
-                        "http://localhost:4200",
-                        "http://ecommercesobe.online:4200"
+                        "http://ecommercesobe.online"
                     )
-                    // .AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials()
@@ -99,6 +114,7 @@ if (app.Environment.IsProduction())
         dbContext.Database.Migrate(); //works
     }
 }
+app.UseHttpsRedirection();
 
 app.UseSwagger();
 app.UseSwaggerUI();
