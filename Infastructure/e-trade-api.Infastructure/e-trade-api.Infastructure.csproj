@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <NoWarn>8618;8601;8604;8600;8603;8602;CA1416</NoWarn>
     <!-- nullable hatası ide'de kapatma -->
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\e-trade-api.application\e-trade-api.application.csproj" />
