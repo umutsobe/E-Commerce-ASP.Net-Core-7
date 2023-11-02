@@ -16,6 +16,5 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.10" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
 
-    <RuntimeHostConfigurationOption Include="System.Drawing.EnableUnixSupport" Value="true" />
   </ItemGroup>
 </Project>

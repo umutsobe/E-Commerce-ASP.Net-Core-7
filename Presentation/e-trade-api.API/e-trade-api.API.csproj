@@ -20,7 +20,5 @@
     <ProjectReference Include="..\..\Infastructure\e-trade-api.Persistence\e-trade-api.Persistence.csproj" />
     <ProjectReference Include="..\..\Infastructure\e-trade-api.Infastructure\e-trade-api.Infastructure.csproj" />
     <ProjectReference Include="..\..\Infastructure\e-trade-api.SignalR\e-trade-api.SignalR.csproj" />
-
-    <RuntimeHostConfigurationOption Include="System.Drawing.EnableUnixSupport" Value="true" />
   </ItemGroup>
 </Project>
