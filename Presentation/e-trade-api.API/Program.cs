@@ -35,6 +35,8 @@ builder.WebHost.ConfigureKestrel(options =>
     );
 });
 
+AppContext.SetSwitch("System.Drawing.EnableUnixSupport", true);
+
 builder.Services.AddHttpContextAccessor(); // clienttan gelen istekteki bilgilere erişmemizi sağlayan servis
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddInfrastructureService();

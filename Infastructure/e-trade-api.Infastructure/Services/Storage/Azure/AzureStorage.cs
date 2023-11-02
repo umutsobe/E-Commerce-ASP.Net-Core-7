@@ -62,9 +62,17 @@ public class AzureStorage : IAzureStorage
             string productFileName =
                 $"{model.ProductName}-{Guid.NewGuid().ToString().Substring(0, 7)}{extension}"; //5 haneli guid productName yanına geldi
 
+            Stream fileStream = ImageCompression.Compress( //image compression
+                file.OpenReadStream(),
+                productFileName,
+                800,
+                800
+            );
+            fileStream.Position = 0;
+
             BlobClient blobClient = _blobContainerClient.GetBlobClient(productFileName);
 
-            await blobClient.UploadAsync(file.OpenReadStream());
+            await blobClient.UploadAsync(fileStream);
 
             datas.Add(
                 new()
