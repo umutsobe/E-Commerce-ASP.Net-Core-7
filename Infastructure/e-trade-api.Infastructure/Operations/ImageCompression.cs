@@ -1,19 +1,22 @@
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
+using SixLabors.ImageSharp.Formats.Webp;
 
 namespace e_trade_api.Infastructure;
 
-public class ImageCompression
+public static class CompressImage
 {
     public static Stream Compress(
         Stream srcImgStream,
-        string fileFullName,
+        string fullFileName,
+        int quality,
         int maxWidth,
         int maxHeight
     )
     {
-        using var image = Image.FromStream(srcImgStream);
+        var extension = Path.GetExtension(fullFileName).ToLower();
+
+        srcImgStream.Position = 0;
+
+        using var image = Image.Load(srcImgStream);
 
         float ratioX = (float)maxWidth / (float)image.Width;
         float ratioY = (float)maxHeight / (float)image.Height;
@@ -22,64 +25,22 @@ public class ImageCompression
         int newWidth = (int)(image.Width * ratio);
         int newHeight = (int)(image.Height * ratio);
 
-        var bitmap = new Bitmap(image, newWidth, newHeight);
+        image.Mutate(x => x.Resize(newWidth, newHeight));
 
-        var imgGraph = Graphics.FromImage(bitmap);
-        imgGraph.SmoothingMode = SmoothingMode.Default;
-        imgGraph.InterpolationMode = InterpolationMode.HighQualityBicubic;
+        var outputStream = new MemoryStream();
 
-        imgGraph.DrawImage(image, 0, 0, newWidth, newHeight);
-
-        var extension = Path.GetExtension(fileFullName).ToLower();
-        ImageFormat imageFormat;
-        ImageCodecInfo encoder;
-
-        switch (extension)
+        if (extension == ".webp")
         {
-            case ".png":
-            case ".gif":
-                imageFormat = ImageFormat.Png;
-                encoder = GetEncoder(imageFormat);
-                break;
-            case ".jpg":
-            case ".jpeg":
-                imageFormat = ImageFormat.Jpeg;
-                encoder = GetEncoder(imageFormat);
-                break;
-            case ".webp":
-                imageFormat = ImageFormat.Webp;
-                encoder = GetEncoder(imageFormat);
-                break;
-            default:
-                throw new ArgumentException("Unsupported image format.");
+            image.Save(outputStream, new WebpEncoder { Quality = quality });
         }
-
-        var resultStream = new MemoryStream();
-        var encoderParameters = new EncoderParameters(1);
-        var parameter = new EncoderParameter(Encoder.Quality, 90L);
-        encoderParameters.Param[0] = parameter;
-
-        bitmap.Save(resultStream, encoder, encoderParameters);
-
-        bitmap.Dispose();
-        imgGraph.Dispose();
-        image.Dispose();
-
-        return resultStream;
-    }
-
-    public static ImageCodecInfo GetEncoder(ImageFormat format)
-    {
-        ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
-
-        foreach (ImageCodecInfo codec in codecs)
+        else
         {
-            if (codec.FormatID == format.Guid)
-            {
-                return codec;
-            }
+            // Convert to Webp
+            fullFileName = Path.ChangeExtension(fullFileName, ".webp");
+            image.Save(outputStream, new WebpEncoder { Quality = quality });
         }
+        outputStream.Position = 0;
 
-        return null;
+        return outputStream;
     }
 }

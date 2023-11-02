@@ -58,16 +58,19 @@ public class AzureStorage : IAzureStorage
 
         foreach (IFormFile file in model.Files)
         {
-            string extension = Path.GetExtension(file.Name);
+            string extension = ".webp";
+
             string productFileName =
                 $"{model.ProductName}-{Guid.NewGuid().ToString().Substring(0, 7)}{extension}"; //5 haneli guid productName yanına geldi
 
-            Stream fileStream = ImageCompression.Compress( //image compression
+            Stream fileStream = CompressImage.Compress( //image compression. bütün dosyalar .webp'ye dönüştürülüyor
                 file.OpenReadStream(),
                 productFileName,
+                70,
                 800,
                 800
             );
+
             fileStream.Position = 0;
 
             BlobClient blobClient = _blobContainerClient.GetBlobClient(productFileName);
@@ -100,9 +103,19 @@ public class AzureStorage : IAzureStorage
             string productFileName =
                 $"{model.Definition}-{Guid.NewGuid().ToString().Substring(0, 8)}{extension}";
 
+            Stream fileStream = CompressImage.Compress( //image compression. bütün dosyalar .webp'ye dönüştürülüyor
+                file.OpenReadStream(),
+                productFileName,
+                70,
+                1600,
+                800
+            );
+
+            fileStream.Position = 0;
+
             BlobClient blobClient = _blobContainerClient.GetBlobClient(productFileName);
 
-            await blobClient.UploadAsync(file.OpenReadStream());
+            await blobClient.UploadAsync(fileStream);
 
             datas.Add(
                 new()
