@@ -1,5 +1,4 @@
 using e_trade_api.application;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace e_trade_api.API.Controllers;

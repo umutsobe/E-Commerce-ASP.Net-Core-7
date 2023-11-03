@@ -2,7 +2,7 @@
 
 ![e_commerce](https://github.com/umutsobe/E-Commerce-ASP.Net-Core-7/assets/120561448/69786e0b-bc1e-4996-9e1a-0ef8e4d5e056)
 
-**Before You Begin:** To try out the application, you can visit the following link: [E-Commerce App](http://ecommercesobe.online). Please note that the initial API request may take 10-15 seconds to respond because I use Azure student subscription, but next requests will be much faster.
+**Before You Begin:** To try out the application, you can visit the following link: [E-Commerce App](https://ecommercesobe.site)
 
 ## Technologies
 

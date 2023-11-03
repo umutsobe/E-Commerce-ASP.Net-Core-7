@@ -1,15 +1,10 @@
-using System.Net;
 using System.Text;
-using Azure.Core;
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
 using e_trade_api.application;
 using e_trade_api.domain;
 using e_trade_api.domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Action = e_trade_api.application.Action;
 using Endpoint = e_trade_api.domain.Endpoint;
 
@@ -72,6 +67,7 @@ public class EndpointController : ControllerBase
                 await _menuWriteRepository.AddAsync(_menu);
             }
         }
+        
 
         await _menuWriteRepository.SaveAsync();
 
