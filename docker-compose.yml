@@ -30,6 +30,7 @@ services:
       - "Certificate=${Certificate}"
       - "CloudflareKey=${CloudflareKey}"
       - "CloudflareClientZoneId=${CloudflareClientZoneId}"
+      - "CloudflareMail=${CloudflareMail}"
 
   s_db:
     container_name: c_postgresdb
