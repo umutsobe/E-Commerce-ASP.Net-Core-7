@@ -1,6 +1,6 @@
 # ASP.NET Mini-E-Commerce App
 
-![e_commerce](https://github.com/umutsobe/E-Commerce-ASP.Net-Core-7/assets/120561448/69786e0b-bc1e-4996-9e1a-0ef8e4d5e056)
+![e_commerce](https://github.com/umutsobe/E-Commerce-ASP.Net-Core-7/assets/120561448/d721ce15-c106-4d6b-9772-b73271688d03)
 
 **Before You Begin:** To try out the application, you can visit the following link: [E-Commerce App](https://ecommercesobe.site)
 
@@ -26,11 +26,12 @@
 
 ## Hosting
 
+- DigitalOcean Machine (now hosting)
+- Cloudflare (DDOS Protection, Caching)
 - Docker
+- Jenkins
 - Azure (before Docker)
 - Heroku (before Docker)
-- DigitalOcean Machine (now hosting)
-- Jenkins
 
 ## Other Technologies
 
