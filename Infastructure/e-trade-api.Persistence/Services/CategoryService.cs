@@ -8,14 +8,17 @@ public class CategoryService : ICategoryService
 {
     readonly ICategoryReadRepository _categoryReadRepository;
     readonly ICategoryWriteRepository _categoryWriteRepository;
+    readonly ICloudflareService _cloudflareService;
 
     public CategoryService(
         ICategoryReadRepository categoryReadRepository,
-        ICategoryWriteRepository categoryWriteRepository
+        ICategoryWriteRepository categoryWriteRepository,
+        ICloudflareService cloudflareService
     )
     {
         _categoryReadRepository = categoryReadRepository;
         _categoryWriteRepository = categoryWriteRepository;
+        _cloudflareService = cloudflareService;
     }
 
     public async Task CreateCategory(string name)
@@ -29,6 +32,7 @@ public class CategoryService : ICategoryService
         {
             await _categoryWriteRepository.AddAsync(new() { Name = name });
             await _categoryWriteRepository.SaveAsync();
+            await _cloudflareService.PurgeEverythingCache();
         }
     }
 
@@ -36,6 +40,7 @@ public class CategoryService : ICategoryService
     {
         await _categoryWriteRepository.RemoveAsync(id);
         await _categoryWriteRepository.SaveAsync();
+        await _cloudflareService.PurgeEverythingCache();
     }
 
     public async Task<GetAllCategoriesDTO> GetAllCategories(GetAllCategoriesRequestDTO model)
@@ -77,5 +82,6 @@ public class CategoryService : ICategoryService
         category.Name = model.NewName;
 
         await _categoryWriteRepository.SaveAsync();
+        await _cloudflareService.PurgeEverythingCache();
     }
 }

@@ -13,6 +13,7 @@ public class ProductService : IProductService
     readonly IProductWriteRepository _productWriteRepository;
     readonly IProductHubServices _productHubServices;
     readonly ICategoryReadRepository _categoryReadRepository;
+    readonly ICloudflareService _cloudflareService;
 
     public ProductService(
         IProductImageFileWriteRepository productImageFileWriteRepository,
@@ -20,7 +21,8 @@ public class ProductService : IProductService
         IProductWriteRepository productWriteRepository,
         IProductHubServices productHubServices,
         ICategoryReadRepository categoryReadRepository,
-        IProductImageFileReadRepository productImageFileReadRepository
+        IProductImageFileReadRepository productImageFileReadRepository,
+        ICloudflareService cloudflareService
     )
     {
         _productImageFileWriteRepository = productImageFileWriteRepository;
@@ -29,6 +31,7 @@ public class ProductService : IProductService
         _productHubServices = productHubServices;
         _categoryReadRepository = categoryReadRepository;
         _productImageFileReadRepository = productImageFileReadRepository;
+        _cloudflareService = cloudflareService;
     }
 
     public async Task ChangeShowcaseImage(ChangeShowCaseImageRequestDTO model)
@@ -50,6 +53,7 @@ public class ProductService : IProductService
         productImageFile.Showcase = true;
 
         await _productImageFileWriteRepository.SaveAsync();
+        await _cloudflareService.PurgeEverythingCache();
     }
 
     public async Task CreateProduct(CreateProductDTO model)
@@ -80,12 +84,14 @@ public class ProductService : IProductService
         await _productHubServices.ProductAddedMessageAsync(
             $"A product named {model.Name} has been added"
         );
+        await _cloudflareService.PurgeEverythingCache();
     }
 
     public async Task DeleteProductById(string Id)
     {
         await _productWriteRepository.RemoveAsync(Id);
         await _productWriteRepository.SaveAsync();
+        await _cloudflareService.PurgeEverythingCache();
     }
 
     public async Task UpdateProduct(UpdateProductDTO model)
@@ -104,6 +110,7 @@ public class ProductService : IProductService
         product.Categories = categories;
 
         await _productWriteRepository.SaveAsync();
+        await _cloudflareService.PurgeEverythingCache();
     }
 
     public async Task<GetAllProductsResponseAdminDTO> GetAllProductsAdmin(
@@ -245,6 +252,7 @@ public class ProductService : IProductService
             }
 
             await _productWriteRepository.SaveAsync();
+            await _cloudflareService.PurgeEverythingCache();
         }
         else
         {
@@ -290,6 +298,7 @@ public class ProductService : IProductService
             }
 
             await _productWriteRepository.SaveAsync();
+            await _cloudflareService.PurgeEverythingCache();
         }
         else
         {
@@ -400,6 +409,7 @@ public class ProductService : IProductService
 
         await _productWriteRepository.AddRangeAsync(products);
         await _productWriteRepository.SaveAsync();
+        await _cloudflareService.PurgeEverythingCache();
     }
 
     public async Task AddStock(AddStockRequestDTO model)
@@ -408,6 +418,7 @@ public class ProductService : IProductService
         product.Stock += model.StockToBeAdded;
 
         await _productWriteRepository.SaveAsync();
+        await _cloudflareService.PurgeEverythingCache();
     }
 
     public async Task DeactivateProduct(string productId)
@@ -416,6 +427,7 @@ public class ProductService : IProductService
         product.isActive = false;
 
         await _productWriteRepository.SaveAsync();
+        await _cloudflareService.PurgeEverythingCache();
     }
 
     public async Task ActivateProduct(string productId)
@@ -424,5 +436,6 @@ public class ProductService : IProductService
         product.isActive = true;
 
         await _productWriteRepository.SaveAsync();
+        await _cloudflareService.PurgeEverythingCache();
     }
 }

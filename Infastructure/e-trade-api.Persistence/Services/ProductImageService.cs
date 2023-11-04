@@ -13,13 +13,15 @@ public class ProductImageService : IProductImageService
     IProductImageFileWriteRepository _productImageFileWriteRepository;
     IStorageService _storageService;
     readonly IConfiguration _configuration;
+    readonly ICloudflareService _cloudflareService;
 
     public ProductImageService(
         IStorageService storageService,
         IProductImageFileWriteRepository productImageFileWriteRepository,
         IProductReadRepository productReadRepository,
         IProductImageFileReadRepository productImageFileReadRepository,
-        IConfiguration configuration
+        IConfiguration configuration,
+        ICloudflareService cloudflareService
     )
     {
         _storageService = storageService;
@@ -27,6 +29,7 @@ public class ProductImageService : IProductImageService
         _productReadRepository = productReadRepository;
         _productImageFileReadRepository = productImageFileReadRepository;
         _configuration = configuration;
+        _cloudflareService = cloudflareService;
     }
 
     public async Task DeleteProductImage(ProductImageDeleteRequestDTO model)
@@ -45,6 +48,7 @@ public class ProductImageService : IProductImageService
         string imageName = productImageFile.Path.Split("/")[1]; // bize / işaretinin gelme ihtimali yok çünkü characteregulatory ile / işaretini boş stringe dönüştürmüştük
 
         await _storageService.DeleteAsync("product-image", imageName); // fotoğrafı azuredan da sildik
+        await _cloudflareService.PurgeEverythingCache();
     }
 
     public async Task UploadProductImage(UploadImageRequestDTO model)
@@ -87,6 +91,7 @@ public class ProductImageService : IProductImageService
 
         productImageFiles[0].Showcase = true;
         await _productImageFileWriteRepository.SaveAsync();
+        await _cloudflareService.PurgeEverythingCache();
     }
 
     public async Task<List<GetProductImageQueryResponse>> GetProductImages(string Id)

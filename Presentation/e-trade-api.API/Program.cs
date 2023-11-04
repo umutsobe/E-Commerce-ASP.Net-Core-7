@@ -16,6 +16,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.UseContentRoot(Directory.GetCurrentDirectory());
 
+builder.Configuration
+    .AddUserSecrets("bf2b7aee-00be-4f9c-88da-4e9ca846504b")
+    .AddEnvironmentVariables();
+
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.ListenAnyIP(

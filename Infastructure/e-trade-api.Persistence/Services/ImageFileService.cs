@@ -9,16 +9,19 @@ public class ImageFileService : IImageFileService
     IStorageService _storageService;
     IImageFileReadRepository _imageFileReadRepository;
     IImageFileWriteRepository _imageFileWriteRepository;
+    readonly ICloudflareService _cloudflareService;
 
     public ImageFileService(
         IStorageService storageService,
         IImageFileReadRepository imageFileReadRepository,
-        IImageFileWriteRepository imageFileWriteRepository
+        IImageFileWriteRepository imageFileWriteRepository,
+        ICloudflareService cloudflareService
     )
     {
         _storageService = storageService;
         _imageFileReadRepository = imageFileReadRepository;
         _imageFileWriteRepository = imageFileWriteRepository;
+        _cloudflareService = cloudflareService;
     }
 
     public async Task DeleteImage(string imageId)
@@ -31,6 +34,7 @@ public class ImageFileService : IImageFileService
         await _imageFileWriteRepository.SaveAsync();
 
         await _storageService.DeleteAsync("other", imageFile.FileName);
+        await _cloudflareService.PurgeEverythingCache();
     }
 
     public Task<GetImageByIdResponse> GetImageById(string id)
@@ -87,6 +91,7 @@ public class ImageFileService : IImageFileService
 
         await _imageFileWriteRepository.AddRangeAsync(imageFiles);
         await _imageFileWriteRepository.SaveAsync();
+        await _cloudflareService.PurgeEverythingCache();
     }
 
     public async Task UpdateOrderDefinitionImages(UpdateOrderDefinitionImagesRequestDTO model)
@@ -103,5 +108,6 @@ public class ImageFileService : IImageFileService
         }
 
         await _imageFileWriteRepository.SaveAsync();
+        await _cloudflareService.PurgeEverythingCache();
     }
 }

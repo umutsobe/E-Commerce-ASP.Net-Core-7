@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>e_trade_api.Persistence</RootNamespace>
@@ -7,7 +6,6 @@
     <Nullable>enable</Nullable>
     <NoWarn>8618;8601;8604;8600;8603;8602;8619</NoWarn>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Google.Apis.Auth" Version="1.62.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
@@ -29,9 +27,7 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\Core\e-trade-api.application\e-trade-api.application.csproj" />
   </ItemGroup>
-
 </Project>

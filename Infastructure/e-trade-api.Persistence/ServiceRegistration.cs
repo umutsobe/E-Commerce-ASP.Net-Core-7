@@ -106,6 +106,9 @@ namespace e_trade_api.Persistence
             services.AddScoped<IImageFileReadRepository, ImageFileReadRepository>();
             services.AddScoped<IImageFileWriteRepository, ImageFileWriteRepository>();
             services.AddScoped<IImageFileService, ImageFileService>();
+
+            services.AddScoped<ICloudflareService, CloudflareService>();
+            services.AddScoped<HttpClient>();
         }
     }
 }
