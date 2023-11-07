@@ -98,16 +98,10 @@ public class ProductService : IProductService
     {
         Product product = await _productReadRepository.GetByIdAsync(model.Id);
 
-        List<Category> categories = _categoryReadRepository.Table
-            .Where(c => model.CategoryNames.Contains(c.Name))
-            .ToList();
-
         product.Name = model.Name;
         product.Price = model.Price;
         product.Stock = model.Stock;
         product.Description = model.Description;
-        product.isActive = model.IsActive;
-        product.Categories = categories;
 
         await _productWriteRepository.SaveAsync();
         await _cloudflareService.PurgeEverythingCache();

@@ -16,6 +16,7 @@
 - Entity Framework Core
 - FluentValidatiton
 - SignalR
+- Image Compression with SixLabors-ImageSharp
 
 ## Architecture
 
@@ -27,7 +28,7 @@
 ## Hosting
 
 - DigitalOcean Machine (now hosting)
-- Cloudflare (DDOS Protection, Caching)
+- Cloudflare (Security, Caching)
 - Docker
 - Jenkins
 - Azure (before Docker)
@@ -41,6 +42,7 @@
 - Mail Service
 - Google Login
 - Azure Blob Storage
+- Angular Image Lazy Loading
 
 ## Solution Explorer Overview
 

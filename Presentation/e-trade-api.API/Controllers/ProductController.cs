@@ -7,12 +7,12 @@ namespace e_trade_api.API;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ProductControllers : ControllerBase
+public class ProductController : ControllerBase
 {
     readonly IMediator _mediator;
     readonly IProductService _productService;
 
-    public ProductControllers(IMediator mediator, IProductService productService)
+    public ProductController(IMediator mediator, IProductService productService)
     {
         _mediator = mediator;
         _productService = productService;
@@ -42,12 +42,9 @@ public class ProductControllers : ControllerBase
         ActionType = ActionType.Updating,
         Definition = "Update Product"
     )]
-    public async Task<IActionResult> UpdateProduct(
-        [FromBody] UpdateProductCommandRequest updateProductCommandRequest
-    )
+    public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductDTO model)
     {
-        UpdateProductCommandResponse response = await _mediator.Send(updateProductCommandRequest);
-
+        await _productService.UpdateProduct(model);
         return Ok();
     }
 
