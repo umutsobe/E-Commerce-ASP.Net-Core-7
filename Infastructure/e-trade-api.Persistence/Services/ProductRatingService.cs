@@ -2,6 +2,7 @@ using System.Reflection.Metadata.Ecma335;
 using e_trade_api.application;
 using e_trade_api.domain;
 using e_trade_api.domain.Entities;
+using Ganss.Xss;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -175,12 +176,16 @@ public class ProductRatingService : IProductRatingService
 
             if (product != null && user != null)
             {
+                var sanitizer = new HtmlSanitizer();
+
+                var sanitizedComment = sanitizer.Sanitize(model.Comment);
+
                 await _productRatingWriteRepository.AddAsync(
                     new()
                     {
                         Id = Guid.NewGuid(),
                         ProductId = Guid.Parse(model.ProductId),
-                        Comment = model.Comment,
+                        Comment = sanitizedComment,
                         Star = model.Star,
                         UserId = model.UserId,
                     }

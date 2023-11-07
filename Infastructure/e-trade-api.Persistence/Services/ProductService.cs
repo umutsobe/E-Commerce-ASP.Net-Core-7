@@ -1,6 +1,7 @@
 using e_trade_api.application;
 using e_trade_api.domain;
 using e_trade_api.domain.Entities;
+using Ganss.Xss;
 using Microsoft.EntityFrameworkCore;
 
 namespace e_trade_api.Persistence;
@@ -97,11 +98,14 @@ public class ProductService : IProductService
     public async Task UpdateProduct(UpdateProductDTO model)
     {
         Product product = await _productReadRepository.GetByIdAsync(model.Id);
+        var sanitizer = new HtmlSanitizer();
+
+        var sanitizedDesription = sanitizer.Sanitize(model.Description);
 
         product.Name = model.Name;
         product.Price = model.Price;
         product.Stock = model.Stock;
-        product.Description = model.Description;
+        product.Description = sanitizedDesription;
 
         await _productWriteRepository.SaveAsync();
         await _cloudflareService.PurgeEverythingCache();
